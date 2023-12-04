@@ -1,5 +1,6 @@
 import { Auth } from "@auth/core";
-import Discord from "@auth/core/providers/discord";
+import Facebook from "@auth/core/providers/facebook";
+import Google from "@auth/core/providers/google";
 import { eventHandler, toWebRequest } from "h3";
 
 export default eventHandler(async (event) =>
@@ -7,11 +8,6 @@ export default eventHandler(async (event) =>
     secret: process.env.AUTH_SECRET,
     trustHost: !!process.env.VERCEL,
     redirectProxyUrl: process.env.AUTH_REDIRECT_PROXY_URL,
-    providers: [
-      Discord({
-        clientId: process.env.AUTH_DISCORD_ID,
-        clientSecret: process.env.AUTH_DISCORD_SECRET,
-      }),
-    ],
+    providers: [Facebook, Google],
   }),
 );

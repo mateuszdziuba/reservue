@@ -1,20 +1,32 @@
-import { auth, signIn, signOut } from "@acme/auth";
+import { auth, signIn, signOut } from "@reservue/auth";
 
 export async function AuthShowcase() {
   const session = await auth();
 
   if (!session) {
     return (
-      <form
-        action={async () => {
-          "use server";
-          await signIn("discord");
-        }}
-      >
-        <button className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20">
-          Sign in with Discord
-        </button>
-      </form>
+      <>
+        <form
+          action={async () => {
+            "use server";
+            await signIn("facebook");
+          }}
+        >
+          <button className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20">
+            Sign in with Facebook
+          </button>
+        </form>
+        <form
+          action={async () => {
+            "use server";
+            await signIn("google");
+          }}
+        >
+          <button className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20">
+            Sign in with Google
+          </button>
+        </form>
+      </>
     );
   }
 
