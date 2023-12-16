@@ -1,12 +1,11 @@
-/* eslint-disable @typescript-eslint/unbound-method */
 /* @see https://github.com/nextauthjs/next-auth/pull/8932 */
 
-import Facebook from "@auth/core/providers/facebook";
-import Google from "@auth/core/providers/google";
-import type { DefaultSession } from "@auth/core/types";
+import type { DefaultSession } from "next-auth";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
-import { db, tableCreator } from "@reservue/db";
 import NextAuth from "next-auth";
+import Discord from "next-auth/providers/discord";
+
+import { db, tableCreator } from "@reservue/db";
 
 export type { Session } from "next-auth";
 
@@ -25,7 +24,7 @@ export const {
   signOut,
 } = NextAuth({
   adapter: DrizzleAdapter(db, tableCreator),
-  providers: [Google, Facebook],
+  providers: [Discord],
   callbacks: {
     session: ({ session, user }) => ({
       ...session,
