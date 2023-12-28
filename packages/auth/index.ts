@@ -3,7 +3,8 @@
 import type { DefaultSession } from "next-auth";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import NextAuth from "next-auth";
-import Discord from "next-auth/providers/discord";
+import Facebook from "next-auth/providers/facebook";
+import Google from "next-auth/providers/google";
 
 import { db, tableCreator } from "@reservue/db";
 
@@ -24,7 +25,16 @@ export const {
   signOut,
 } = NextAuth({
   adapter: DrizzleAdapter(db, tableCreator),
-  providers: [Discord],
+  providers: [
+    Facebook,
+    Google({
+      authorization: {
+        params: {
+          prompt: "login",
+        },
+      },
+    }),
+  ],
   callbacks: {
     session: ({ session, user }) => ({
       ...session,
