@@ -1,4 +1,4 @@
-import { Facebook, Mail } from "lucide-react";
+import { Facebook } from "lucide-react";
 
 import { auth, signIn, signOut } from "@reservue/auth";
 
@@ -18,7 +18,7 @@ export async function AuthShowcase() {
           }}
         >
           <Button>
-            <Facebook /> Sign in with Facebook
+            <Facebook className="mr-2 h-4 w-4" /> Sign in with Facebook
           </Button>
         </form>
         <form
@@ -28,7 +28,7 @@ export async function AuthShowcase() {
           }}
         >
           <Button>
-            <Mail />
+            <Icons.google className="mr-2 h-4 w-4" />
             Sign in with Google
           </Button>
         </form>
