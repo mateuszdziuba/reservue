@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 
 import type { RouterOutputs } from "@reservue/api";
 
-import { api } from "~/trpc/react";
+import { Badge } from "~/components/ui/badge";
+import { Button } from "~/components/ui/button";
 import {
   Card,
   CardContent,
@@ -14,9 +14,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../components/ui/card";
-import { Badge } from "./ui/badge";
-import { Button } from "./ui/button";
+} from "~/components/ui/card";
 import {
   Form,
   FormControl,
@@ -25,8 +23,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./ui/form";
-import { Input } from "./ui/input";
+} from "~/components/ui/form";
+import { Input } from "~/components/ui/input";
+import { api } from "~/trpc/react";
 
 export function CreateBussinessForm() {
   const utils = api.useUtils();
@@ -75,7 +74,7 @@ export function CreateBussinessForm() {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Username</FormLabel>
+              <FormLabel>Name</FormLabel>
               <FormControl>
                 <Input placeholder="shadcn" {...field} />
               </FormControl>

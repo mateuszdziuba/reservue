@@ -1,4 +1,9 @@
+import { Facebook, Mail } from "lucide-react";
+
 import { auth, signIn, signOut } from "@reservue/auth";
+
+import { Button } from "~/components/ui/button";
+import { Icons } from "./icons";
 
 export async function AuthShowcase() {
   const session = await auth();
@@ -12,9 +17,9 @@ export async function AuthShowcase() {
             await signIn("facebook");
           }}
         >
-          <button className="rounded-full bg-black px-10 py-3 font-semibold no-underline transition hover:bg-white/20">
-            Sign in with Facebook
-          </button>
+          <Button>
+            <Facebook /> Sign in with Facebook
+          </Button>
         </form>
         <form
           action={async () => {
@@ -22,9 +27,10 @@ export async function AuthShowcase() {
             await signIn("google");
           }}
         >
-          <button className="rounded-full bg-black px-10 py-3 font-semibold no-underline transition hover:bg-white/20">
+          <Button>
+            <Mail />
             Sign in with Google
-          </button>
+          </Button>
         </form>
       </div>
     );
@@ -32,7 +38,7 @@ export async function AuthShowcase() {
 
   return (
     <div className="flex items-center justify-center gap-4">
-      <p className="text-center text-2xl text-white">
+      <p className="text-center text-2xl text-black">
         {session && <span>Logged in as {session.user.name}</span>}
       </p>
 
@@ -42,9 +48,7 @@ export async function AuthShowcase() {
           await signOut();
         }}
       >
-        <button className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20">
-          Sign out
-        </button>
+        <Button>Sign out</Button>
       </form>
     </div>
   );

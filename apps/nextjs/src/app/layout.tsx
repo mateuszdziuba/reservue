@@ -6,8 +6,8 @@ import "~/styles/globals.css";
 import { cache } from "react";
 import { headers } from "next/headers";
 
+import { Navbar } from "~/components/navbar";
 import { TRPCReactProvider } from "~/trpc/react";
-import { Navbar } from "../components/navbar";
 
 const fontSans = Inter({
   subsets: ["latin"],
