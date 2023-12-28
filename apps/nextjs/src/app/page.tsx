@@ -1,12 +1,13 @@
 import { Suspense } from "react";
+import Link from "next/link";
+import { Scissors } from "lucide-react";
 
-import { api } from "~/trpc/server";
-import { AuthShowcase } from "./_components/auth-showcase";
 import {
-  CreatePostForm,
-  PostCardSkeleton,
-  PostList,
-} from "./_components/posts";
+  BussinessCardSkeleton,
+  BussinessList,
+} from "../components/bussinesses";
+import { Card, CardContent } from "../components/ui/card";
+import { Input } from "../components/ui/input";
 
 export const runtime = "edge";
 
@@ -14,32 +15,56 @@ export default async function HomePage() {
   // You don't need to fetch these here, just showing different usages
   // If you don't want the Suspense loading state, you could pass these
   // posts as props as use as initialData in the query.
-  const posts = await api.post.all.query();
-  console.log("RSC Posts:", posts);
 
   return (
-    <main className="flex h-screen flex-col items-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
-      <div className="container mt-12 flex flex-col items-center justify-center gap-4 py-8">
-        <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
-          Create <span className="text-pink-400">T3</span> Turbo
-        </h1>
-        <AuthShowcase />
+    <>
+      <main className="flex-1 bg-gray-100 py-8">
+        <div className="mx-auto max-w-5xl px-6">
+          <div className="mb-8">
+            <Input
+              className="h-12 w-full"
+              placeholder="Search for a service..."
+            />
+          </div>
+          <h2 className="mb-4 text-2xl font-bold">Categories</h2>
+          <div className="mb-8 grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4">
+            <Card>
+              <CardContent className="flex items-center">
+                <Scissors className="mr-2 h-8 w-8" />
+                <span>Barber Services</span>
+              </CardContent>
+            </Card>
+          </div>
+          <h2 className="mb-4 text-2xl font-bold">Featured Services</h2>
 
-        <CreatePostForm />
-        <div className="h-[40vh] w-full max-w-2xl overflow-y-scroll">
           <Suspense
             fallback={
-              <div className="flex w-full flex-col gap-4">
-                <PostCardSkeleton />
-                <PostCardSkeleton />
-                <PostCardSkeleton />
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <BussinessCardSkeleton />
+                <BussinessCardSkeleton />
+                <BussinessCardSkeleton />
               </div>
             }
           >
-            <PostList />
+            <BussinessList />
           </Suspense>
         </div>
-      </div>
-    </main>
+      </main>
+      <footer className="bg-white px-6 py-4">
+        <div className="mx-auto flex max-w-5xl items-center justify-between">
+          <div className="text-sm text-gray-700">
+            © reservue. All rights reserved.
+          </div>
+          <nav className="space-x-4">
+            <Link className="text-sm hover:underline" href="#">
+              Privacy Policy
+            </Link>
+            <Link className="text-sm hover:underline" href="#">
+              Terms & Conditions
+            </Link>
+          </nav>
+        </div>
+      </footer>
+    </>
   );
 }

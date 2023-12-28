@@ -7,6 +7,7 @@ import { cache } from "react";
 import { headers } from "next/headers";
 
 import { TRPCReactProvider } from "~/trpc/react";
+import { Navbar } from "../components/navbar";
 
 const fontSans = Inter({
   subsets: ["latin"],
@@ -37,6 +38,7 @@ export default function Layout(props: { children: React.ReactNode }) {
     <html lang="en">
       <body className={["font-sans", fontSans.variable].join(" ")}>
         <TRPCReactProvider headersPromise={getHeaders()}>
+          <Navbar />
           {props.children}
         </TRPCReactProvider>
       </body>
