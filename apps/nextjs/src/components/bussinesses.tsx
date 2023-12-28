@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useForm } from "react-hook-form";
 
 import type { RouterOutputs } from "@reservue/api";
 
@@ -16,70 +17,110 @@ import {
 } from "../components/ui/card";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "./ui/form";
+import { Input } from "./ui/input";
 
 export function CreateBussinessForm() {
   const utils = api.useUtils();
 
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+  const form = useForm({ defaultValues: { name: "", description: "" } });
 
   const { mutateAsync: createBussiness, error } =
     api.bussiness.create.useMutation({
       async onSuccess() {
-        setName("");
-        setDescription("");
+        form.reset();
         await utils.bussiness.all.invalidate();
       },
     });
 
+  async function onSubmit(values, e) {
+    e.preventDefault();
+    try {
+      await createBussiness({
+        name: values.name,
+        description: values.description,
+      });
+      if (error?.data?.zodError?.fieldErrors.name) {
+        form.setError("name", {
+          message: error?.data?.zodError?.fieldErrors.name[0],
+        });
+      }
+      if (error?.data?.zodError?.fieldErrors.description) {
+        form.setError("description", {
+          message: error?.data?.zodError?.fieldErrors.description[0],
+        });
+      }
+      await utils.bussiness.all.invalidate();
+    } catch {
+      // noop
+    }
+  }
+
   return (
-    <form
-      className="flex w-full max-w-2xl flex-col"
-      onSubmit={async (e) => {
-        e.preventDefault();
-        try {
-          await createBussiness({
-            name,
-            description,
-          });
-          setName("");
-          setDescription("");
-          await utils.bussiness.all.invalidate();
-        } catch {
-          // noop
-        }
-      }}
-    >
-      <input
-        className="mb-2 rounded bg-white/10 p-2 text-white"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholder="Name"
-      />
-      {error?.data?.zodError?.fieldErrors.name && (
-        <span className="mb-2 text-red-500">
-          {error.data.zodError.fieldErrors.name}
-        </span>
-      )}
-      <input
-        className="mb-2 rounded bg-white/10 p-2 text-white"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        placeholder="Description"
-      />
-      {error?.data?.zodError?.fieldErrors.description && (
-        <span className="mb-2 text-red-500">
-          {error.data.zodError.fieldErrors.description}
-        </span>
-      )}
-      {}
-      <button type="submit" className="rounded bg-pink-400 p-2 font-bold">
-        Create
-      </button>
-      {error?.data?.code === "UNAUTHORIZED" && (
-        <span className="mt-2 text-red-500">You must be logged in to post</span>
-      )}
-    </form>
+    <Form {...form}>
+      <form
+        className="flex w-full max-w-2xl flex-col"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Username</FormLabel>
+              <FormControl>
+                <Input placeholder="shadcn" {...field} />
+              </FormControl>
+              <FormDescription>
+                This is your public display name.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        {error?.data?.zodError?.fieldErrors.name && (
+          <span className="mb-2 text-red-500">
+            {error.data.zodError.fieldErrors.name}
+          </span>
+        )}
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+                <Input placeholder="shadcn" {...field} />
+              </FormControl>
+              <FormDescription>
+                This is your public display name.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        {error?.data?.zodError?.fieldErrors.description && (
+          <span className="mb-2 text-red-500">
+            {error.data.zodError.fieldErrors.description}
+          </span>
+        )}
+        <Button type="submit">Submit</Button>
+
+        {error?.data?.code === "UNAUTHORIZED" && (
+          <span className="mt-2 text-red-500">
+            You must be logged in to post
+          </span>
+        )}
+      </form>
+    </Form>
   );
 }
 
