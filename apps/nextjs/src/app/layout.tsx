@@ -5,8 +5,11 @@ import "~/styles/globals.css";
 
 import { cache } from "react";
 import { headers } from "next/headers";
+import { Book } from "lucide-react";
 
-import { Navbar } from "~/components/navbar";
+import BusinessSwitcher from "~/components/business-switcher";
+import { MainNav } from "~/components/navbar";
+import { UserNav } from "~/components/user-nav";
 import { TRPCReactProvider } from "~/trpc/react";
 
 const fontSans = Inter({
@@ -38,7 +41,17 @@ export default function Layout(props: { children: React.ReactNode }) {
     <html lang="en">
       <body className={["font-sans", fontSans.variable].join(" ")}>
         <TRPCReactProvider headersPromise={getHeaders()}>
-          <Navbar />
+          <header className="flex h-16 items-center px-4">
+            <div className="flex items-center text-black">
+              <Book className="mr-2 h-8 w-8" />
+              <span className="text-2xl font-bold ">reservue</span>
+            </div>
+            <BusinessSwitcher />
+            <MainNav />
+            <div className="ml-auto flex items-center space-x-4">
+              <UserNav />
+            </div>
+          </header>
           {props.children}
         </TRPCReactProvider>
       </body>
