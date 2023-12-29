@@ -27,23 +27,23 @@ import {
 import { Input } from "~/components/ui/input";
 import { api } from "~/trpc/react";
 
-export function CreateBussinessForm() {
+export function CreateBusinessForm() {
   const utils = api.useUtils();
 
   const form = useForm({ defaultValues: { name: "", description: "" } });
 
-  const { mutateAsync: createBussiness, error } =
-    api.bussiness.create.useMutation({
+  const { mutateAsync: createBusiness, error } =
+    api.business.create.useMutation({
       async onSuccess() {
         form.reset();
-        await utils.bussiness.all.invalidate();
+        await utils.business.all.invalidate();
       },
     });
 
   async function onSubmit(values, e) {
     e.preventDefault();
     try {
-      await createBussiness({
+      await createBusiness({
         name: values.name,
         description: values.description,
       });
@@ -57,7 +57,7 @@ export function CreateBussinessForm() {
           message: error?.data?.zodError?.fieldErrors.description[0],
         });
       }
-      await utils.bussiness.all.invalidate();
+      await utils.business.all.invalidate();
     } catch {
       // noop
     }
@@ -123,18 +123,18 @@ export function CreateBussinessForm() {
   );
 }
 
-export function BussinessList() {
-  const [bussinesses] = api.bussiness.all.useSuspenseQuery();
+export function BusinessList() {
+  const [businesses] = api.business.all.useSuspenseQuery();
 
-  if (bussinesses.length === 0) {
+  if (businesses.length === 0) {
     return (
       <div className="relative grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        <BussinessCardSkeleton pulse={false} />
-        <BussinessCardSkeleton pulse={false} />
-        <BussinessCardSkeleton pulse={false} />
+        <BusinessCardSkeleton pulse={false} />
+        <BusinessCardSkeleton pulse={false} />
+        <BusinessCardSkeleton pulse={false} />
 
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/10">
-          <p className="text-2xl font-bold text-white">No bussinesses yet</p>
+          <p className="text-2xl font-bold text-white">No businesses yet</p>
         </div>
       </div>
     );
@@ -142,24 +142,24 @@ export function BussinessList() {
 
   return (
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {bussinesses.map((p) => {
-        return <BussinessCard key={p.id} bussiness={p} />;
+      {businesses.map((p) => {
+        return <BusinessCard key={p.id} business={p} />;
       })}
     </div>
   );
 }
 
-export function BussinessCard(props: {
-  bussiness: RouterOutputs["bussiness"]["all"][number];
+export function BusinessCard(props: {
+  business: RouterOutputs["business"]["all"][number];
 }) {
   const utils = api.useUtils();
-  const deleteBussiness = api.bussiness.delete.useMutation();
+  const deleteBusiness = api.business.delete.useMutation();
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{props.bussiness.name}</CardTitle>
-        <CardDescription>{props.bussiness.description}</CardDescription>
+        <CardTitle>{props.business.name}</CardTitle>
+        <CardDescription>{props.business.description}</CardDescription>
       </CardHeader>
       <CardContent>
         <Badge>Featured</Badge>
@@ -170,8 +170,8 @@ export function BussinessCard(props: {
         </Link>
         <Button
           onClick={async () => {
-            await deleteBussiness.mutateAsync(props.bussiness.id);
-            await utils.bussiness.all.invalidate();
+            await deleteBusiness.mutateAsync(props.business.id);
+            await utils.business.all.invalidate();
           }}
         >
           DELETE
@@ -181,7 +181,7 @@ export function BussinessCard(props: {
   );
 }
 
-export function BussinessCardSkeleton(props: { pulse?: boolean }) {
+export function BusinessCardSkeleton(props: { pulse?: boolean }) {
   const { pulse = true } = props;
   return (
     <Card>

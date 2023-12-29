@@ -3,7 +3,7 @@ import { serial, timestamp, varchar } from "drizzle-orm/mysql-core";
 
 import { mySqlTable } from "./_table";
 
-export const bussiness = mySqlTable("bussiness", {
+export const business = mySqlTable("business", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
   description: varchar("description", { length: 256 }).notNull(),

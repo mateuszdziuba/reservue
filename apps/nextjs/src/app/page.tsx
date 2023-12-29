@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { Scissors } from "lucide-react";
 
-import { BussinessCardSkeleton, BussinessList } from "~/components/bussinesses";
+import { BusinessCardSkeleton, BusinessList } from "~/components/businesses";
 import { Card, CardContent } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 
@@ -37,13 +37,13 @@ export default async function HomePage() {
           <Suspense
             fallback={
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                <BussinessCardSkeleton />
-                <BussinessCardSkeleton />
-                <BussinessCardSkeleton />
+                <BusinessCardSkeleton />
+                <BusinessCardSkeleton />
+                <BusinessCardSkeleton />
               </div>
             }
           >
-            <BussinessList />
+            <BusinessList />
           </Suspense>
         </div>
       </main>

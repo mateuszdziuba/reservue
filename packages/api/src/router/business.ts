@@ -4,11 +4,11 @@ import { desc, eq, schema } from "@reservue/db";
 
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
-export const bussinessRouter = createTRPCRouter({
+export const businessRouter = createTRPCRouter({
   all: publicProcedure.query(({ ctx }) => {
-    // return ctx.db.select().from(schema.bussiness).orderBy(desc(schema.bussiness.id));
-    return ctx.db.query.bussiness.findMany({
-      orderBy: desc(schema.bussiness.id),
+    // return ctx.db.select().from(schema.business).orderBy(desc(schema.business.id));
+    return ctx.db.query.business.findMany({
+      orderBy: desc(schema.business.id),
       limit: 10,
     });
   }),
@@ -18,11 +18,11 @@ export const bussinessRouter = createTRPCRouter({
     .query(({ ctx, input }) => {
       // return ctx.db
       //   .select()
-      //   .from(schema.bussiness)
-      //   .where(eq(schema.bussiness.id, input.id));
+      //   .from(schema.business)
+      //   .where(eq(schema.business.id, input.id));
 
-      return ctx.db.query.bussiness.findFirst({
-        where: eq(schema.bussiness.id, input.id),
+      return ctx.db.query.business.findFirst({
+        where: eq(schema.business.id, input.id),
       });
     }),
 
@@ -34,12 +34,10 @@ export const bussinessRouter = createTRPCRouter({
       }),
     )
     .mutation(({ ctx, input }) => {
-      return ctx.db.insert(schema.bussiness).values(input);
+      return ctx.db.insert(schema.business).values(input);
     }),
 
   delete: protectedProcedure.input(z.number()).mutation(({ ctx, input }) => {
-    return ctx.db
-      .delete(schema.bussiness)
-      .where(eq(schema.bussiness.id, input));
+    return ctx.db.delete(schema.business).where(eq(schema.business.id, input));
   }),
 });

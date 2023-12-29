@@ -1,5 +1,5 @@
-import { CreateBussinessForm } from "~/components/bussinesses";
+import { CreateBusinessForm } from "~/components/businesses";
 
 export default function Login() {
-  return <CreateBussinessForm />;
+  return <CreateBusinessForm />;
 }

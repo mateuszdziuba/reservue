@@ -24,7 +24,7 @@ export async function Navbar() {
         <span className="text-2xl font-bold ">reservue</span>
       </div>
       <nav className="space-x-4">
-        <Link className="text-sm font-medium hover:underline" href="#">
+        <Link className="text-sm font-medium hover:underline" href="/">
           Home
         </Link>
         <Link className="text-sm font-medium hover:underline" href="#">
