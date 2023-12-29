@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { desc, eq, schema } from "@reservue/db";
+import { and, desc, eq, schema } from "@reservue/db";
 
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
@@ -26,6 +26,15 @@ export const businessRouter = createTRPCRouter({
       });
     }),
 
+  byOwnerId: protectedProcedure.query(({ ctx }) => {
+    // return ctx.db.select().from(schema.business).orderBy(desc(schema.business.id));
+    return ctx.db.query.business.findMany({
+      where: eq(schema.business.ownerId, ctx.session.user.id),
+      orderBy: desc(schema.business.id),
+      limit: 10,
+    });
+  }),
+
   create: protectedProcedure
     .input(
       z.object({
@@ -34,10 +43,26 @@ export const businessRouter = createTRPCRouter({
       }),
     )
     .mutation(({ ctx, input }) => {
-      return ctx.db.insert(schema.business).values(input);
+      if (!ctx.session?.user?.id) {
+        throw new Error("User not authenticated");
+      }
+
+      return ctx.db
+        .insert(schema.business)
+        .values({ ...input, ownerId: ctx.session.user.id });
     }),
 
   delete: protectedProcedure.input(z.number()).mutation(({ ctx, input }) => {
-    return ctx.db.delete(schema.business).where(eq(schema.business.id, input));
+    if (!ctx.session?.user?.id) {
+      throw new Error("User not authenticated");
+    }
+    return ctx.db
+      .delete(schema.business)
+      .where(
+        and(
+          eq(schema.business.id, input),
+          eq(schema.business.ownerId, ctx.session.user.id),
+        ),
+      );
   }),
 });

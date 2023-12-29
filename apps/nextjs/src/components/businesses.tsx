@@ -124,7 +124,7 @@ export function CreateBusinessForm() {
 }
 
 export function BusinessList() {
-  const [businesses] = api.business.all.useSuspenseQuery();
+  const [businesses] = api.business.byOwnerId.useSuspenseQuery();
 
   if (businesses.length === 0) {
     return (
