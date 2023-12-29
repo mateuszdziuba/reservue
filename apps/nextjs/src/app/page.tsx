@@ -1,10 +1,14 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { Scissors } from "lucide-react";
 
-import { BusinessCardSkeleton, BusinessList } from "~/components/businesses";
-import { Card, CardContent } from "~/components/ui/card";
-import { Input } from "~/components/ui/input";
+import { auth } from "@reservue/auth";
+
+import { AuthShowcase } from "~/components/auth-showcase";
+import {
+  BusinessCardSkeleton,
+  BusinessList,
+  CreateBusinessForm,
+} from "~/components/businesses";
 
 export const runtime = "edge";
 
@@ -12,27 +16,15 @@ export default async function HomePage() {
   // You don't need to fetch these here, just showing different usages
   // If you don't want the Suspense loading state, you could pass these
   // posts as props as use as initialData in the query.
+  const session = await auth();
+
+  if (!session) return <AuthShowcase />;
 
   return (
     <>
       <main className="flex-1 bg-gray-100 py-8">
         <div className="mx-auto max-w-5xl px-6">
-          <div className="mb-8">
-            <Input
-              className="h-12 w-full"
-              placeholder="Search for a service..."
-            />
-          </div>
-          <h2 className="mb-4 text-2xl font-bold">Categories</h2>
-          <div className="mb-8 grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4">
-            <Card>
-              <CardContent className="flex items-center">
-                <Scissors className="mr-2 h-8 w-8" />
-                <span>Barber Services</span>
-              </CardContent>
-            </Card>
-          </div>
-          <h2 className="mb-4 text-2xl font-bold">Featured Services</h2>
+          <h2 className="mb-4 text-2xl font-bold">My businesses</h2>
 
           <Suspense
             fallback={
@@ -46,6 +38,7 @@ export default async function HomePage() {
             <BusinessList />
           </Suspense>
         </div>
+        <CreateBusinessForm />
       </main>
       <footer className="bg-white px-6 py-4">
         <div className="mx-auto flex max-w-5xl items-center justify-between">
