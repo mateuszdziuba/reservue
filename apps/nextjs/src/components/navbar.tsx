@@ -1,40 +1,35 @@
+import type { Route } from "next";
 import Link from "next/link";
 
 import { cn } from "~/lib/utils";
 
 export function MainNav({
   className,
+  navItems,
   ...props
-}: React.HTMLAttributes<HTMLElement>) {
+}: React.HTMLAttributes<HTMLElement> & {
+  navItems: { href: Route; title: string }[];
+}) {
   return (
     <nav
-      className={cn("flex items-center space-x-4 lg:space-x-6", className)}
+      className={cn(
+        "hidden items-center space-x-4 md:flex lg:space-x-6",
+        className,
+      )}
       {...props}
     >
-      <Link
-        href="/"
-        className="hover:text-primary text-sm font-medium transition-colors"
-      >
-        Overview
-      </Link>
-      <Link
-        href="/"
-        className="text-muted-foreground hover:text-primary text-sm font-medium transition-colors"
-      >
-        Customers
-      </Link>
-      <Link
-        href="/"
-        className="text-muted-foreground hover:text-primary text-sm font-medium transition-colors"
-      >
-        Products
-      </Link>
-      <Link
-        href="/"
-        className="text-muted-foreground hover:text-primary text-sm font-medium transition-colors"
-      >
-        Settings
-      </Link>
+      {navItems.map((item, idx) => (
+        <Link
+          href={item.href}
+          key={`${item.href}-${idx}`}
+          className={cn(
+            "hover:text-primary text-sm font-medium transition-colors",
+            idx !== 0 && "text-muted-foreground",
+          )}
+        >
+          {item.title}
+        </Link>
+      ))}
     </nav>
   );
 }

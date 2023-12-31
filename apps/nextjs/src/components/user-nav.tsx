@@ -57,7 +57,7 @@ export async function UserNav() {
         </DropdownMenu>
       ) : (
         <Button asChild>
-          <Link href="/login">Sign In</Link>
+          <Link href="/login">Zaloguj się</Link>
         </Button>
       )}
     </>

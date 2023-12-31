@@ -24,7 +24,7 @@ export function CreateBusinessForm() {
     api.business.create.useMutation({
       async onSuccess() {
         form.reset();
-        await utils.business.all.invalidate();
+        await utils.business.byOwnerId.invalidate();
       },
     });
 
@@ -45,7 +45,7 @@ export function CreateBusinessForm() {
           message: error?.data?.zodError?.fieldErrors.description[0],
         });
       }
-      await utils.business.all.invalidate();
+      await utils.business.byOwnerId.invalidate();
     } catch {
       // noop
     }

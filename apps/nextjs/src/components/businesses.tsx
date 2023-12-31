@@ -14,7 +14,6 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-
 import { api } from "~/trpc/react";
 
 export function BusinessList() {
@@ -65,7 +64,7 @@ export function BusinessCard(props: {
         <Button
           onClick={async () => {
             await deleteBusiness.mutateAsync(props.business.id);
-            await utils.business.all.invalidate();
+            await utils.business.byOwnerId.invalidate();
           }}
         >
           DELETE
