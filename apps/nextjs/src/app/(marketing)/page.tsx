@@ -15,18 +15,18 @@ export const runtime = "edge";
 export default function Home() {
   return (
     <main className="flex min-h-screen w-full flex-col items-center justify-center pt-48">
-      <div className="z-10 min-h-[80vh] w-full max-w-4xl px-5 xl:px-0">
+      <div className="z-10 min-h-[60vh] w-full max-w-4xl px-5 xl:px-0">
         <h1
-          className="animate-fade-up from-foreground to-muted-foreground bg-gradient-to-br bg-clip-text text-center text-4xl font-bold tracking-[-0.02em] text-transparent opacity-0 drop-shadow-sm md:text-7xl/[5rem]"
-          style={{ animationDelay: "0.20s", animationFillMode: "forwards" }}
+          className="animate-fade-up from-foreground to-muted-foreground fill-mode-forwards bg-gradient-to-br bg-clip-text text-center text-4xl font-bold tracking-[-0.02em] text-transparent opacity-0 drop-shadow-sm md:text-7xl/[5rem]"
+          style={{ animationDelay: "0.20s" }}
         >
           <Balancer>
             Wszystko czego potrzebujesz do zarządzania gabinetem
           </Balancer>
         </h1>
         <p
-          className="animate-fade-up text-muted-foreground/80 mt-6 text-center opacity-0 md:text-xl"
-          style={{ animationDelay: "0.30s", animationFillMode: "forwards" }}
+          className="animate-fade-up text-muted-foreground/80 fill-mode-forwards mt-6 text-center opacity-0 md:text-xl"
+          style={{ animationDelay: "0.30s" }}
         >
           <Balancer>
             Reservue to aplikacja, która pomoze Ci w zarządzaniu Twoim

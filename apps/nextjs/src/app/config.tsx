@@ -11,24 +11,17 @@ import {
 
 export const guestNavItems = [
   {
-    href: "/dashboard",
+    href: "/",
     title: "Strona główna",
   },
 ] satisfies { href: Route; title: string }[];
 
 export const authNavItems = [
   ...guestNavItems,
+  { href: "/dashboard", title: "Dashboard" },
   {
-    href: "/pricing",
-    title: "Cennik",
-  },
-  {
-    href: "/dashboard",
-    title: "Products",
-  },
-  {
-    href: "/dashboard",
-    title: "Settings",
+    href: "/customers",
+    title: "Klienci",
   },
 ] satisfies { href: Route; title: string }[];
 

@@ -2,24 +2,32 @@ import type { ReactNode } from "react";
 import { Suspense } from "react";
 import { Book } from "lucide-react";
 
+import BusinessSwitcher from "~/components/business-switcher";
 import { DashboardLink } from "~/components/dashboard-link";
 import { SiteFooter } from "~/components/footer";
 import { MainNav } from "~/components/main-nav";
-import { guestNavItems } from "../config";
+import { UserNav } from "~/components/user-nav";
+import { authNavItems, guestNavItems } from "../config";
 
 export default function MarketingLayout(props: { children: ReactNode }) {
   return (
     <div className="flex min-h-screen flex-col">
       <header className="bg-background z-50 flex h-16 items-center border-b px-4">
-        <div className="mr-8 hidden items-center md:flex">
-          <Book className="mr-2 h-6 w-6" />
-          <span className="text-lg font-bold tracking-tight">reservue</span>
+        <div className="flex space-x-4">
+          <div className="mr-8 hidden items-center md:flex">
+            <Book className="mr-2 h-6 w-6" />
+            <span className="text-lg font-bold tracking-tight">reservue</span>
+          </div>
+
+          {/* <MobileDropdown /> */}
+          <MainNav navItems={authNavItems} />
+          <Suspense>
+            <BusinessSwitcher />
+          </Suspense>
         </div>
-        {/* <MobileDropdown /> */}
-        <MainNav navItems={guestNavItems} />
         <div className="ml-auto flex items-center space-x-4">
           <Suspense>
-            <DashboardLink />
+            <UserNav />
           </Suspense>
         </div>
       </header>

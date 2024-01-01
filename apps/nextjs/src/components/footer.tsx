@@ -5,8 +5,8 @@ import { cn } from "~/lib/utils";
 
 export function SiteFooter(props: { className?: string }) {
   return (
-    <footer className={cn("container border-t", props.className)}>
-      <div className="my-4 grid grid-cols-2 md:flex md:items-center">
+    <footer className={cn("border-t", props.className)}>
+      <div className="container my-4 grid grid-cols-2 md:flex md:items-center">
         <Link
           href="/"
           className="col-start-1 row-start-1 flex items-center gap-2 md:mr-2"

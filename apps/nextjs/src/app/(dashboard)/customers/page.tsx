@@ -11,9 +11,9 @@ export default function Customers() {
   console.log(data);
 
   return (
-    <>
+    <div className="container">
       {data && <DataTable data={data} columns={columns} />}
       <CreateCustomerForm />
-    </>
+    </div>
   );
 }

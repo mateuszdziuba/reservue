@@ -1,5 +1,8 @@
+"use client";
+
 import type { Route } from "next";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import { cn } from "~/lib/utils";
 
@@ -10,6 +13,8 @@ export function MainNav({
 }: React.HTMLAttributes<HTMLElement> & {
   navItems: { href: Route; title: string }[];
 }) {
+  const pathname = usePathname();
+
   return (
     <nav
       className={cn(
@@ -24,7 +29,7 @@ export function MainNav({
           key={`${item.href}-${idx}`}
           className={cn(
             "hover:text-primary text-sm font-medium transition-colors",
-            idx !== 0 && "text-muted-foreground",
+            pathname !== item.href && "text-muted-foreground",
           )}
         >
           {item.title}

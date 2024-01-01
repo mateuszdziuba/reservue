@@ -10,26 +10,28 @@ export async function AuthShowcase() {
 
   if (!session) {
     return (
-      <div className="flex justify-center gap-2 text-white">
+      <div className="flex flex-col gap-2">
         <form
+          className="min-w-full"
           action={async () => {
             "use server";
             await signIn("facebook");
           }}
         >
-          <Button>
-            <Facebook className="mr-2 h-4 w-4" /> Sign in with Facebook
+          <Button className="min-w-full">
+            <Facebook className="mr-2 h-4 w-4" /> Facebook
           </Button>
         </form>
         <form
+          className="min-w-full"
           action={async () => {
             "use server";
             await signIn("google");
           }}
         >
-          <Button>
+          <Button className="min-w-full">
             <Icons.google className="mr-2 h-4 w-4" />
-            Sign in with Google
+            Google
           </Button>
         </form>
       </div>
