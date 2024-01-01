@@ -15,7 +15,7 @@ export async function AuthShowcase() {
           className="min-w-full"
           action={async () => {
             "use server";
-            await signIn("facebook");
+            await signIn("facebook", { redirectTo: "/dashboard" });
           }}
         >
           <Button className="min-w-full">
@@ -26,7 +26,7 @@ export async function AuthShowcase() {
           className="min-w-full"
           action={async () => {
             "use server";
-            await signIn("google");
+            await signIn("google", { redirectTo: "/dashboard" });
           }}
         >
           <Button className="min-w-full">

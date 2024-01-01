@@ -2,14 +2,17 @@ import type { ReactNode } from "react";
 import { Suspense } from "react";
 import { Book } from "lucide-react";
 
+import { auth } from "@reservue/auth";
+
 import BusinessSwitcher from "~/components/business-switcher";
-import { DashboardLink } from "~/components/dashboard-link";
 import { SiteFooter } from "~/components/footer";
 import { MainNav } from "~/components/main-nav";
 import { UserNav } from "~/components/user-nav";
-import { authNavItems, guestNavItems } from "../config";
+import { authNavItems } from "../config";
 
-export default function MarketingLayout(props: { children: ReactNode }) {
+export default async function MarketingLayout(props: { children: ReactNode }) {
+  const session = await auth();
+
   return (
     <div className="flex min-h-screen flex-col">
       <header className="bg-background z-50 flex h-16 items-center border-b px-4">
@@ -21,9 +24,11 @@ export default function MarketingLayout(props: { children: ReactNode }) {
 
           {/* <MobileDropdown /> */}
           <MainNav navItems={authNavItems} />
-          <Suspense>
-            <BusinessSwitcher />
-          </Suspense>
+          {session && (
+            <Suspense>
+              <BusinessSwitcher />
+            </Suspense>
+          )}
         </div>
         <div className="ml-auto flex items-center space-x-4">
           <Suspense>

@@ -6,9 +6,6 @@ import "~/styles/globals.css";
 import { cache } from "react";
 import { headers } from "next/headers";
 
-import { auth } from "@reservue/auth";
-
-import { Header } from "~/components/header";
 import { TRPCReactProvider } from "~/trpc/react";
 
 const fontSans = Inter({

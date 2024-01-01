@@ -8,8 +8,6 @@ import { DataTable } from "./data-table";
 export default function Customers() {
   const { data } = api.customer.all.useQuery();
 
-  console.log(data);
-
   return (
     <div className="container">
       {data && <DataTable data={data} columns={columns} />}
