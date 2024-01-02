@@ -1,5 +1,5 @@
 import { relations, sql } from "drizzle-orm";
-import { serial, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { int, serial, timestamp, varchar } from "drizzle-orm/mysql-core";
 
 import { mySqlTable } from "./_table";
 import { users } from "./auth";
@@ -7,18 +7,21 @@ import { users } from "./auth";
 export const business = mySqlTable("business", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
-  description: varchar("description", { length: 256 }).notNull(),
-  picture: varchar("picture", { length: 256 }),
+  vatin: varchar("phone_number", { length: 10 }).notNull(),
+  streetName: varchar("street_name", { length: 256 }).notNull(),
+  streetNumber: int("street_number").notNull(),
+  apartmentNumber: int("apartment_number").notNull(),
+  postalCode: varchar("postal_code", { length: 6 }).notNull(),
+  city: varchar("street_name", { length: 256 }).notNull(),
+  ownerFirstName: varchar("first_name", { length: 256 }).notNull(),
+  ownerLastName: varchar("last_name", { length: 256 }).notNull(),
+  ownerPhoneNumber: varchar("phone_number", { length: 256 }).notNull(),
   createdAt: timestamp("created_at")
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
   updatedAt: timestamp("updatedAt").onUpdateNow(),
   ownerId: varchar("owner_id", { length: 255 }).notNull(),
 });
-
-export const usersRelations = relations(users, ({ many }) => ({
-  business: many(business),
-}));
 
 export const bussinessRelations = relations(business, ({ one }) => ({
   user: one(users, {

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Suspense } from "react";
+import { redirect } from "next/navigation";
 import { Book } from "lucide-react";
 
 import { auth } from "@reservue/auth";
@@ -8,10 +9,19 @@ import BusinessSwitcher from "~/components/business-switcher";
 import { SiteFooter } from "~/components/footer";
 import { MainNav } from "~/components/main-nav";
 import { UserNav } from "~/components/user-nav";
+import { api } from "~/trpc/server";
 import { authNavItems } from "../config";
 
 export default async function MarketingLayout(props: { children: ReactNode }) {
   const session = await auth();
+
+  if (!session) {
+    redirect("/signin");
+  }
+
+  const business = await api.business.byOwnerId.query();
+  if (!business) redirect("/");
+  console.log(business);
 
   return (
     <div className="flex min-h-screen flex-col">

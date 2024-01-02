@@ -1,6 +1,6 @@
 /* @see https://github.com/nextauthjs/next-auth/pull/8932 */
 
-import type { DefaultSession } from "next-auth";
+import type { Account, DefaultSession, Profile } from "next-auth";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import NextAuth from "next-auth";
 import Facebook from "next-auth/providers/facebook";
@@ -30,7 +30,9 @@ export const {
     Google({
       authorization: {
         params: {
-          prompt: "login",
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code",
         },
       },
     }),

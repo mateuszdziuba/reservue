@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { and, desc, eq, schema } from "@reservue/db";
+import { CreateBusinessSchema } from "@reservue/validators";
 
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
@@ -28,20 +29,13 @@ export const businessRouter = createTRPCRouter({
 
   byOwnerId: protectedProcedure.query(({ ctx }) => {
     // return ctx.db.select().from(schema.business).orderBy(desc(schema.business.id));
-    return ctx.db.query.business.findMany({
+    return ctx.db.query.business.findFirst({
       where: eq(schema.business.ownerId, ctx.session.user.id),
-      orderBy: desc(schema.business.id),
-      limit: 10,
     });
   }),
 
   create: protectedProcedure
-    .input(
-      z.object({
-        name: z.string().min(1),
-        description: z.string().min(1),
-      }),
-    )
+    .input(CreateBusinessSchema)
     .mutation(({ ctx, input }) => {
       if (!ctx.session?.user?.id) {
         throw new Error("User not authenticated");
