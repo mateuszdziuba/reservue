@@ -41,7 +41,7 @@ import {
 } from "~/components/ui/select";
 import { cn } from "~/lib/utils";
 import { api } from "~/trpc/react";
-import { CreateBusinessForm } from "./business-form";
+import { CreateBusinessForm } from "./create-business-form";
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<
   typeof PopoverTrigger
@@ -53,8 +53,6 @@ export default function BusinessSwitcher({ className }: BusinessSwitcherProps) {
   const [open, setOpen] = React.useState(false);
   const [showNewBusinessDialog, setShowNewBusinessDialog] =
     React.useState(false);
-
-  const [businesses] = api.business.byOwnerId.useSuspenseQuery();
 
   const groups = [
     {
@@ -68,7 +66,7 @@ export default function BusinessSwitcher({ className }: BusinessSwitcherProps) {
     },
     {
       label: "Businesses",
-      items: businesses?.map(({ id, name }) => ({ label: name, value: id })),
+      items: [],
     },
   ];
   const [selectedItem, setSelectedItem] = React.useState(groups[0]?.items[0]);

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import { and, desc, eq, schema } from "@reservue/db";
-import { CreateBusinessSchema } from "@reservue/validators";
+import { createBusinessSchema } from "@reservue/validators";
 
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
@@ -35,7 +35,7 @@ export const businessRouter = createTRPCRouter({
   }),
 
   create: protectedProcedure
-    .input(CreateBusinessSchema)
+    .input(createBusinessSchema)
     .mutation(({ ctx, input }) => {
       if (!ctx.session?.user?.id) {
         throw new Error("User not authenticated");

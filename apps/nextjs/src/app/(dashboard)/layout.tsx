@@ -20,8 +20,7 @@ export default async function MarketingLayout(props: { children: ReactNode }) {
   }
 
   const business = await api.business.byOwnerId.query();
-  if (!business) redirect("/");
-  console.log(business);
+  if (!business) redirect("/create-business");
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -34,11 +33,9 @@ export default async function MarketingLayout(props: { children: ReactNode }) {
 
           {/* <MobileDropdown /> */}
           <MainNav navItems={authNavItems} />
-          {session && (
-            <Suspense>
-              <BusinessSwitcher />
-            </Suspense>
-          )}
+          <Suspense>
+            <BusinessSwitcher />
+          </Suspense>
         </div>
         <div className="ml-auto flex items-center space-x-4">
           <Suspense>
