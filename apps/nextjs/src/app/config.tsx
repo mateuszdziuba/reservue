@@ -20,8 +20,20 @@ export const authNavItems = [
   ...guestNavItems,
   { href: "/dashboard", title: "Dashboard" },
   {
+    href: "/employees",
+    title: "Pracownicy",
+  },
+  {
     href: "/customers",
     title: "Klienci",
+  },
+  {
+    href: "/treatments",
+    title: "Zabiegi",
+  },
+  {
+    href: "/forms",
+    title: "Formularze",
   },
 ] satisfies { href: Route; title: string }[];
 
@@ -42,11 +54,6 @@ export const marketingFeatures = [
     icon: <HeartHandshake className="h-10 w-10" />,
     title: "Zabiegi",
     body: <>Stwórz bazę swoich zabiegów.</>,
-  },
-  {
-    icon: <FlaskRound className="h-10 w-10" />,
-    title: "Produkty",
-    body: <>Prowadź inwentarz swoich produktów.</>,
   },
   {
     icon: <FileQuestion className="h-10 w-10" />,

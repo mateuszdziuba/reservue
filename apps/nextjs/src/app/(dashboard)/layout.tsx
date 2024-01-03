@@ -29,13 +29,13 @@ export default async function MarketingLayout(props: { children: ReactNode }) {
           <div className="mr-8 hidden items-center md:flex">
             <Book className="mr-2 h-6 w-6" />
             <span className="text-lg font-bold tracking-tight">reservue</span>
+            {/* <Suspense>
+              <BusinessSwitcher />
+            </Suspense> */}
           </div>
 
           {/* <MobileDropdown /> */}
           <MainNav navItems={authNavItems} />
-          <Suspense>
-            <BusinessSwitcher />
-          </Suspense>
         </div>
         <div className="ml-auto flex items-center space-x-4">
           <Suspense>

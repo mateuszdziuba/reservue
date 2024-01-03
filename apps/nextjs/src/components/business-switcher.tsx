@@ -3,8 +3,6 @@
 import * as React from "react";
 import { Check, ChevronsUpDown, PlusCircle } from "lucide-react";
 
-import { auth } from "@reservue/auth";
-
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import {
@@ -56,7 +54,7 @@ export default function BusinessSwitcher({ className }: BusinessSwitcherProps) {
 
   const groups = [
     {
-      label: "Personal Account",
+      label: "Twoja firma",
       items: [
         {
           label: "Overall",
@@ -65,7 +63,7 @@ export default function BusinessSwitcher({ className }: BusinessSwitcherProps) {
       ],
     },
     {
-      label: "Businesses",
+      label: "Twoje placówki",
       items: [],
     },
   ];
