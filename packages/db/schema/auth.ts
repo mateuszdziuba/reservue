@@ -9,6 +9,7 @@ import {
 } from "drizzle-orm/mysql-core";
 
 import { mySqlTable } from "./_table";
+import { business } from "./business";
 
 export const users = mySqlTable("user", {
   id: varchar("id", { length: 255 }).notNull().primaryKey(),
@@ -21,8 +22,9 @@ export const users = mySqlTable("user", {
   image: varchar("image", { length: 255 }),
 });
 
-export const usersRelations = relations(users, ({ many }) => ({
+export const usersRelations = relations(users, ({ one, many }) => ({
   accounts: many(accounts),
+  business: one(business),
 }));
 
 export const accounts = mySqlTable(

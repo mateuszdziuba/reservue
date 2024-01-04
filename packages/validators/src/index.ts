@@ -14,3 +14,25 @@ export const createBusinessSchema = z.object({
   // ownerId is not included here as it's derived from the session context
 });
 export type CreateBusiness = z.infer<typeof createBusinessSchema>;
+
+const optionSchema = z.string().min(1).max(256);
+
+const questionSchema = z.string().min(1).max(256);
+
+const agreementSchema = z.object({
+  agreement: z.string().min(1).max(256),
+  required: z.boolean(),
+});
+
+export const componentSchema = z.object({
+  type: z.string().min(1).max(256),
+  question: questionSchema.optional(),
+  options: z.array(optionSchema).optional(),
+  agreements: z.array(agreementSchema).optional(),
+});
+
+export const createFormSchema = z.object({
+  title: z.string().min(1).max(256),
+  description: z.string().min(1).max(256),
+  components: z.array(componentSchema),
+});

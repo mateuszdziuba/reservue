@@ -3,6 +3,7 @@ import { serial, timestamp, varchar } from "drizzle-orm/mysql-core";
 
 import { mySqlTable } from "./_table";
 import { users } from "./auth";
+import { business } from "./business";
 
 export const customer = mySqlTable("customer", {
   id: serial("id").primaryKey(),
@@ -18,12 +19,8 @@ export const customer = mySqlTable("customer", {
   createdBy: varchar("created_by", { length: 255 }).notNull(),
 });
 
-export const usersRelations = relations(users, ({ many }) => ({
-  customer: many(customer),
-}));
-
-export const bussinessRelations = relations(customer, ({ one }) => ({
-  user: one(users, {
+export const customerRelations = relations(customer, ({ one }) => ({
+  admin: one(users, {
     fields: [customer.createdBy],
     references: [users.id],
   }),
