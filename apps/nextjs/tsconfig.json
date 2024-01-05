@@ -12,6 +12,12 @@
     ],
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
   },
-  "include": [".", ".next/types/**/*.ts", "../../packages/ui/src/lib", "../../packages/ui", "../../packages/ui"],
+  "include": [
+    ".",
+    ".next/types/**/*.ts",
+    "../../packages/ui/src/lib",
+    "../../packages/ui",
+    "../../packages/ui"
+  ],
   "exclude": ["node_modules"]
 }

@@ -320,9 +320,6 @@ importers:
       '@types/react-dom':
         specifier: ^18.2.17
         version: 18.2.17
-      '@types/uuid':
-        specifier: ^9.0.7
-        version: 9.0.7
       dotenv-cli:
         specifier: ^7.3.0
         version: 7.3.0
@@ -5668,10 +5665,6 @@ packages:
 
   /@types/tinycolor2@1.4.3:
     resolution: {integrity: sha512-Kf1w9NE5HEgGxCRyIcRXR/ZYtDv0V8FVPtYHwLxl0O+maGX0erE77pQlD0gpP+/KByMZ87mOA79SjifhSB3PjQ==}
-    dev: true
-
-  /@types/uuid@9.0.7:
-    resolution: {integrity: sha512-WUtIVRUZ9i5dYXefDEAI7sh9/O7jGvHg7Df/5O/gtH3Yabe5odI3UWopVR1qbPXQtvOxWu3mM4XxlYeZtMWF4g==}
     dev: true
 
   /@types/yargs-parser@21.0.0:
