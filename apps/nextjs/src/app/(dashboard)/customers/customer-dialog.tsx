@@ -1,14 +1,15 @@
 import { useState } from "react";
+
+import { Button } from "~/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
+  DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@radix-ui/react-dialog";
-
-import { Button } from "~/components/ui/button";
-import { DialogFooter, DialogHeader } from "~/components/ui/dialog";
+} from "~/components/ui/dialog";
 import { CreateCustomerForm } from "./customer-form";
 
 export function CustomerDialog() {

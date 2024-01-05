@@ -47,13 +47,6 @@ export const formRouter = createTRPCRouter({
       return form;
     }),
 
-  // byOwnerId: protectedProcedure.query(({ ctx }) => {
-  //   // return ctx.db.select().from(schema.form).orderBy(desc(schema.form.id));
-  //   return ctx.db.query.form.findFirst({
-  //     where: eq(schema.form.ownerId, ctx.session.user.id),
-  //   });
-  // }),
-
   create: protectedProcedure
     .input(createFormSchema)
     .mutation(async ({ ctx, input }) => {
@@ -300,17 +293,51 @@ export const formRouter = createTRPCRouter({
       });
     }),
 
-  // delete: protectedProcedure.input(z.number()).mutation(({ ctx, input }) => {
-  //   if (!ctx.session?.user?.id) {
-  //     throw new Error("User not authenticated");
-  //   }
-  //   return ctx.db
-  //     .delete(schema.form)
-  //     .where(
-  //       and(
-  //         eq(schema.form.id, input),
-  //         eq(schema.form.ownerId, ctx.session.user.id),
-  //       ),
-  //     );
-  // }),
+  delete: protectedProcedure.input(z.number()).mutation(({ ctx, input }) => {
+    if (!ctx.session?.user?.id) {
+      throw new Error("User not authenticated");
+    }
+    return ctx.db.transaction(async (trx) => {
+      await trx
+        .delete(schema.form)
+        .where(
+          and(
+            eq(schema.form.id, input),
+            eq(schema.form.createdBy, ctx.session.user.id),
+          ),
+        );
+
+      const componentIds = await trx
+        .select({ id: schema.formComponent.id })
+        .from(schema.formComponent)
+        .where(eq(schema.formComponent.formId, String(input)))
+        .then((res) => res.map(({ id }) => id));
+
+      await trx
+        .delete(schema.formComponent)
+        .where(eq(schema.formComponent.formId, String(input)));
+
+      if (componentIds.length === 0) {
+        return;
+      }
+
+      await trx
+        .delete(schema.formQuestion)
+        .where(
+          inArray(schema.formQuestion.componentId, componentIds.map(String)),
+        );
+
+      await trx
+        .delete(schema.formOption)
+        .where(
+          inArray(schema.formOption.componentId, componentIds.map(String)),
+        );
+
+      await trx
+        .delete(schema.formAgreement)
+        .where(
+          inArray(schema.formAgreement.componentId, componentIds.map(String)),
+        );
+    });
+  }),
 });

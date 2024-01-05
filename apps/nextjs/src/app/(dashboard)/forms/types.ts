@@ -38,7 +38,7 @@ export interface ComponentItems {
 }
 
 export interface Form {
-  id: number;
+  id: number | string;
   title: string;
   description: string;
   createdAt: Date | string; // ISO date string
