@@ -32,11 +32,8 @@ export const formRouter = createTRPCRouter({
         with: {
           components: {
             with: {
-              question: {
-                with: {
-                  options: true,
-                },
-              },
+              question: true,
+              options: true,
               agreements: true,
             },
           },
@@ -79,19 +76,17 @@ export const formRouter = createTRPCRouter({
 
           // If there are options, insert them
           if (component.question) {
-            const insertedQuestion = await trx
-              .insert(schema.formQuestion)
-              .values({
-                content: component.question.content,
+            await trx.insert(schema.formQuestion).values({
+              content: component.question.content,
+              componentId: insertedComponent.insertId,
+            });
+          }
+          if (component.options) {
+            for (const option of component.options) {
+              await trx.insert(schema.formOption).values({
+                content: option.content,
                 componentId: insertedComponent.insertId,
               });
-            if (component.question.options) {
-              for (const option of component.question.options) {
-                await trx.insert(schema.formOption).values({
-                  content: option.content,
-                  questionId: insertedQuestion.insertId,
-                });
-              }
             }
           }
 
@@ -150,22 +145,22 @@ export const formRouter = createTRPCRouter({
                 })
                 .where(eq(schema.formQuestion.id, Number(questionId)));
             }
+          }
 
-            if (component.question.options) {
-              for (const option of component.question.options) {
-                if (option.id) {
-                  await trx
-                    .update(schema.formOption)
-                    .set({
-                      content: option.content,
-                    })
-                    .where(eq(schema.formOption.id, Number(option.id)));
-                } else
-                  await trx.insert(schema.formOption).values({
+          if (component.options) {
+            for (const option of component.options) {
+              if (option.id) {
+                await trx
+                  .update(schema.formOption)
+                  .set({
                     content: option.content,
-                    questionId: String(questionId),
-                  });
-              }
+                  })
+                  .where(eq(schema.formOption.id, Number(option.id)));
+              } else
+                await trx.insert(schema.formOption).values({
+                  content: option.content,
+                  componentId: String(componentId),
+                });
             }
           }
 
@@ -192,20 +187,36 @@ export const formRouter = createTRPCRouter({
 
         // Handle deletions for removed components
         const existingComponentIds = await trx
-          .select()
+          .select({ id: schema.formComponent.id })
           .from(schema.formComponent)
-          .where(eq(schema.formComponent.formId, input.formId));
+          .where(eq(schema.formComponent.formId, input.id));
 
-        console.log(existingComponentIds);
+        const componentIdsToDelete = existingComponentIds
+          .map(({ id }) => id)
+          .filter(
+            (id) =>
+              !input.components.some(({ id: inFormId }) => id === inFormId),
+          );
 
-        // const componentIdsToDelete = existingComponentIds.filter(
-        //   (id) => !input.components.some((comp) => comp.id === id),
-        // );
+        console.log(componentIdsToDelete);
 
-        // for (const id of componentIdsToDelete) {
-        //   await trx.delete(schema.formComponent).where({ id });
-        //   // Also delete related questions, options, agreements if necessary
-        // }
+        for (const id of componentIdsToDelete) {
+          await trx
+            .delete(schema.formComponent)
+            .where(eq(schema.formComponent.id, id));
+          // Also delete related questions, options, agreements if necessary
+          await trx
+            .delete(schema.formQuestion)
+            .where(eq(schema.formQuestion.componentId, String(id)));
+
+          await trx
+            .delete(schema.formOption)
+            .where(eq(schema.formOption.componentId, String(id)));
+
+          await trx
+            .delete(schema.formAgreement)
+            .where(eq(schema.formAgreement.componentId, String(id)));
+        }
 
         return { success: true, formId: input.id };
       });

@@ -20,7 +20,7 @@ export function Selection({
   }>(initialData?.question || { content: "" });
   const [options, setOptions] = useState<
     { content: string; id?: string | number; questionId?: string | number }[]
-  >(initialData?.question.options || [{ content: "" }, { content: "" }]);
+  >(initialData?.options || [{ content: "" }, { content: "" }]);
 
   const handleChangeOption = (value: string, idx: number) => {
     setOptions((prev) => {
@@ -39,7 +39,7 @@ export function Selection({
   };
 
   useEffect(() => {
-    updateFormData({ question: { ...question, options } });
+    updateFormData({ question, options });
   }, [question, options]);
 
   return (

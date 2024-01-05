@@ -30,7 +30,7 @@ export const formQuestion = mySqlTable("form_question", {
 export const formOption = mySqlTable("form_option", {
   id: serial("id").primaryKey(),
   content: varchar("content", { length: 256 }).notNull(),
-  questionId: varchar("question_id", { length: 256 }).notNull(),
+  componentId: varchar("component_id", { length: 256 }).notNull(),
 });
 
 export const formAgreement = mySqlTable("form_agreement", {
@@ -56,25 +56,22 @@ export const formComponentRelations = relations(
       references: [form.id],
     }),
     question: one(formQuestion),
+    options: many(formOption),
     agreements: many(formAgreement),
   }),
 );
 
-export const formQuestionRelations = relations(
-  formQuestion,
-  ({ one, many }) => ({
-    component: one(formComponent, {
-      fields: [formQuestion.componentId],
-      references: [formComponent.id],
-    }),
-    options: many(formOption),
+export const formQuestionRelations = relations(formQuestion, ({ one }) => ({
+  component: one(formComponent, {
+    fields: [formQuestion.componentId],
+    references: [formComponent.id],
   }),
-);
+}));
 
 export const formOptionRelations = relations(formOption, ({ one }) => ({
-  question: one(formQuestion, {
-    fields: [formOption.questionId],
-    references: [formQuestion.id],
+  question: one(formComponent, {
+    fields: [formOption.componentId],
+    references: [formComponent.id],
   }),
 }));
 

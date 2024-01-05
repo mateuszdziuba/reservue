@@ -18,12 +18,12 @@ export type CreateBusiness = z.infer<typeof createBusinessSchema>;
 const optionSchema = z.object({
   content: z.string().min(1).max(256),
   id: z.string().min(1).max(256).optional().or(z.number().optional()),
-  questionId: z.string().min(1).max(256).optional().or(z.number().optional()),
+  componentId: z.string().min(1).max(256).optional().or(z.number().optional()),
 });
 
 const questionSchema = z.object({
   content: z.string().min(1).max(256),
-  options: z.array(optionSchema).optional(),
+
   id: z.string().min(1).max(256).optional().or(z.number().optional()),
   componentId: z.string().min(1).max(256).optional().or(z.number().optional()),
 });
@@ -39,6 +39,7 @@ export const componentSchema = z.object({
   id: z.string().min(1).max(256).optional().or(z.number().optional()),
   type: z.string().min(1).max(256),
   question: questionSchema.optional(),
+  options: z.array(optionSchema).optional(),
   agreements: z.array(agreementSchema).optional(),
 });
 

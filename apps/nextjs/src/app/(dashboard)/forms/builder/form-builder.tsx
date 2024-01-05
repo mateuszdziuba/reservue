@@ -130,7 +130,10 @@ export function FormBuilder({ initialData }: { initialData: any }) {
     setComponents((prev) => [...prev].filter(({ id }) => id !== idx));
   }
 
-  const { mutateAsync: createForm, error } = api.form.update.useMutation();
+  const { mutateAsync: createForm, error: createError } =
+    api.form.create.useMutation();
+  const { mutateAsync: updateForm, error: updateError } =
+    api.form.update.useMutation();
 
   return (
     <div className="container flex flex-col py-2">
@@ -226,19 +229,21 @@ export function FormBuilder({ initialData }: { initialData: any }) {
         </DndContext>
         <Button
           onClick={async () => {
+            const input = {
+              title: formTitle,
+              description: formDescription,
+              components: Object.values(
+                rearrangeObjectKeys(formData, componentsIds),
+              ),
+            };
             try {
-              await createForm({
-                id: initialData.id,
-                title: formTitle,
-                description: formDescription,
-                components: Object.values(
-                  rearrangeObjectKeys(formData, componentsIds),
-                ),
-              });
+              initialData
+                ? await updateForm({ id: initialData.id, ...input })
+                : await createForm(input);
             } catch (error) {}
           }}
         >
-          Dodaj formularz
+          {initialData ? "Zapisz formularz" : "Dodaj formularz"}
         </Button>
       </div>
     </div>
