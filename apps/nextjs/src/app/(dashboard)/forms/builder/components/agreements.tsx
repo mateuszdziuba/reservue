@@ -8,13 +8,19 @@ import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
 
 export function Agreements({
+  initialData,
   updateFormData,
 }: {
   updateFormData: Dispatch<SetStateAction<any>>;
 }) {
   const [agreements, setAgreements] = useState<
-    { agreement: string; required: boolean }[]
-  >([{ agreement: "", required: false }]);
+    {
+      content: string;
+      required: boolean;
+      id?: string | number;
+      componentId?: string | number;
+    }[]
+  >(initialData?.agreements || [{ agreement: "", required: false }]);
 
   useEffect(() => {
     updateFormData({ agreements });
@@ -24,7 +30,7 @@ export function Agreements({
     setAgreements((prev) => {
       const updatedAgreements = [...prev];
       const agreementToUpdate = updatedAgreements[idx];
-      if (agreementToUpdate) agreementToUpdate.agreement = value;
+      if (agreementToUpdate) agreementToUpdate.content = value;
       return updatedAgreements;
     });
   };
@@ -43,7 +49,7 @@ export function Agreements({
   };
 
   const handleAddOption = () => {
-    setAgreements((prev) => [...prev, { agreement: "", required: false }]);
+    setAgreements((prev) => [...prev, { content: "", required: false }]);
   };
 
   return (
@@ -52,7 +58,7 @@ export function Agreements({
         Zaznacz <Checkbox className="inline" checked disabled />, jeśli zgoda ma
         być wymagana
       </Label>
-      {agreements.map(({ agreement, required }, idx) => (
+      {agreements.map(({ content, required }, idx) => (
         <div className="flex items-center gap-2" key={idx}>
           <Checkbox
             checked={required}
@@ -60,7 +66,7 @@ export function Agreements({
           />
           <Textarea
             placeholder="Wpisz treść zgody"
-            value={agreement}
+            value={content}
             onChange={(e) => handleChangeOption(e.target.value, idx)}
           />
           <Button

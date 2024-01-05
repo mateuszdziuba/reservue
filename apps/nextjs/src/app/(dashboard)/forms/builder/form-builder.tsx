@@ -40,7 +40,7 @@ import { Answer } from "./components/answer";
 import { FormWrapper } from "./components/form-wrapper";
 import { Selection } from "./components/selection";
 
-export function FormBuilder() {
+export function FormBuilder({ initialData }: { initialData: any }) {
   type FormType =
     | "shortAnswer"
     | "longAnswer"
@@ -70,13 +70,14 @@ export function FormBuilder() {
       name: string;
       type: FormType;
       component: () => ReactElement;
+      updated?: boolean;
+      initialData?: any;
     }[]
   >([]);
-
   const [formData, setFormData] = useState({});
 
   const componentsIds = useMemo(
-    () => components.map(({ id }) => id),
+    () => components.map(({ id }) => String(id)),
     [components],
   );
 
@@ -98,6 +99,21 @@ export function FormBuilder() {
     return newObj;
   }
 
+  useEffect(() => {
+    if (!initialData) return;
+    setFormTitle(initialData.title);
+    setFormDescription(initialData.description);
+    setComponents(
+      initialData.components.map(({ id, type, ...rest }) => ({
+        id,
+        type,
+        name: formNames[type].name,
+        component: formNames[type].component,
+        initialData: rest,
+      })),
+    );
+  }, [initialData]);
+
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
 
@@ -105,7 +121,6 @@ export function FormBuilder() {
       setComponents((items) => {
         const oldIndex = componentsIds.indexOf(String(active.id));
         const newIndex = componentsIds.indexOf(String(over?.id));
-
         return arrayMove(items, oldIndex, newIndex);
       });
     }
@@ -115,7 +130,7 @@ export function FormBuilder() {
     setComponents((prev) => [...prev].filter(({ id }) => id !== idx));
   }
 
-  const { mutateAsync: createForm, error } = api.form.create.useMutation();
+  const { mutateAsync: createForm, error } = api.form.update.useMutation();
 
   return (
     <div className="container flex flex-col py-2">
@@ -158,6 +173,7 @@ export function FormBuilder() {
                   type: value,
                   name: formNames[value].name,
                   component: formNames[value].component,
+                  updated: true,
                 },
               ]);
             }}
@@ -175,29 +191,44 @@ export function FormBuilder() {
             items={componentsIds}
             strategy={verticalListSortingStrategy}
           >
-            {components.map(({ id, name, type, component: Component }) => (
-              <FormWrapper
-                key={id}
-                name={name}
-                id={id}
-                onDeleteClick={() => handleDeleteComponent(id)}
-              >
-                <Component
-                  updateFormData={(input) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      [id]: { ...input, type },
-                    }))
-                  }
-                />
-              </FormWrapper>
-            ))}
+            {components.map(
+              ({
+                id,
+                name,
+                type,
+                updated,
+                initialData,
+                component: Component,
+              }) => (
+                <FormWrapper
+                  key={id}
+                  name={name}
+                  id={String(id)}
+                  onDeleteClick={() => handleDeleteComponent(id)}
+                >
+                  <Component
+                    initialData={initialData}
+                    updateFormData={(input) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        [id]: {
+                          ...input,
+                          type,
+                          id: updated ? undefined : id,
+                        },
+                      }))
+                    }
+                  />
+                </FormWrapper>
+              ),
+            )}
           </SortableContext>
         </DndContext>
         <Button
           onClick={async () => {
             try {
               await createForm({
+                id: initialData.id,
                 title: formTitle,
                 description: formDescription,
                 components: Object.values(

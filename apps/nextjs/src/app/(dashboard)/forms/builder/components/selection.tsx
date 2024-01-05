@@ -7,18 +7,25 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 
 export function Selection({
+  initialData,
   updateFormData,
 }: {
   updateFormData: Dispatch<SetStateAction<any>>;
 }) {
   const id = useId();
-  const [question, setQuestion] = useState<string>("");
-  const [options, setOptions] = useState<string[]>(["", ""]);
+  const [question, setQuestion] = useState<{
+    content: string;
+    id?: string | number;
+    componentId?: string | number;
+  }>(initialData?.question || { content: "" });
+  const [options, setOptions] = useState<
+    { content: string; id?: string | number; questionId?: string | number }[]
+  >(initialData?.question.options || [{ content: "" }, { content: "" }]);
 
   const handleChangeOption = (value: string, idx: number) => {
     setOptions((prev) => {
       const updatedOptions = [...prev];
-      updatedOptions[idx] = value;
+      updatedOptions[idx].content = value;
       return updatedOptions;
     });
   };
@@ -28,11 +35,11 @@ export function Selection({
   };
 
   const handleAddOption = () => {
-    setOptions((prev) => [...prev, ""]);
+    setOptions((prev) => [...prev, { content: "" }]);
   };
 
   useEffect(() => {
-    updateFormData({ question, options });
+    updateFormData({ question: { ...question, options } });
   }, [question, options]);
 
   return (
@@ -40,14 +47,16 @@ export function Selection({
       <Label htmlFor={id}>Treść pytania</Label>
       <Input
         id={id}
-        value={question}
-        onChange={(e) => setQuestion(e.target.value)}
+        value={question.content}
+        onChange={(e) =>
+          setQuestion((prev) => ({ ...prev, content: e.target.value }))
+        }
       />
       {options.map((option, idx) => (
         <div className="flex gap-2" key={idx}>
           <Input
             placeholder="Wpisz treść odpowiedzi"
-            value={option}
+            value={option.content}
             onChange={(e) => handleChangeOption(e.target.value, idx)}
           />
           <Button

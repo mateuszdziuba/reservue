@@ -24,73 +24,30 @@ export const formRouter = createTRPCRouter({
         throw new Error("User not authenticated");
       }
 
-      // Start a read operation
       const form = await ctx.db.query.form.findFirst({
         where: and(
-          eq(schema.form.createdBy, ctx.session.user.id),
           eq(schema.form.id, input.formId),
+          eq(schema.form.createdBy, ctx.session.user.id),
         ),
+        with: {
+          components: {
+            with: {
+              question: {
+                with: {
+                  options: true,
+                },
+              },
+              agreements: true,
+            },
+          },
+        },
       });
 
       if (!form) {
         throw new Error("Form not found");
       }
-      const result = [];
-      // Fetch components
-      const components = await ctx.db.query.formComponent.findMany({
-        where: eq(schema.formComponent.formId, form.id),
-      });
 
-      for (const component of components) {
-        const newComponent = {};
-
-        if (["shortAnswer", "longAnswer"].includes(component.type)) {
-          newComponent.type = component.type;
-          const question = await ctx.db.query.formQuestion.findFirst({
-            where: eq(schema.formQuestion.componentId, component.id),
-          });
-
-          if (question) {
-            newComponent.question = question.content;
-          }
-        }
-
-        if (
-          ["singleSelection", "multipleSelection", "dropdownMenu"].includes(
-            component.type,
-          )
-        ) {
-          newComponent.type = component.type;
-
-          const question = await ctx.db.query.formQuestion.findFirst({
-            where: eq(schema.formQuestion.componentId, component.id),
-          });
-
-          if (question) {
-            newComponent.question = question.content;
-            const options = await ctx.db.query.formOption.findMany({
-              where: eq(schema.formOption.questionId, question.id),
-            });
-            newComponent.options = options.map(({ content }) => content);
-          }
-        }
-
-        if (component.type === "agreements") {
-          newComponent.type = component.type;
-          const agreements = await ctx.db.query.formAgreement.findMany({
-            where: eq(schema.formAgreement.componentId, component.id),
-          });
-
-          newComponent.agreements = agreements.map(({ content, required }) => ({
-            agreement: content,
-            required,
-          }));
-        }
-
-        result.push(newComponent);
-      }
-
-      return { ...form, components: result };
+      return form;
     }),
 
   // byOwnerId: protectedProcedure.query(({ ctx }) => {
@@ -125,13 +82,13 @@ export const formRouter = createTRPCRouter({
             const insertedQuestion = await trx
               .insert(schema.formQuestion)
               .values({
-                content: component.question,
+                content: component.question.content,
                 componentId: insertedComponent.insertId,
               });
-            if (component.options) {
-              for (const option of component.options) {
+            if (component.question.options) {
+              for (const option of component.question.options) {
                 await trx.insert(schema.formOption).values({
-                  content: option,
+                  content: option.content,
                   questionId: insertedQuestion.insertId,
                 });
               }
@@ -141,7 +98,7 @@ export const formRouter = createTRPCRouter({
           if (component.agreements) {
             for (const agreement of component.agreements) {
               await trx.insert(schema.formAgreement).values({
-                content: agreement.agreement,
+                content: agreement.content,
                 required: agreement.required,
                 componentId: insertedComponent.insertId,
               });
@@ -150,6 +107,107 @@ export const formRouter = createTRPCRouter({
         }
 
         return insertedForm; // or some confirmation message
+      });
+    }),
+
+  update: protectedProcedure
+    .input(createFormSchema) // Define this schema to include necessary fields for update
+    .mutation(async ({ ctx, input }) => {
+      if (!ctx.session?.user?.id) {
+        throw new Error("User not authenticated");
+      }
+
+      return ctx.db.transaction(async (trx) => {
+        // Update the form data
+
+        // Iterate over components for update/addition
+        for (const component of input.components) {
+          let componentId = component.id;
+
+          if (!componentId) {
+            const newComponent = await trx
+              .insert(schema.formComponent)
+              .values({ type: component.type, formId: String(input.id) });
+            componentId = newComponent.insertId;
+          }
+
+          if (component.question) {
+            let questionId = component.question.id;
+
+            if (!questionId) {
+              const insertedQuestion = await trx
+                .insert(schema.formQuestion)
+                .values({
+                  content: component.question.content,
+                  componentId: String(componentId),
+                });
+              questionId = insertedQuestion.insertId;
+            } else {
+              await trx
+                .update(schema.formQuestion)
+                .set({
+                  content: component.question.content,
+                })
+                .where(eq(schema.formQuestion.id, Number(questionId)));
+            }
+
+            if (component.question.options) {
+              for (const option of component.question.options) {
+                if (option.id) {
+                  await trx
+                    .update(schema.formOption)
+                    .set({
+                      content: option.content,
+                    })
+                    .where(eq(schema.formOption.id, Number(option.id)));
+                } else
+                  await trx.insert(schema.formOption).values({
+                    content: option.content,
+                    questionId: String(questionId),
+                  });
+              }
+            }
+          }
+
+          if (component.agreements) {
+            for (const agreement of component.agreements) {
+              if (agreement.id) {
+                await trx
+                  .update(schema.formAgreement)
+                  .set({
+                    content: agreement.content,
+                    required: agreement.required,
+                  })
+                  .where(eq(schema.formAgreement.id, Number(agreement.id)));
+              } else {
+                await trx.insert(schema.formAgreement).values({
+                  content: agreement.content,
+                  required: agreement.required,
+                  componentId: String(componentId),
+                });
+              }
+            }
+          }
+        }
+
+        // Handle deletions for removed components
+        const existingComponentIds = await trx
+          .select()
+          .from(schema.formComponent)
+          .where(eq(schema.formComponent.formId, input.formId));
+
+        console.log(existingComponentIds);
+
+        // const componentIdsToDelete = existingComponentIds.filter(
+        //   (id) => !input.components.some((comp) => comp.id === id),
+        // );
+
+        // for (const id of componentIdsToDelete) {
+        //   await trx.delete(schema.formComponent).where({ id });
+        //   // Also delete related questions, options, agreements if necessary
+        // }
+
+        return { success: true, formId: input.id };
       });
     }),
 

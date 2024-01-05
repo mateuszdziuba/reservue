@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+
 import { api } from "~/trpc/server";
 import { FormBuilder } from "../../builder/form-builder";
 
@@ -8,5 +10,5 @@ export default async function FormEditor({
 }) {
   const data = await api.form.byId.query({ formId: params.formId });
 
-  return <FormBuilder />;
+  return <FormBuilder initialData={data} />;
 }

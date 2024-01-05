@@ -45,7 +45,7 @@ export const formRelations = relations(form, ({ one, many }) => ({
     fields: [form.createdBy],
     references: [business.id],
   }),
-  formComponents: many(formComponent),
+  components: many(formComponent),
 }));
 
 export const formComponentRelations = relations(
@@ -55,31 +55,31 @@ export const formComponentRelations = relations(
       fields: [formComponent.formId],
       references: [form.id],
     }),
-    formQuestion: one(formQuestion),
-    formAgreements: many(formAgreement),
+    question: one(formQuestion),
+    agreements: many(formAgreement),
   }),
 );
 
 export const formQuestionRelations = relations(
   formQuestion,
   ({ one, many }) => ({
-    formComponent: one(formComponent, {
+    component: one(formComponent, {
       fields: [formQuestion.componentId],
       references: [formComponent.id],
     }),
-    formQuestions: many(formOption),
+    options: many(formOption),
   }),
 );
 
 export const formOptionRelations = relations(formOption, ({ one }) => ({
-  formQuestion: one(formQuestion, {
+  question: one(formQuestion, {
     fields: [formOption.questionId],
     references: [formQuestion.id],
   }),
 }));
 
 export const formAgreementRelations = relations(formAgreement, ({ one }) => ({
-  formComponent: one(formComponent, {
+  component: one(formComponent, {
     fields: [formAgreement.componentId],
     references: [formComponent.id],
   }),

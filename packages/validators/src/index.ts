@@ -15,23 +15,35 @@ export const createBusinessSchema = z.object({
 });
 export type CreateBusiness = z.infer<typeof createBusinessSchema>;
 
-const optionSchema = z.string().min(1).max(256);
+const optionSchema = z.object({
+  content: z.string().min(1).max(256),
+  id: z.string().min(1).max(256).optional().or(z.number().optional()),
+  questionId: z.string().min(1).max(256).optional().or(z.number().optional()),
+});
 
-const questionSchema = z.string().min(1).max(256);
+const questionSchema = z.object({
+  content: z.string().min(1).max(256),
+  options: z.array(optionSchema).optional(),
+  id: z.string().min(1).max(256).optional().or(z.number().optional()),
+  componentId: z.string().min(1).max(256).optional().or(z.number().optional()),
+});
 
 const agreementSchema = z.object({
-  agreement: z.string().min(1).max(256),
+  content: z.string().min(1).max(256),
   required: z.boolean(),
+  id: z.string().min(1).max(256).optional().or(z.number().optional()),
+  componentId: z.string().min(1).max(256).optional().or(z.number().optional()),
 });
 
 export const componentSchema = z.object({
+  id: z.string().min(1).max(256).optional().or(z.number().optional()),
   type: z.string().min(1).max(256),
   question: questionSchema.optional(),
-  options: z.array(optionSchema).optional(),
   agreements: z.array(agreementSchema).optional(),
 });
 
 export const createFormSchema = z.object({
+  id: z.string().min(1).max(256).optional().or(z.number().optional()),
   title: z.string().min(1).max(256),
   description: z.string().min(1).max(256),
   components: z.array(componentSchema),

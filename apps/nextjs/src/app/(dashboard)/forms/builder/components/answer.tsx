@@ -5,12 +5,17 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 
 export function Answer({
+  initialData,
   updateFormData,
 }: {
   updateFormData: Dispatch<SetStateAction<any>>;
 }) {
   const id = useId();
-  const [question, setQuestion] = useState("");
+  const [question, setQuestion] = useState<{
+    content: string;
+    id?: string | number;
+    componentId?: string | number;
+  }>(initialData?.question || { content: "" });
 
   useEffect(() => {
     updateFormData({ question });
@@ -21,8 +26,10 @@ export function Answer({
       <Label htmlFor={id}>Treść pytania</Label>
       <Input
         id={id}
-        value={question}
-        onChange={(e) => setQuestion(e.target.value)}
+        value={question.content}
+        onChange={(e) =>
+          setQuestion((prev) => ({ ...prev, content: e.target.value }))
+        }
       />
     </div>
   );
