@@ -2,16 +2,18 @@ import type { Dispatch, SetStateAction } from "react";
 import { useEffect, useState } from "react";
 import { Plus, Trash } from "lucide-react";
 
+import type { ComponentItems } from "../../types";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
 
 export function Agreements({
-  initialData,
   updateFormData,
+  initialData,
 }: {
   updateFormData: Dispatch<SetStateAction<any>>;
+  initialData?: ComponentItems;
 }) {
   const [agreements, setAgreements] = useState<
     {
@@ -20,7 +22,7 @@ export function Agreements({
       id?: string | number;
       componentId?: string | number;
     }[]
-  >(initialData?.agreements || [{ agreement: "", required: false }]);
+  >(initialData?.agreements || [{ content: "", required: false }]);
 
   useEffect(() => {
     updateFormData({ agreements });

@@ -3,12 +3,12 @@ import type { ColumnDef } from "@tanstack/react-table";
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export interface Customer {
-  id: string;
+  id: number | string;
   firstName: string;
   lastName: string;
   phoneNumber: string;
-  emailAddress: string;
-  lastVisitDate: Date;
+  email: string | null;
+  lastVisitDate: Date | null;
 }
 
 export const columns: ColumnDef<Customer>[] = [

@@ -1,6 +1,7 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import type { CreateCustomer } from "@reservue/validators";
+import { createCustomerSchema } from "@reservue/validators";
 
 import { Button } from "~/components/ui/button";
 import {
@@ -13,14 +14,13 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
+import { useZodForm } from "~/lib/zod-form";
 import { api } from "~/trpc/react";
 
 export function CreateCustomerForm() {
   const utils = api.useUtils();
 
-  const form = useForm({
-    defaultValues: { firstName: "", lastName: "", phoneNumber: "", email: "" },
-  });
+  const form = useZodForm({ schema: createCustomerSchema });
 
   const { mutateAsync: createCustomer, error } =
     api.customer.create.useMutation({
@@ -30,8 +30,7 @@ export function CreateCustomerForm() {
       },
     });
 
-  async function onSubmit(values, e) {
-    e.preventDefault();
+  async function onSubmit(values: CreateCustomer) {
     try {
       await createCustomer({
         firstName: values.firstName,

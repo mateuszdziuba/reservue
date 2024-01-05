@@ -15,6 +15,14 @@ export const createBusinessSchema = z.object({
 });
 export type CreateBusiness = z.infer<typeof createBusinessSchema>;
 
+export const createCustomerSchema = z.object({
+  firstName: z.string().min(1),
+  lastName: z.string().min(1),
+  phoneNumber: z.string().min(1),
+  email: z.string().min(1).email(),
+});
+export type CreateCustomer = z.infer<typeof createCustomerSchema>;
+
 const optionSchema = z.object({
   content: z.string().min(1).max(256),
   id: z.string().min(1).max(256).optional().or(z.number().optional()),
@@ -38,7 +46,7 @@ const agreementSchema = z.object({
 export const componentSchema = z.object({
   id: z.string().min(1).max(256).optional().or(z.number().optional()),
   type: z.string().min(1).max(256),
-  question: questionSchema.optional(),
+  question: questionSchema.optional().or(z.null()),
   options: z.array(optionSchema).optional(),
   agreements: z.array(agreementSchema).optional(),
 });

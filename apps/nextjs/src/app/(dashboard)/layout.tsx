@@ -5,7 +5,6 @@ import { Book } from "lucide-react";
 
 import { auth } from "@reservue/auth";
 
-import BusinessSwitcher from "~/components/business-switcher";
 import { SiteFooter } from "~/components/footer";
 import { MainNav } from "~/components/main-nav";
 import { UserNav } from "~/components/user-nav";

@@ -1,7 +1,7 @@
 "use client";
 
 import type { DragEndEvent } from "@dnd-kit/core";
-import type { ReactElement } from "react";
+import type { Dispatch, ReactElement, SetStateAction } from "react";
 import React, { useEffect, useMemo, useState } from "react";
 import {
   closestCenter,
@@ -12,10 +12,7 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import {
-  restrictToVerticalAxis,
-  restrictToWindowEdges,
-} from "@dnd-kit/modifiers";
+import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import {
   arrayMove,
   SortableContext,
@@ -24,6 +21,15 @@ import {
 } from "@dnd-kit/sortable";
 import { v4 as uuidv4 } from "uuid";
 
+import type {
+  Agreement,
+  ComponentItems,
+  ComponentType,
+  Form,
+  FormComponent,
+  Option,
+  Question,
+} from "../types";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -40,18 +46,19 @@ import { Answer } from "./components/answer";
 import { FormWrapper } from "./components/form-wrapper";
 import { Selection } from "./components/selection";
 
-export function FormBuilder({ initialData }: { initialData: any }) {
-  type FormType =
-    | "shortAnswer"
-    | "longAnswer"
-    | "singleSelection"
-    | "multipleSelection"
-    | "dropdownMenu"
-    | "agreements";
-
-  const formNames: Record<
-    FormType,
-    { name: string; component: () => ReactElement }
+export function FormBuilder({ initialData }: { initialData?: Form }) {
+  const formItems: Record<
+    ComponentType,
+    {
+      name: string;
+      component: ({
+        initialData,
+        updateFormData,
+      }: {
+        initialData?: ComponentItems;
+        updateFormData: Dispatch<SetStateAction<any>>;
+      }) => JSX.Element;
+    }
   > = {
     shortAnswer: { name: "Krótka odpowiedź", component: Answer },
     longAnswer: { name: "Długa odpowiedź", component: Answer },
@@ -61,20 +68,28 @@ export function FormBuilder({ initialData }: { initialData: any }) {
     agreements: { name: "Zgody", component: Agreements },
   };
 
-  const [value, setValue] = useState<FormType | "">("");
+  const [value, setValue] = useState<ComponentType | "">("");
   const [formTitle, setFormTitle] = useState("");
   const [formDescription, setFormDescription] = useState("");
   const [components, setComponents] = useState<
     {
-      id: string;
+      id: string | number;
       name: string;
-      type: FormType;
-      component: () => ReactElement;
+      type: ComponentType;
+      component: ({
+        initialData,
+        updateFormData,
+      }: {
+        initialData?: ComponentItems;
+        updateFormData: Dispatch<SetStateAction<any>>;
+      }) => JSX.Element;
       updated?: boolean;
-      initialData?: any;
+      initialData?: ComponentItems;
     }[]
   >([]);
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState<
+    Record<string | number, FormComponent>
+  >({});
 
   const componentsIds = useMemo(
     () => components.map(({ id }) => String(id)),
@@ -89,11 +104,16 @@ export function FormBuilder({ initialData }: { initialData: any }) {
     }),
   );
 
-  function rearrangeObjectKeys(obj, keyOrder) {
-    const newObj = {};
+  //TODO: add order logic
+
+  function rearrangeObjectKeys(
+    obj: Record<string | number, FormComponent>,
+    keyOrder: string[],
+  ) {
+    const newObj: Record<string | number, FormComponent> = {};
     keyOrder.forEach((key) => {
-      if (obj.hasOwnProperty(key)) {
-        newObj[key] = obj[key];
+      if (obj[key]) {
+        newObj[key] = obj[key]!;
       }
     });
     return newObj;
@@ -107,8 +127,8 @@ export function FormBuilder({ initialData }: { initialData: any }) {
       initialData.components.map(({ id, type, ...rest }) => ({
         id,
         type,
-        name: formNames[type].name,
-        component: formNames[type].component,
+        name: formItems[type].name,
+        component: formItems[type].component,
         initialData: rest,
       })),
     );
@@ -126,7 +146,7 @@ export function FormBuilder({ initialData }: { initialData: any }) {
     }
   }
 
-  function handleDeleteComponent(idx: string) {
+  function handleDeleteComponent(idx: string | number) {
     setComponents((prev) => [...prev].filter(({ id }) => id !== idx));
   }
 
@@ -153,13 +173,13 @@ export function FormBuilder({ initialData }: { initialData: any }) {
         <div className="flex w-full max-w-lg gap-2">
           <Select
             value={value}
-            onValueChange={(value: FormType) => setValue(value)}
+            onValueChange={(value: ComponentType) => setValue(value)}
           >
             <SelectTrigger>
               <SelectValue placeholder="Rodzaj pola" />
             </SelectTrigger>
             <SelectContent>
-              {Object.entries(formNames).map(([key, value]) => (
+              {Object.entries(formItems).map(([key, value]) => (
                 <SelectItem key={key} value={key}>
                   {value.name}
                 </SelectItem>
@@ -174,8 +194,8 @@ export function FormBuilder({ initialData }: { initialData: any }) {
                 {
                   id: uuidv4(),
                   type: value,
-                  name: formNames[value].name,
-                  component: formNames[value].component,
+                  name: formItems[value].name,
+                  component: formItems[value].component,
                   updated: true,
                 },
               ]);

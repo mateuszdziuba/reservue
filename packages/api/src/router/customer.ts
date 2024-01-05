@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { and, desc, eq, schema } from "@reservue/db";
+import { createCustomerSchema } from "@reservue/validators";
 
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
@@ -27,14 +28,7 @@ export const customerRouter = createTRPCRouter({
     }),
 
   create: protectedProcedure
-    .input(
-      z.object({
-        firstName: z.string().min(1),
-        lastName: z.string().min(1),
-        phoneNumber: z.string().min(1),
-        email: z.string().min(1).email(),
-      }),
-    )
+    .input(createCustomerSchema)
     .mutation(({ ctx, input }) => {
       if (!ctx.session?.user?.id) {
         throw new Error("User not authenticated");

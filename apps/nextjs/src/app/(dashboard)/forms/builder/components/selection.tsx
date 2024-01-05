@@ -2,30 +2,34 @@ import type { Dispatch, SetStateAction } from "react";
 import { useEffect, useId, useState } from "react";
 import { Plus, Trash } from "lucide-react";
 
+import type { ComponentItems } from "../../types";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 
 export function Selection({
-  initialData,
   updateFormData,
+  initialData,
 }: {
   updateFormData: Dispatch<SetStateAction<any>>;
+  initialData?: ComponentItems;
 }) {
   const id = useId();
   const [question, setQuestion] = useState<{
     content: string;
     id?: string | number;
     componentId?: string | number;
-  }>(initialData?.question || { content: "" });
+  }>(initialData?.question ?? { content: "" });
   const [options, setOptions] = useState<
     { content: string; id?: string | number; questionId?: string | number }[]
-  >(initialData?.options || [{ content: "" }, { content: "" }]);
+  >(initialData?.options ?? [{ content: "" }, { content: "" }]);
 
   const handleChangeOption = (value: string, idx: number) => {
     setOptions((prev) => {
       const updatedOptions = [...prev];
-      updatedOptions[idx].content = value;
+      if (updatedOptions[idx]) {
+        updatedOptions[idx]!.content = value;
+      }
       return updatedOptions;
     });
   };
