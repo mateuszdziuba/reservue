@@ -2,7 +2,7 @@
 
 import type { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
-import { ClipboardEdit, MoreHorizontal } from "lucide-react";
+import { ClipboardEdit, MoreHorizontal, Trash } from "lucide-react";
 
 import type { Form } from "./types";
 import {
@@ -25,6 +25,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import { useToast } from "~/components/ui/use-toast";
 import { api } from "~/trpc/react";
 
 export const columns: ColumnDef<Form>[] = [
@@ -41,6 +42,7 @@ export const columns: ColumnDef<Form>[] = [
     cell: ({ row }) => {
       const { mutateAsync: deleteForm } = api.form.delete.useMutation();
       const utils = api.useUtils();
+      const { toast } = useToast();
 
       return (
         <>
@@ -62,8 +64,17 @@ export const columns: ColumnDef<Form>[] = [
                     try {
                       await deleteForm(Number(row.original.id));
                       await utils.form.byCreatorId.invalidate();
+
+                      toast({
+                        title: "Sukces",
+                        description: `Pomyślnie usunięto formularz o nazwie: ${row.original.title}`,
+                      });
                     } catch {
-                      // noop
+                      toast({
+                        description:
+                          "Nie udało się usunąć formularza, spróbuj ponownie później",
+                        variant: "destructive",
+                      });
                     }
                   }}
                 >
@@ -80,6 +91,7 @@ export const columns: ColumnDef<Form>[] = [
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 {/* <DropdownMenuLabel>Akcje</DropdownMenuLabel> */}
+                {/* <DropdownMenuSeparator /> */}
                 <DropdownMenuItem asChild>
                   <Link href={`/forms/${row.original.id}/edit`}>
                     <ClipboardEdit className="mr-2 h-4 w-4" />
@@ -87,11 +99,11 @@ export const columns: ColumnDef<Form>[] = [
                   </Link>
                 </DropdownMenuItem>
                 <AlertDialogTrigger asChild>
-                  <DropdownMenuItem>Usuń</DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Trash className="mr-2 h-4 w-4" />
+                    <span>Usuń</span>
+                  </DropdownMenuItem>
                 </AlertDialogTrigger>
-                {/* <DropdownMenuSeparator /> */}
-                <DropdownMenuItem>View customer</DropdownMenuItem>
-                <DropdownMenuItem>View payment details</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </AlertDialog>

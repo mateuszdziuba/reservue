@@ -1,15 +1,14 @@
-import { Suspense } from "react";
+"use client";
 
-import { api } from "~/trpc/server";
+import type { Form } from "./types";
+import { api } from "~/trpc/react";
 import { DataTable } from "../customers/data-table";
 import { columns } from "./columns";
 
-export default async function Forms() {
-  const data = await api.form.byCreatorId.query();
+export default function Forms() {
+  const { data } = api.form.byCreatorId.useQuery();
 
-  return (
-    <Suspense>
-      <DataTable columns={columns} data={data} />
-    </Suspense>
-  );
+  if (!data) return null;
+
+  return <DataTable columns={columns} data={data as Form[]} />;
 }

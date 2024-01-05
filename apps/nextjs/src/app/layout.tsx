@@ -6,6 +6,7 @@ import "~/styles/globals.css";
 import { cache } from "react";
 import { headers } from "next/headers";
 
+import { Toaster } from "~/components/ui/toaster";
 import { TRPCReactProvider } from "~/trpc/react";
 
 const fontSans = Inter({
@@ -38,6 +39,7 @@ export default function Layout(props: { children: React.ReactNode }) {
       <body className={["font-sans", fontSans.variable].join(" ")}>
         <TRPCReactProvider headersPromise={getHeaders()}>
           {props.children}
+          <Toaster />
         </TRPCReactProvider>
       </body>
     </html>
