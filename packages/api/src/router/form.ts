@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { and, eq, schema } from "@reservue/db";
+import { and, eq, inArray, schema } from "@reservue/db";
 import { createFormSchema } from "@reservue/validators";
 
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
@@ -26,7 +26,7 @@ export const formRouter = createTRPCRouter({
 
       const form = await ctx.db.query.form.findFirst({
         where: and(
-          eq(schema.form.id, input.formId),
+          eq(schema.form.id, Number(input.formId)),
           eq(schema.form.createdBy, ctx.session.user.id),
         ),
         with: {
@@ -63,10 +63,12 @@ export const formRouter = createTRPCRouter({
 
       // Start a transaction
       return ctx.db.transaction(async (trx) => {
-        // Insert the business data
-        const insertedForm = await trx
-          .insert(schema.form)
-          .values({ ...input, createdBy: ctx.session.user.id });
+        const insertedForm = await trx.insert(schema.form).values({
+          id: Number(input.id),
+          title: input.title,
+          description: input.description,
+          createdBy: ctx.session.user.id,
+        });
 
         // Iterate and insert questions
         for (const component of input.components) {
@@ -117,6 +119,7 @@ export const formRouter = createTRPCRouter({
         const createdComponentIds = [];
         const createdOptionIds = [];
         const createdAgreementIds = [];
+
         // Iterate over components for update/addition
         for (const component of input.components) {
           let componentId = component.id;
@@ -199,7 +202,7 @@ export const formRouter = createTRPCRouter({
         const existingComponentIds = await trx
           .select({ id: schema.formComponent.id })
           .from(schema.formComponent)
-          .where(eq(schema.formComponent.formId, input.id))
+          .where(eq(schema.formComponent.formId, String(input.id)))
           .then((res) => res.map(({ id }) => id));
 
         const inputComponentIds = input.components
@@ -219,7 +222,7 @@ export const formRouter = createTRPCRouter({
           await trx
             .delete(schema.formComponent)
             .where(eq(schema.formComponent.id, id));
-          // Also delete related questions, options, agreements if necessary
+
           await trx
             .delete(schema.formQuestion)
             .where(eq(schema.formQuestion.componentId, String(id)));
@@ -260,16 +263,15 @@ export const formRouter = createTRPCRouter({
 
         const allCurrentOptionIds = [...inputOptionIds, ...createdOptionIds];
 
-        // Step 3: Identify options to delete
         const optionIdsToDelete =
           existingOptionIds?.filter(
             (existingId) => !allCurrentOptionIds.includes(String(existingId)),
           ) ?? [];
 
-        for (const id of optionIdsToDelete) {
+        if (optionIdsToDelete.length > 0) {
           await trx
             .delete(schema.formOption)
-            .where(eq(schema.formOption.id, Number(id)));
+            .where(inArray(schema.formOption.id, optionIdsToDelete));
         }
 
         const inputAgreementIds = input.components
@@ -282,17 +284,16 @@ export const formRouter = createTRPCRouter({
           ...createdAgreementIds,
         ];
 
-        // Step 3: Identify agreements to delete
         const agreementIdsToDelete =
           existingAgreementIds?.filter(
             (existingId) =>
               !allCurrentAgreementIds.includes(String(existingId)),
           ) ?? [];
 
-        for (const id of agreementIdsToDelete) {
+        if (agreementIdsToDelete.length > 0) {
           await trx
             .delete(schema.formAgreement)
-            .where(eq(schema.formAgreement.id, Number(id)));
+            .where(inArray(schema.formAgreement.id, agreementIdsToDelete));
         }
 
         return { success: true, formId: input.id };
