@@ -114,7 +114,9 @@ export const formRouter = createTRPCRouter({
 
       return ctx.db.transaction(async (trx) => {
         // Update the form data
-
+        const createdComponentIds = [];
+        const createdOptionIds = [];
+        const createdAgreementIds = [];
         // Iterate over components for update/addition
         for (const component of input.components) {
           let componentId = component.id;
@@ -124,6 +126,7 @@ export const formRouter = createTRPCRouter({
               .insert(schema.formComponent)
               .values({ type: component.type, formId: String(input.id) });
             componentId = newComponent.insertId;
+            createdComponentIds.push(componentId);
           }
 
           if (component.question) {
@@ -156,11 +159,15 @@ export const formRouter = createTRPCRouter({
                     content: option.content,
                   })
                   .where(eq(schema.formOption.id, Number(option.id)));
-              } else
-                await trx.insert(schema.formOption).values({
-                  content: option.content,
-                  componentId: String(componentId),
-                });
+              } else {
+                const insertedOption = await trx
+                  .insert(schema.formOption)
+                  .values({
+                    content: option.content,
+                    componentId: String(componentId),
+                  });
+                createdOptionIds.push(insertedOption.insertId);
+              }
             }
           }
 
@@ -175,11 +182,14 @@ export const formRouter = createTRPCRouter({
                   })
                   .where(eq(schema.formAgreement.id, Number(agreement.id)));
               } else {
-                await trx.insert(schema.formAgreement).values({
-                  content: agreement.content,
-                  required: agreement.required,
-                  componentId: String(componentId),
-                });
+                const insertedAgreement = await trx
+                  .insert(schema.formAgreement)
+                  .values({
+                    content: agreement.content,
+                    required: agreement.required,
+                    componentId: String(componentId),
+                  });
+                createdAgreementIds.push(insertedAgreement.insertId);
               }
             }
           }
@@ -189,16 +199,21 @@ export const formRouter = createTRPCRouter({
         const existingComponentIds = await trx
           .select({ id: schema.formComponent.id })
           .from(schema.formComponent)
-          .where(eq(schema.formComponent.formId, input.id));
+          .where(eq(schema.formComponent.formId, input.id))
+          .then((res) => res.map(({ id }) => id));
 
-        const componentIdsToDelete = existingComponentIds
-          .map(({ id }) => id)
-          .filter(
-            (id) =>
-              !input.components.some(({ id: inFormId }) => id === inFormId),
-          );
+        const inputComponentIds = input.components
+          .filter((component) => component.id !== undefined)
+          .map((component) => String(component.id));
 
-        console.log(componentIdsToDelete);
+        const allCurrentComponentIds = [
+          ...inputComponentIds,
+          ...createdComponentIds,
+        ];
+
+        const componentIdsToDelete = existingComponentIds.filter(
+          (existingId) => !allCurrentComponentIds.includes(String(existingId)),
+        );
 
         for (const id of componentIdsToDelete) {
           await trx
@@ -216,6 +231,68 @@ export const formRouter = createTRPCRouter({
           await trx
             .delete(schema.formAgreement)
             .where(eq(schema.formAgreement.componentId, String(id)));
+        }
+
+        const existingOptionIds = [];
+        const existingAgreementIds = [];
+
+        for (const id of existingComponentIds) {
+          const optionIdsForComponent = await trx
+            .select({ id: schema.formOption.id })
+            .from(schema.formOption)
+            .where(eq(schema.formOption.componentId, String(id)))
+            .then((res) => res.map(({ id }) => id));
+
+          const agreementIdsForComponent = await trx
+            .select({ id: schema.formAgreement.id })
+            .from(schema.formAgreement)
+            .where(eq(schema.formAgreement.componentId, String(id)))
+            .then((res) => res.map(({ id }) => id));
+
+          existingOptionIds.push(...optionIdsForComponent);
+          existingAgreementIds.push(...agreementIdsForComponent);
+        }
+
+        const inputOptionIds = input.components
+          .flatMap((component) => component.options ?? [])
+          .filter((option) => option.id !== undefined)
+          .map((option) => String(option.id));
+
+        const allCurrentOptionIds = [...inputOptionIds, ...createdOptionIds];
+
+        // Step 3: Identify options to delete
+        const optionIdsToDelete =
+          existingOptionIds?.filter(
+            (existingId) => !allCurrentOptionIds.includes(String(existingId)),
+          ) ?? [];
+
+        for (const id of optionIdsToDelete) {
+          await trx
+            .delete(schema.formOption)
+            .where(eq(schema.formOption.id, Number(id)));
+        }
+
+        const inputAgreementIds = input.components
+          .flatMap((component) => component.agreements ?? [])
+          .filter((agreement) => agreement.id !== undefined)
+          .map((agreement) => String(agreement.id));
+
+        const allCurrentAgreementIds = [
+          ...inputAgreementIds,
+          ...createdAgreementIds,
+        ];
+
+        // Step 3: Identify agreements to delete
+        const agreementIdsToDelete =
+          existingAgreementIds?.filter(
+            (existingId) =>
+              !allCurrentAgreementIds.includes(String(existingId)),
+          ) ?? [];
+
+        for (const id of agreementIdsToDelete) {
+          await trx
+            .delete(schema.formAgreement)
+            .where(eq(schema.formAgreement.id, Number(id)));
         }
 
         return { success: true, formId: input.id };
