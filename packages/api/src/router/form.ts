@@ -66,30 +66,23 @@ export const formRouter = createTRPCRouter({
         for (const component of input.components) {
           const insertedComponent = await trx
             .insert(schema.formComponent)
-            .values({ type: component.type, formId: insertedForm.insertId });
+            .values({
+              type: component.type,
+              formId: Number(insertedForm.insertId),
+            });
 
           // If there are options, insert them
           if (component.question) {
             await trx.insert(schema.formQuestion).values({
               content: component.question.content,
-              componentId: insertedComponent.insertId,
+              componentId: Number(insertedComponent.insertId),
             });
           }
           if (component.options) {
             for (const option of component.options) {
               await trx.insert(schema.formOption).values({
                 content: option.content,
-                componentId: insertedComponent.insertId,
-              });
-            }
-          }
-
-          if (component.agreements) {
-            for (const agreement of component.agreements) {
-              await trx.insert(schema.formAgreement).values({
-                content: agreement.content,
-                required: agreement.required,
-                componentId: insertedComponent.insertId,
+                componentId: Number(insertedComponent.insertId),
               });
             }
           }
@@ -117,10 +110,10 @@ export const formRouter = createTRPCRouter({
           let componentId = component.id;
 
           if (!componentId) {
-            const newComponent = await trx
+            const insertedComponent = await trx
               .insert(schema.formComponent)
-              .values({ type: component.type, formId: String(input.id) });
-            componentId = newComponent.insertId;
+              .values({ type: component.type, formId: input.id });
+            componentId = +insertedComponent.insertId;
             createdComponentIds.push(componentId);
           }
 
@@ -132,16 +125,16 @@ export const formRouter = createTRPCRouter({
                 .insert(schema.formQuestion)
                 .values({
                   content: component.question.content,
-                  componentId: String(componentId),
+                  componentId,
                 });
-              questionId = insertedQuestion.insertId;
+              questionId = +insertedQuestion.insertId;
             } else {
               await trx
                 .update(schema.formQuestion)
                 .set({
                   content: component.question.content,
                 })
-                .where(eq(schema.formQuestion.id, Number(questionId)));
+                .where(eq(schema.formQuestion.id, questionId));
             }
           }
 
@@ -159,7 +152,7 @@ export const formRouter = createTRPCRouter({
                   .insert(schema.formOption)
                   .values({
                     content: option.content,
-                    componentId: String(componentId),
+                    componentId,
                   });
                 createdOptionIds.push(insertedOption.insertId);
               }
@@ -182,7 +175,7 @@ export const formRouter = createTRPCRouter({
                   .values({
                     content: agreement.content,
                     required: agreement.required,
-                    componentId: String(componentId),
+                    componentId,
                   });
                 createdAgreementIds.push(insertedAgreement.insertId);
               }
@@ -194,7 +187,7 @@ export const formRouter = createTRPCRouter({
         const existingComponentIds = await trx
           .select({ id: schema.formComponent.id })
           .from(schema.formComponent)
-          .where(eq(schema.formComponent.formId, String(input.id)))
+          .where(eq(schema.formComponent.formId, input.id!))
           .then((res) => res.map(({ id }) => id));
 
         const inputComponentIds = input.components
@@ -217,15 +210,15 @@ export const formRouter = createTRPCRouter({
 
           await trx
             .delete(schema.formQuestion)
-            .where(eq(schema.formQuestion.componentId, String(id)));
+            .where(eq(schema.formQuestion.componentId, id));
 
           await trx
             .delete(schema.formOption)
-            .where(eq(schema.formOption.componentId, String(id)));
+            .where(eq(schema.formOption.componentId, id));
 
           await trx
             .delete(schema.formAgreement)
-            .where(eq(schema.formAgreement.componentId, String(id)));
+            .where(eq(schema.formAgreement.componentId, id));
         }
 
         const existingOptionIds = [];
@@ -235,13 +228,13 @@ export const formRouter = createTRPCRouter({
           const optionIdsForComponent = await trx
             .select({ id: schema.formOption.id })
             .from(schema.formOption)
-            .where(eq(schema.formOption.componentId, String(id)))
+            .where(eq(schema.formOption.componentId, id))
             .then((res) => res.map(({ id }) => id));
 
           const agreementIdsForComponent = await trx
             .select({ id: schema.formAgreement.id })
             .from(schema.formAgreement)
-            .where(eq(schema.formAgreement.componentId, String(id)))
+            .where(eq(schema.formAgreement.componentId, id))
             .then((res) => res.map(({ id }) => id));
 
           existingOptionIds.push(...optionIdsForComponent);
@@ -309,12 +302,12 @@ export const formRouter = createTRPCRouter({
       const componentIds = await trx
         .select({ id: schema.formComponent.id })
         .from(schema.formComponent)
-        .where(eq(schema.formComponent.formId, String(input)))
+        .where(eq(schema.formComponent.formId, input))
         .then((res) => res.map(({ id }) => id));
 
       await trx
         .delete(schema.formComponent)
-        .where(eq(schema.formComponent.formId, String(input)));
+        .where(eq(schema.formComponent.formId, input));
 
       if (componentIds.length === 0) {
         return;
@@ -322,21 +315,15 @@ export const formRouter = createTRPCRouter({
 
       await trx
         .delete(schema.formQuestion)
-        .where(
-          inArray(schema.formQuestion.componentId, componentIds.map(String)),
-        );
+        .where(inArray(schema.formQuestion.componentId, componentIds));
 
       await trx
         .delete(schema.formOption)
-        .where(
-          inArray(schema.formOption.componentId, componentIds.map(String)),
-        );
+        .where(inArray(schema.formOption.componentId, componentIds));
 
       await trx
         .delete(schema.formAgreement)
-        .where(
-          inArray(schema.formAgreement.componentId, componentIds.map(String)),
-        );
+        .where(inArray(schema.formAgreement.componentId, componentIds));
     });
   }),
 });

@@ -30,26 +30,25 @@ export type CreateCustomer = z.infer<typeof createCustomerSchema>;
 
 const optionSchema = z.object({
   content: z.string().min(1).max(256),
-  id: z.string().min(1).max(256).optional().or(z.number().optional()),
-  componentId: z.string().min(1).max(256).optional().or(z.number().optional()),
+  id: z.number().optional(),
+  componentId: z.number().optional(),
 });
 
 const questionSchema = z.object({
   content: z.string().min(1).max(256),
-
-  id: z.string().min(1).max(256).optional().or(z.number().optional()),
-  componentId: z.string().min(1).max(256).optional().or(z.number().optional()),
+  id: z.number().optional(),
+  componentId: z.number().optional(),
 });
 
 const agreementSchema = z.object({
   content: z.string().min(1).max(256),
   required: z.boolean(),
-  id: z.string().min(1).max(256).optional().or(z.number().optional()),
-  componentId: z.string().min(1).max(256).optional().or(z.number().optional()),
+  id: z.number().optional(),
+  componentId: z.number().optional(),
 });
 
 export const componentSchema = z.object({
-  id: z.string().min(1).max(256).optional().or(z.number().optional()),
+  id: z.number().optional(),
   type: z.string().min(1).max(256),
   question: questionSchema.optional().or(z.null()),
   options: z.array(optionSchema).optional(),
@@ -57,7 +56,7 @@ export const componentSchema = z.object({
 });
 
 export const createFormSchema = z.object({
-  id: z.string().min(1).max(256).optional().or(z.number().optional()),
+  id: z.number().optional(),
   title: z.string().min(1).max(256),
   description: z.string().min(1).max(256),
   components: z.array(componentSchema),
