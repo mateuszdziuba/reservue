@@ -16,6 +16,7 @@ import { CreateCustomerForm } from "./create-customer-form";
 
 export function NewCustomerDialog() {
   const [dialogOpen, setDialogOpen] = React.useState(false);
+  const router = useRouter();
 
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -30,6 +31,7 @@ export function NewCustomerDialog() {
         <CreateCustomerForm
           handleOnSuccess={() => {
             setDialogOpen(false);
+            router.refresh();
           }}
         />
       </DialogContent>

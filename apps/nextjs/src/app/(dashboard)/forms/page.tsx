@@ -1,16 +1,14 @@
-"use client";
-
 import Link from "next/link";
 
 import type { Form } from "./types";
 import { Button } from "~/components/ui/button";
-import { api } from "~/trpc/react";
+import { api } from "~/trpc/server";
 import { DashboardShell } from "../components/dashboard-shell";
 import { DataTable } from "../customers/data-table";
 import { columns } from "./columns";
 
-export default function Forms() {
-  const [data] = api.form.byCreatorId.useSuspenseQuery();
+export default async function Forms() {
+  const data = await api.form.byCreatorId.query();
 
   return (
     <DashboardShell

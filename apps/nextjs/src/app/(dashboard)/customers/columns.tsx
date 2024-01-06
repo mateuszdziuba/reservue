@@ -1,5 +1,8 @@
+"use client";
+
 import type { ColumnDef } from "@tanstack/react-table";
-import { Eye, Link, MoreHorizontal, Pencil, Trash } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Eye, MoreHorizontal, Pencil, Trash } from "lucide-react";
 import { z } from "zod";
 
 import {
@@ -67,6 +70,7 @@ export const columns: ColumnDef<Customer>[] = [
       const { mutateAsync: deleteCustomer } = api.customer.delete.useMutation();
       const utils = api.useUtils();
       const { toast } = useToast();
+      const router = useRouter();
 
       return (
         <>
@@ -87,8 +91,7 @@ export const columns: ColumnDef<Customer>[] = [
                   onClick={async () => {
                     try {
                       await deleteCustomer(Number(t.row.original.id));
-                      await utils.customer.byCreatorId.invalidate();
-
+                      router.refresh();
                       toast({
                         title: "Sukces",
                         description: `Pomyślnie usunięto klienta: ${t.row.original.firstName} ${t.row.original.lastName}`,

@@ -3,6 +3,7 @@
 import type { CreateCustomer } from "@reservue/validators";
 import { createCustomerSchema } from "@reservue/validators";
 
+import { Spinner } from "~/components/spinner";
 import { Button } from "~/components/ui/button";
 import {
   Form,
@@ -43,7 +44,7 @@ export function CreateCustomerForm({
         title: "Dodano klienta",
         description: `Utworzono klienta: ${values.firstName} ${values.lastName}`,
       });
-      await utils.customer.all.invalidate();
+      await utils.customer.byCreatorId.invalidate();
     } catch {
       toast({
         title: "Błąd podczas tworzenia klienta",
@@ -195,7 +196,10 @@ export function CreateCustomerForm({
           </div>
         </div>
 
-        <Button type="submit">Dodaj klienta</Button>
+        <Button type="submit" disabled={form.formState.isSubmitting}>
+          {form.formState.isSubmitting && <Spinner className="mr-1" />}Dodaj
+          klienta
+        </Button>
       </form>
     </Form>
   );

@@ -9,10 +9,10 @@ import { SiteFooter } from "~/components/footer";
 import { MainNav } from "~/components/main-nav";
 import { UserNav } from "~/components/user-nav";
 import { api } from "~/trpc/server";
-import { authNavItems, guestNavItems } from "../config";
+import { guestNavItems } from "../config";
 import { SidebarNav } from "./components/sidebar";
 
-export default async function MarketingLayout(props: { children: ReactNode }) {
+export default async function DashboardLayout(props: { children: ReactNode }) {
   const session = await auth();
 
   if (!session) {
