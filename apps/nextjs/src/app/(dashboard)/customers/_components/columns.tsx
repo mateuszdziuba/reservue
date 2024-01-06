@@ -2,7 +2,7 @@
 
 import type { ColumnDef } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
-import { Eye, MoreHorizontal, Pencil, Trash } from "lucide-react";
+import { ArrowUpDown, Eye, MoreHorizontal, Pencil, Trash } from "lucide-react";
 import { z } from "zod";
 
 import {
@@ -23,7 +23,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import { toast, useToast } from "~/components/ui/use-toast";
+import { useToast } from "~/components/ui/use-toast";
 import { api } from "~/trpc/react";
 
 // This type is used to define the shape of our data.
@@ -39,12 +39,22 @@ export interface Customer {
 
 export const columns: ColumnDef<Customer>[] = [
   {
-    accessorKey: "firstName",
-    header: "Imię",
+    accessorKey: "lastName",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Nazwisko
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   {
-    accessorKey: "lastName",
-    header: "Nazwisko",
+    accessorKey: "firstName",
+    header: "Imię",
   },
   {
     accessorKey: "phoneNumber",
@@ -56,7 +66,17 @@ export const columns: ColumnDef<Customer>[] = [
   },
   {
     accessorKey: "lastVisitDate",
-    header: "Ostatni zabieg",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Ostatni zabieg
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
     cell: ({ row }) =>
       new Intl.DateTimeFormat("pl-PL", {
         day: "numeric",
@@ -68,7 +88,6 @@ export const columns: ColumnDef<Customer>[] = [
     id: "actions",
     cell: function Actions(t) {
       const { mutateAsync: deleteCustomer } = api.customer.delete.useMutation();
-      const utils = api.useUtils();
       const { toast } = useToast();
       const router = useRouter();
 

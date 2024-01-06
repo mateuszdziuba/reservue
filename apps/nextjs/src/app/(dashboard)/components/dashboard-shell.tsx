@@ -8,7 +8,7 @@ export function DashboardShell(props: {
   className?: string;
 }) {
   return (
-    <div className="px-1">
+    <div className="p-1">
       <div className="mb-4 flex items-center justify-between ">
         <div className="space-y-1">
           <h1 className="font-cal text-xl font-semibold leading-none">

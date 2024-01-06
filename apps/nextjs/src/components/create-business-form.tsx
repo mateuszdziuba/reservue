@@ -31,14 +31,12 @@ export function CreateBusinessForm() {
     api.business.create.useMutation({
       async onSuccess() {
         form.reset();
-        await utils.business.byOwnerId.invalidate();
       },
     });
 
   async function onSubmit(values: CreateBusiness) {
     try {
       await createBusiness(values);
-      await utils.business.byOwnerId.invalidate();
       router.push("/dashboard");
     } catch {
       // noop

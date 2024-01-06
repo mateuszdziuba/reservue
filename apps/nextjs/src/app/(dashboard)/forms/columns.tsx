@@ -2,6 +2,7 @@
 
 import type { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Eye, MoreHorizontal, Pencil, Trash } from "lucide-react";
 
 import type { Form } from "./types";
@@ -43,6 +44,7 @@ export const columns: ColumnDef<Form>[] = [
       const { mutateAsync: deleteForm } = api.form.delete.useMutation();
       const utils = api.useUtils();
       const { toast } = useToast();
+      const router = useRouter();
 
       return (
         <>
@@ -64,7 +66,7 @@ export const columns: ColumnDef<Form>[] = [
                     try {
                       await deleteForm(Number(t.row.original.id));
                       await utils.form.byCreatorId.invalidate();
-
+                      router.refresh();
                       toast({
                         title: "Sukces",
                         description: `Pomyślnie usunięto formularz o nazwie: ${t.row.original.title}`,

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Facebook } from "lucide-react";
 
 import { auth, signIn, signOut } from "@reservue/auth";
@@ -5,7 +6,7 @@ import { auth, signIn, signOut } from "@reservue/auth";
 import { Button } from "~/components/ui/button";
 import { Icons } from "./icons";
 
-export async function AuthShowcase() {
+export async function OauthSignin() {
   const session = await auth();
 
   if (!session) {
@@ -39,19 +40,13 @@ export async function AuthShowcase() {
   }
 
   return (
-    <div className="flex items-center justify-center gap-4">
-      <p className="text-center text-2xl text-black">
-        {session && <span>Logged in as {session.user.name}</span>}
+    <div className="flex flex-col items-center justify-center gap-4">
+      <p className="text-center text-base">
+        {session && <span>Zalogowany jako {session.user.name}</span>}
       </p>
-
-      <form
-        action={async () => {
-          "use server";
-          await signOut();
-        }}
-      >
-        <Button>Sign out</Button>
-      </form>
+      <Button asChild>
+        <Link href="/signout">Wyloguj się</Link>
+      </Button>
     </div>
   );
 }

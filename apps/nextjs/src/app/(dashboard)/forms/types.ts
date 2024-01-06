@@ -4,19 +4,19 @@ export interface Agreement {
   id?: number;
   content: string;
   required: boolean;
-  componentId?: string;
+  componentId?: number;
 }
 
 export interface Option {
   id?: number;
   content: string;
-  componentId?: string;
+  componentId?: number;
 }
 
 export interface Question {
   id?: number;
   content: string;
-  componentId?: string;
+  componentId?: number;
 }
 
 export type ComponentType =
@@ -30,7 +30,7 @@ export type ComponentType =
 export type FormComponent = {
   id: number | string;
   type: ComponentType;
-  formId: string;
+  formId: number;
 } & ComponentItems;
 
 export interface ComponentItems {
@@ -40,7 +40,7 @@ export interface ComponentItems {
 }
 
 export interface Form {
-  id: number | string;
+  id: number;
   title: string;
   description: string;
   createdAt: Date | string; // ISO date string

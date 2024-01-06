@@ -1,7 +1,7 @@
 import type { Route } from "next";
 import Link from "next/link";
 
-import { AuthShowcase } from "~/components/auth-showcase";
+import { OauthSignin } from "~/components/oauth-signin";
 
 export const runtime = "edge";
 
@@ -9,12 +9,10 @@ export default function AuthenticationPage() {
   return (
     <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
       <div className="flex flex-col space-y-2 text-center">
-        <h1 className="text-2xl font-semibold tracking-tight">
-          Create an account
-        </h1>
-        <p className="text-muted-foreground text-sm">
+        <h1 className="text-2xl font-semibold tracking-tight">Zaloguj się</h1>
+        {/* <p className="text-muted-foreground text-sm">
           Enter your email below to create your account
-        </p>
+        </p> */}
       </div>
       <div className="grid gap-6">
         {/* <EmailSignIn /> */}
@@ -25,15 +23,15 @@ export default function AuthenticationPage() {
           </div>
           <div className="relative flex justify-center text-xs uppercase">
             <span className="bg-background text-muted-foreground px-2">
-              Lub kontynuuj z
+              Kontynuuj z
             </span>
           </div>
         </div>
 
-        <AuthShowcase />
+        <OauthSignin />
       </div>
 
-      <p className="text-muted-foreground px-8 text-center text-sm">
+      {/* <p className="text-muted-foreground px-8 text-center text-sm">
         By clicking continue, you agree to our{" "}
         <Link
           href={"/terms" as Route}
@@ -49,7 +47,7 @@ export default function AuthenticationPage() {
           Privacy Policy
         </Link>
         .
-      </p>
+      </p> */}
     </div>
   );
 }

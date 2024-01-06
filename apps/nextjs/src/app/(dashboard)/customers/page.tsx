@@ -1,8 +1,9 @@
 import { api } from "~/trpc/server";
+import { DataTable } from "../../../components/data-table";
 import { DashboardShell } from "../components/dashboard-shell";
-import { columns } from "./columns";
-import { DataTable } from "./data-table";
-import { NewCustomerDialog } from "./new-customer-dialog";
+import { columns } from "./_components/columns";
+import { DataTableToolbar } from "./_components/data-table-toolbar";
+import { NewCustomerDialog } from "./_components/new-customer-dialog";
 
 export default async function Customers() {
   const data = await api.customer.byCreatorId.query();
@@ -13,7 +14,9 @@ export default async function Customers() {
       description="Zarządzaj swoimi klientami"
       headerAction={<NewCustomerDialog />}
     >
-      {data && <DataTable data={data} columns={columns} />}
+      {data && (
+        <DataTable data={data} columns={columns} toolbar={DataTableToolbar} />
+      )}
     </DashboardShell>
   );
 }

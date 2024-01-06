@@ -275,6 +275,7 @@ export function FormBuilder({ initialData }: { initialData?: Form }) {
                 description: "Pomyślnie zapisano formularz",
               });
               router.push("/forms");
+              router.refresh();
             }
           } catch (error) {
             toast({

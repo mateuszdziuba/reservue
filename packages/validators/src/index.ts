@@ -48,7 +48,7 @@ const agreementSchema = z.object({
 });
 
 export const componentSchema = z.object({
-  id: z.number().optional(),
+  id: z.number().optional().or(z.string().optional()),
   type: z.string().min(1).max(256),
   question: questionSchema.optional().or(z.null()),
   options: z.array(optionSchema).optional(),
