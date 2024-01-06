@@ -31,7 +31,7 @@ export function FormWrapper({
     <div
       ref={setNodeRef}
       style={style}
-      className="w-full max-w-lg rounded-md border bg-white p-4"
+      className="rounded-md border bg-white p-4"
     >
       <div className="flex w-full justify-between">
         <p>{name}</p>

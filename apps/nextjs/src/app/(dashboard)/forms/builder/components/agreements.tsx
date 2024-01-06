@@ -55,7 +55,7 @@ export function Agreements({
   };
 
   return (
-    <div className="grid w-full max-w-lg items-center gap-1.5">
+    <div className="grid gap-1.5">
       <Label>
         Zaznacz <Checkbox className="inline" checked disabled />, jeśli zgoda ma
         być wymagana

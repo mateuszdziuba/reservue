@@ -47,7 +47,7 @@ export function Selection({
   }, [question, options]);
 
   return (
-    <div className="grid w-full max-w-lg items-center gap-1.5">
+    <div className="grid gap-1.5">
       <Label htmlFor={id}>Treść pytania</Label>
       <Input
         id={id}

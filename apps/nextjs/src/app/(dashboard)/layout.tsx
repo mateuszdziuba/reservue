@@ -9,7 +9,8 @@ import { SiteFooter } from "~/components/footer";
 import { MainNav } from "~/components/main-nav";
 import { UserNav } from "~/components/user-nav";
 import { api } from "~/trpc/server";
-import { authNavItems } from "../config";
+import { authNavItems, guestNavItems } from "../config";
+import { SidebarNav } from "./components/sidebar";
 
 export default async function MarketingLayout(props: { children: ReactNode }) {
   const session = await auth();
@@ -34,7 +35,7 @@ export default async function MarketingLayout(props: { children: ReactNode }) {
           </div>
 
           {/* <MobileDropdown /> */}
-          <MainNav navItems={authNavItems} />
+          <MainNav navItems={guestNavItems} />
         </div>
         <div className="ml-auto flex items-center space-x-4">
           <Suspense>
@@ -43,7 +44,14 @@ export default async function MarketingLayout(props: { children: ReactNode }) {
         </div>
       </header>
 
-      <main className="flex-1">{props.children}</main>
+      <div className="container flex min-h-[calc(100vh-14rem)] flex-1 gap-12 p-8 pt-6">
+        <aside className="hidden w-52 flex-col md:flex">
+          <SidebarNav />
+        </aside>
+        <main className="flex flex-1 flex-col overflow-hidden">
+          {props.children}
+        </main>
+      </div>
       <SiteFooter />
     </div>
   );

@@ -1,7 +1,7 @@
 "use client";
 
 import type { DragEndEvent } from "@dnd-kit/core";
-import type { Dispatch, ReactElement, SetStateAction } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import React, { useEffect, useMemo, useState } from "react";
 import {
   closestCenter,
@@ -22,13 +22,10 @@ import {
 import { v4 as uuidv4 } from "uuid";
 
 import type {
-  Agreement,
   ComponentItems,
   ComponentType,
   Form,
   FormComponent,
-  Option,
-  Question,
 } from "../types";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -156,116 +153,115 @@ export function FormBuilder({ initialData }: { initialData?: Form }) {
     api.form.update.useMutation();
 
   return (
-    <div className="container flex flex-col py-2">
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="title">Tytuł</Label>
-        <Input
-          id="title"
-          value={formTitle}
-          onChange={(e) => setFormTitle(e.target.value)}
-        />
-        <Label htmlFor="description">Opis</Label>
-        <Input
-          id="description"
-          value={formDescription}
-          onChange={(e) => setFormDescription(e.target.value)}
-        />
-        <div className="flex w-full max-w-lg gap-2">
-          <Select
-            value={value}
-            onValueChange={(value: ComponentType) => setValue(value)}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Rodzaj pola" />
-            </SelectTrigger>
-            <SelectContent>
-              {Object.entries(formItems).map(([key, value]) => (
-                <SelectItem key={key} value={key}>
-                  {value.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Button
-            onClick={() => {
-              if (value === "") return;
-              setComponents((prev) => [
-                ...prev,
-                {
-                  id: uuidv4(),
-                  type: value,
-                  name: formItems[value].name,
-                  component: formItems[value].component,
-                  updated: true,
-                },
-              ]);
-            }}
-          >
-            Dodaj
-          </Button>
-        </div>
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragEnd={handleDragEnd}
-          modifiers={[restrictToVerticalAxis]}
+    <div className="flex flex-col gap-2">
+      <Label htmlFor="title">Tytuł</Label>
+      <Input
+        id="title"
+        value={formTitle}
+        onChange={(e) => setFormTitle(e.target.value)}
+      />
+      <Label htmlFor="description">Opis</Label>
+      <Input
+        id="description"
+        value={formDescription}
+        onChange={(e) => setFormDescription(e.target.value)}
+      />
+      <div className="flex w-full gap-2">
+        <Select
+          value={value}
+          onValueChange={(value: ComponentType) => setValue(value)}
         >
-          <SortableContext
-            items={componentsIds}
-            strategy={verticalListSortingStrategy}
-          >
-            {components.map(
-              ({
-                id,
-                name,
-                type,
-                updated,
-                initialData,
-                component: Component,
-              }) => (
-                <FormWrapper
-                  key={id}
-                  name={name}
-                  id={String(id)}
-                  onDeleteClick={() => handleDeleteComponent(id)}
-                >
-                  <Component
-                    initialData={initialData}
-                    updateFormData={(input) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        [id]: {
-                          ...input,
-                          type,
-                          id: updated ? undefined : id,
-                        },
-                      }))
-                    }
-                  />
-                </FormWrapper>
-              ),
-            )}
-          </SortableContext>
-        </DndContext>
+          <SelectTrigger>
+            <SelectValue placeholder="Rodzaj pola" />
+          </SelectTrigger>
+          <SelectContent>
+            {Object.entries(formItems).map(([key, value]) => (
+              <SelectItem key={key} value={key}>
+                {value.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
         <Button
-          onClick={async () => {
-            const input = {
-              title: formTitle,
-              description: formDescription,
-              components: Object.values(
-                rearrangeObjectKeys(formData, componentsIds),
-              ),
-            };
-            try {
-              initialData
-                ? await updateForm({ id: initialData.id, ...input })
-                : await createForm(input);
-            } catch (error) {}
+          disabled={value === ""}
+          onClick={() => {
+            if (value === "") return;
+            setComponents((prev) => [
+              ...prev,
+              {
+                id: uuidv4(),
+                type: value,
+                name: formItems[value].name,
+                component: formItems[value].component,
+                updated: true,
+              },
+            ]);
           }}
         >
-          {initialData ? "Zapisz formularz" : "Dodaj formularz"}
+          Dodaj
         </Button>
       </div>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+        modifiers={[restrictToVerticalAxis]}
+      >
+        <SortableContext
+          items={componentsIds}
+          strategy={verticalListSortingStrategy}
+        >
+          {components.map(
+            ({
+              id,
+              name,
+              type,
+              updated,
+              initialData,
+              component: Component,
+            }) => (
+              <FormWrapper
+                key={id}
+                name={name}
+                id={String(id)}
+                onDeleteClick={() => handleDeleteComponent(id)}
+              >
+                <Component
+                  initialData={initialData}
+                  updateFormData={(input) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      [id]: {
+                        ...input,
+                        type,
+                        id: updated ? undefined : id,
+                      },
+                    }))
+                  }
+                />
+              </FormWrapper>
+            ),
+          )}
+        </SortableContext>
+      </DndContext>
+      <Button
+        onClick={async () => {
+          const input = {
+            title: formTitle,
+            description: formDescription,
+            components: Object.values(
+              rearrangeObjectKeys(formData, componentsIds),
+            ),
+          };
+          try {
+            initialData
+              ? await updateForm({ id: initialData.id, ...input })
+              : await createForm(input);
+          } catch (error) {}
+        }}
+      >
+        {initialData ? "Zapisz formularz" : "Dodaj formularz"}
+      </Button>
     </div>
   );
 }

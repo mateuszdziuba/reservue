@@ -57,7 +57,6 @@ export const formRouter = createTRPCRouter({
       // Start a transaction
       return ctx.db.transaction(async (trx) => {
         const insertedForm = await trx.insert(schema.form).values({
-          id: Number(input.id),
           title: input.title,
           description: input.description,
           createdBy: ctx.session.user.id,

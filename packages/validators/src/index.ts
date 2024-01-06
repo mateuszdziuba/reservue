@@ -19,7 +19,12 @@ export const createCustomerSchema = z.object({
   firstName: z.string().min(1),
   lastName: z.string().min(1),
   phoneNumber: z.string().min(1),
-  email: z.string().min(1).email(),
+  email: z.string().min(1).email().optional(),
+  streetName: z.string().min(1).max(256).optional(), // Corresponds to varchar("street_name", { length: 256 })
+  streetNumber: z.string().min(1).optional(), // Corresponds to int("street_number")
+  apartmentNumber: z.string().min(1).optional(), // Corresponds to int("apartment_number")
+  postalCode: z.string().min(1).max(6).optional(), // Corresponds to varchar("postal_code", { length: 6 })
+  city: z.string().min(1).max(256).optional(), // C
 });
 export type CreateCustomer = z.infer<typeof createCustomerSchema>;
 

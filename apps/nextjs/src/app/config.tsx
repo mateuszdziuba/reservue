@@ -1,12 +1,12 @@
+import type { LucideIcon } from "lucide-react";
 import type { Route } from "next";
 import {
+  BarChart,
   BookUser,
-  CalendarDays,
+  ClipboardEdit,
   FileQuestion,
-  FlaskRound,
-  Globe,
   HeartHandshake,
-  Store,
+  Users,
 } from "lucide-react";
 
 export const guestNavItems = [
@@ -17,34 +17,26 @@ export const guestNavItems = [
 ] satisfies { href: Route; title: string }[];
 
 export const authNavItems = [
-  ...guestNavItems,
-  { href: "/dashboard", title: "Dashboard" },
-  {
-    href: "/employees",
-    title: "Pracownicy",
-  },
+  { href: "/dashboard", title: "Dashboard", icon: BarChart },
+
   {
     href: "/customers",
     title: "Klienci",
+    icon: Users,
   },
   {
     href: "/treatments",
     title: "Zabiegi",
+    icon: HeartHandshake,
   },
   {
     href: "/forms",
     title: "Formularze",
+    icon: ClipboardEdit,
   },
-] satisfies { href: Route; title: string }[];
+] satisfies { href: Route; title: string; icon: LucideIcon }[];
 
 export const marketingFeatures = [
-  {
-    icon: <Store className="h-10 w-10" />,
-    title: "Zarządzaj",
-    body: (
-      <>Zarządzaj swoimi gabinetami bez względu na to gdzie teraz jesteś.</>
-    ),
-  },
   {
     icon: <BookUser className="h-10 w-10" />,
     title: "Klienci",
@@ -53,7 +45,7 @@ export const marketingFeatures = [
   {
     icon: <HeartHandshake className="h-10 w-10" />,
     title: "Zabiegi",
-    body: <>Stwórz bazę swoich zabiegów.</>,
+    body: <>Przypisz formularze do zabiegów</>,
   },
   {
     icon: <FileQuestion className="h-10 w-10" />,
@@ -62,16 +54,6 @@ export const marketingFeatures = [
       <>
         Zrezygnuj ze zbędnej papierologii. Twórz i wypełniaj ankiety w
         aplikacji.
-      </>
-    ),
-  },
-  {
-    icon: <CalendarDays className="h-10 w-10" />,
-    title: "Beauty plany",
-    body: (
-      <>
-        Komponuj beauty plany, dzięki którym Twoim klientom będzie łatwiej
-        codziennie dbać o swoją urodę.
       </>
     ),
   },

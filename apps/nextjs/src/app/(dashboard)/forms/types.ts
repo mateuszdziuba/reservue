@@ -1,3 +1,5 @@
+import type { Control } from "react-hook-form";
+
 export interface Agreement {
   id?: number;
   content: string;
@@ -45,4 +47,10 @@ export interface Form {
   updatedAt: Date | string | null; // ISO date string or null
   createdBy: string;
   components: FormComponent[];
+}
+
+export interface FormFieldProps {
+  data: ComponentItems;
+  control: Control;
+  name: string;
 }

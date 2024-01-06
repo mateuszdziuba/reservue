@@ -2,7 +2,7 @@
 
 import type { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
-import { ClipboardEdit, MoreHorizontal, Trash } from "lucide-react";
+import { Eye, MoreHorizontal, Pencil, Trash } from "lucide-react";
 
 import type { Form } from "./types";
 import {
@@ -39,7 +39,7 @@ export const columns: ColumnDef<Form>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => {
+    cell: function Actions(t) {
       const { mutateAsync: deleteForm } = api.form.delete.useMutation();
       const utils = api.useUtils();
       const { toast } = useToast();
@@ -62,12 +62,12 @@ export const columns: ColumnDef<Form>[] = [
                 <AlertDialogAction
                   onClick={async () => {
                     try {
-                      await deleteForm(Number(row.original.id));
+                      await deleteForm(Number(t.row.original.id));
                       await utils.form.byCreatorId.invalidate();
 
                       toast({
                         title: "Sukces",
-                        description: `Pomyślnie usunięto formularz o nazwie: ${row.original.title}`,
+                        description: `Pomyślnie usunięto formularz o nazwie: ${t.row.original.title}`,
                       });
                     } catch {
                       toast({
@@ -93,13 +93,19 @@ export const columns: ColumnDef<Form>[] = [
                 {/* <DropdownMenuLabel>Akcje</DropdownMenuLabel> */}
                 {/* <DropdownMenuSeparator /> */}
                 <DropdownMenuItem asChild>
-                  <Link href={`/forms/${row.original.id}/edit`}>
-                    <ClipboardEdit className="mr-2 h-4 w-4" />
+                  <Link href={`/forms/${t.row.original.id}/preview`}>
+                    <Eye className="mr-2 h-4 w-4" />
+                    <span>Podgląd</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href={`/forms/${t.row.original.id}/edit`}>
+                    <Pencil className="mr-2 h-4 w-4" />
                     <span>Edytuj</span>
                   </Link>
                 </DropdownMenuItem>
                 <AlertDialogTrigger asChild>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem className="!text-red-500">
                     <Trash className="mr-2 h-4 w-4" />
                     <span>Usuń</span>
                   </DropdownMenuItem>
