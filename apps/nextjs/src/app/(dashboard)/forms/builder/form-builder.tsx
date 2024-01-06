@@ -3,6 +3,7 @@
 import type { DragEndEvent } from "@dnd-kit/core";
 import type { Dispatch, SetStateAction } from "react";
 import React, { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   closestCenter,
   DndContext,
@@ -27,6 +28,7 @@ import type {
   Form,
   FormComponent,
 } from "../types";
+import { Spinner } from "~/components/spinner";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -37,37 +39,39 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { useToast } from "~/components/ui/use-toast";
 import { api } from "~/trpc/react";
 import { Agreements } from "./components/agreements";
 import { Answer } from "./components/answer";
 import { FormWrapper } from "./components/form-wrapper";
 import { Selection } from "./components/selection";
 
-export function FormBuilder({ initialData }: { initialData?: Form }) {
-  const formItems: Record<
-    ComponentType,
-    {
-      name: string;
-      component: ({
-        initialData,
-        updateFormData,
-      }: {
-        initialData?: ComponentItems;
-        updateFormData: Dispatch<SetStateAction<any>>;
-      }) => JSX.Element;
-    }
-  > = {
-    shortAnswer: { name: "Krótka odpowiedź", component: Answer },
-    longAnswer: { name: "Długa odpowiedź", component: Answer },
-    singleSelection: { name: "Jednokrotny wybór", component: Selection },
-    multipleSelection: { name: "Wielokrony wybór", component: Selection },
-    dropdownMenu: { name: "Lista rozwijana", component: Selection },
-    agreements: { name: "Zgody", component: Agreements },
-  };
+const formItems: Record<
+  ComponentType,
+  {
+    name: string;
+    component: ({
+      initialData,
+      updateFormData,
+    }: {
+      initialData?: ComponentItems;
+      updateFormData: Dispatch<SetStateAction<any>>;
+    }) => JSX.Element;
+  }
+> = {
+  shortAnswer: { name: "Krótka odpowiedź", component: Answer },
+  longAnswer: { name: "Długa odpowiedź", component: Answer },
+  singleSelection: { name: "Jednokrotny wybór", component: Selection },
+  multipleSelection: { name: "Wielokrony wybór", component: Selection },
+  dropdownMenu: { name: "Lista rozwijana", component: Selection },
+  agreements: { name: "Zgody", component: Agreements },
+};
 
+export function FormBuilder({ initialData }: { initialData?: Form }) {
   const [value, setValue] = useState<ComponentType | "">("");
   const [formTitle, setFormTitle] = useState("");
   const [formDescription, setFormDescription] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [components, setComponents] = useState<
     {
       id: string | number;
@@ -93,6 +97,8 @@ export function FormBuilder({ initialData }: { initialData?: Form }) {
     [components],
   );
 
+  const router = useRouter();
+  const { toast } = useToast();
   const sensors = useSensors(
     useSensor(MouseSensor),
     useSensor(TouchSensor),
@@ -245,6 +251,7 @@ export function FormBuilder({ initialData }: { initialData?: Form }) {
         </SortableContext>
       </DndContext>
       <Button
+        disabled={isLoading}
         onClick={async () => {
           const input = {
             title: formTitle,
@@ -254,12 +261,33 @@ export function FormBuilder({ initialData }: { initialData?: Form }) {
             ),
           };
           try {
-            initialData
-              ? await updateForm({ id: initialData.id, ...input })
-              : await createForm(input);
-          } catch (error) {}
+            setIsLoading(true);
+            if (initialData) {
+              await updateForm({ id: initialData.id, ...input });
+              toast({
+                title: "Sukces",
+                description: "Pomyślnie edytowano formularz",
+              });
+            } else {
+              await createForm(input);
+              toast({
+                title: "Sukces",
+                description: "Pomyślnie zapisano formularz",
+              });
+              router.push("/forms");
+            }
+          } catch (error) {
+            toast({
+              title: "Błąd",
+              description: "Coś poszło nie tak",
+              variant: "destructive",
+            });
+          } finally {
+            setIsLoading(false);
+          }
         }}
       >
+        {isLoading && <Spinner className="mr-1" />}
         {initialData ? "Zapisz formularz" : "Dodaj formularz"}
       </Button>
     </div>

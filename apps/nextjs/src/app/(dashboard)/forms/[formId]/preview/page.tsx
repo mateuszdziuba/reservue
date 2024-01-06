@@ -15,8 +15,8 @@ export default async function FormEditor({
 
   return (
     <DashboardShell
-      title="Edycja formularza"
-      description="Edytuj istniejący formularz"
+      title={data.title}
+      description={data.description}
       headerAction={
         <Button asChild>
           <Link href="/forms">Wróć</Link>

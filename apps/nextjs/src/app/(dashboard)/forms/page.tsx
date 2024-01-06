@@ -10,9 +10,7 @@ import { DataTable } from "../customers/data-table";
 import { columns } from "./columns";
 
 export default function Forms() {
-  const { data } = api.form.byCreatorId.useQuery();
-
-  if (!data) return null;
+  const [data] = api.form.byCreatorId.useSuspenseQuery();
 
   return (
     <DashboardShell

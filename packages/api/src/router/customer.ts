@@ -27,6 +27,16 @@ export const customerRouter = createTRPCRouter({
       });
     }),
 
+  byCreatorId: protectedProcedure.query(({ ctx }) => {
+    if (!ctx.session?.user?.id) {
+      throw new Error("User not authenticated");
+    }
+
+    return ctx.db.query.customer.findMany({
+      where: eq(schema.customer.createdBy, ctx.session.user.id),
+    });
+  }),
+
   create: protectedProcedure
     .input(createCustomerSchema)
     .mutation(({ ctx, input }) => {
