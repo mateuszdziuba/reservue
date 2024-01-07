@@ -21,7 +21,7 @@ export function Answer({
 
   useEffect(() => {
     updateFormData({ question });
-  }, [question]);
+  }, [question, initialData]);
 
   return (
     <div className="grid gap-1.5">

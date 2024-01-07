@@ -53,6 +53,7 @@ export const componentSchema = z.object({
   question: questionSchema.optional().or(z.null()),
   options: z.array(optionSchema).optional(),
   agreements: z.array(agreementSchema).optional(),
+  order: z.number(),
 });
 
 export const createFormSchema = z.object({

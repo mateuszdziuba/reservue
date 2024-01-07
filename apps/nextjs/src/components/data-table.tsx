@@ -7,6 +7,7 @@ import type {
   Table as TableType,
 } from "@tanstack/react-table";
 import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import {
   flexRender,
   getCoreRowModel,
@@ -54,6 +55,8 @@ export function DataTable<TData, TValue>({
       sorting,
     },
   });
+  const pathname = usePathname();
+  const router = useRouter();
 
   return (
     <div className="space-y-4">

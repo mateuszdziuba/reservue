@@ -14,13 +14,12 @@ export const customerRouter = createTRPCRouter({
     });
   }),
 
-  byId: publicProcedure
+  byId: protectedProcedure
     .input(z.object({ id: z.number() }))
     .query(({ ctx, input }) => {
-      // return ctx.db
-      //   .select()
-      //   .from(schema.customer)
-      //   .where(eq(schema.customer.id, input.id));
+      if (!ctx.session?.user?.id) {
+        throw new Error("User not authenticated");
+      }
 
       return ctx.db.query.customer.findFirst({
         where: eq(schema.customer.id, input.id),
@@ -47,6 +46,24 @@ export const customerRouter = createTRPCRouter({
       return ctx.db
         .insert(schema.customer)
         .values({ ...input, createdBy: ctx.session.user.id });
+    }),
+
+  update: protectedProcedure
+    .input(z.object({ id: z.number(), data: createCustomerSchema }))
+    .mutation(({ ctx, input }) => {
+      if (!ctx.session?.user?.id) {
+        throw new Error("User not authenticated");
+      }
+
+      return ctx.db
+        .update(schema.customer)
+        .set(input.data)
+        .where(
+          and(
+            eq(schema.customer.id, input.id),
+            eq(schema.customer.createdBy, ctx.session.user.id),
+          ),
+        );
     }),
 
   delete: protectedProcedure.input(z.number()).mutation(({ ctx, input }) => {

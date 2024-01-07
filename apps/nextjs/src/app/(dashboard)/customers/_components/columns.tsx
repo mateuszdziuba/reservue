@@ -1,6 +1,7 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowUpDown, Eye, MoreHorizontal, Pencil, Trash } from "lucide-react";
 import { z } from "zod";
@@ -138,18 +139,13 @@ export const columns: ColumnDef<Customer>[] = [
               <DropdownMenuContent align="end">
                 {/* <DropdownMenuLabel>Akcje</DropdownMenuLabel> */}
                 {/* <DropdownMenuSeparator /> */}
-                {/* <DropdownMenuItem asChild>
-                  <Link href={`/forms/${t.row.original.id}/preview`}>
+                <DropdownMenuItem asChild>
+                  <Link href={`/customers/${t.row.original.id}`}>
                     <Eye className="mr-2 h-4 w-4" />
-                    <span>Podgląd</span>
+                    <span>Szczegóły</span>
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href={`/forms/${t.row.original.id}/edit`}>
-                    <Pencil className="mr-2 h-4 w-4" />
-                    <span>Edytuj</span>
-                  </Link>
-                </DropdownMenuItem> */}
+
                 <AlertDialogTrigger asChild>
                   <DropdownMenuItem className="!text-red-500">
                     <Trash className="mr-2 h-4 w-4" />

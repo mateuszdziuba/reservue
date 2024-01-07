@@ -5,7 +5,7 @@ import { mySqlTable } from "./_table";
 import { users } from "./auth";
 
 export const business = mySqlTable("business", {
-  id: int("id").primaryKey().autoincrement(),
+  id: int("id").autoincrement().primaryKey(),
   name: varchar("name", { length: 256 }).default("").notNull(),
   vatin: varchar("vatin", { length: 10 }).default("").notNull(),
   streetName: varchar("street_name", { length: 256 }).default("").notNull(),
@@ -28,5 +28,4 @@ export const bussinessRelations = relations(business, ({ one, many }) => ({
     fields: [business.ownerId],
     references: [users.id],
   }),
-  // customers: many(customer),
 }));

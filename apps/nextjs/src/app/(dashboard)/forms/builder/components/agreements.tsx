@@ -26,7 +26,7 @@ export function Agreements({
 
   useEffect(() => {
     updateFormData({ agreements });
-  }, [agreements]);
+  }, [agreements, initialData]);
 
   const handleChangeOption = (value: string, idx: number) => {
     setAgreements((prev) => {

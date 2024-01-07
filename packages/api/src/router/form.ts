@@ -31,6 +31,7 @@ export const formRouter = createTRPCRouter({
         ),
         with: {
           components: {
+            orderBy: (components, { asc }) => [asc(components.order)],
             with: {
               question: true,
               options: true,
@@ -100,21 +101,39 @@ export const formRouter = createTRPCRouter({
       }
 
       return ctx.db.transaction(async (trx) => {
-        // Update the form data
+        await trx
+          .update(schema.form)
+          .set({
+            title: input.title,
+            description: input.description,
+          })
+          .where(eq(schema.form.id, Number(input.id)));
+
         const createdComponentIds = [];
         const createdOptionIds = [];
         const createdAgreementIds = [];
 
-        // Iterate over components for update/addition
         for (const component of input.components) {
-          let componentId = component.id;
+          let componentId =
+            typeof component.id === "number" ? component.id : undefined;
 
           if (!componentId) {
             const insertedComponent = await trx
               .insert(schema.formComponent)
-              .values({ type: component.type, formId: input.id });
+              .values({
+                type: component.type,
+                order: component.order,
+                formId: input.id,
+              });
             componentId = +insertedComponent.insertId;
             createdComponentIds.push(componentId);
+          } else {
+            await trx
+              .update(schema.formComponent)
+              .set({
+                order: component.order,
+              })
+              .where(eq(schema.formComponent.id, componentId));
           }
 
           if (component.question) {
@@ -146,7 +165,7 @@ export const formRouter = createTRPCRouter({
                   .set({
                     content: option.content,
                   })
-                  .where(eq(schema.formOption.id, Number(option.id)));
+                  .where(eq(schema.formOption.id, option.id));
               } else {
                 const insertedOption = await trx
                   .insert(schema.formOption)
@@ -154,7 +173,7 @@ export const formRouter = createTRPCRouter({
                     content: option.content,
                     componentId,
                   });
-                createdOptionIds.push(insertedOption.insertId);
+                createdOptionIds.push(+insertedOption.insertId);
               }
             }
           }
@@ -168,7 +187,7 @@ export const formRouter = createTRPCRouter({
                     content: agreement.content,
                     required: agreement.required,
                   })
-                  .where(eq(schema.formAgreement.id, Number(agreement.id)));
+                  .where(eq(schema.formAgreement.id, agreement.id));
               } else {
                 const insertedAgreement = await trx
                   .insert(schema.formAgreement)
@@ -177,7 +196,7 @@ export const formRouter = createTRPCRouter({
                     required: agreement.required,
                     componentId,
                   });
-                createdAgreementIds.push(insertedAgreement.insertId);
+                createdAgreementIds.push(+insertedAgreement.insertId);
               }
             }
           }
@@ -187,12 +206,12 @@ export const formRouter = createTRPCRouter({
         const existingComponentIds = await trx
           .select({ id: schema.formComponent.id })
           .from(schema.formComponent)
-          .where(eq(schema.formComponent.formId, input.id!))
+          .where(eq(schema.formComponent.formId, Number(input.id)))
           .then((res) => res.map(({ id }) => id));
 
         const inputComponentIds = input.components
           .filter((component) => component.id !== undefined)
-          .map((component) => String(component.id));
+          .map((component) => component.id);
 
         const allCurrentComponentIds = [
           ...inputComponentIds,
@@ -200,7 +219,7 @@ export const formRouter = createTRPCRouter({
         ];
 
         const componentIdsToDelete = existingComponentIds.filter(
-          (existingId) => !allCurrentComponentIds.includes(String(existingId)),
+          (existingId) => !allCurrentComponentIds.includes(existingId),
         );
 
         for (const id of componentIdsToDelete) {
@@ -244,13 +263,13 @@ export const formRouter = createTRPCRouter({
         const inputOptionIds = input.components
           .flatMap((component) => component.options ?? [])
           .filter((option) => option.id !== undefined)
-          .map((option) => String(option.id));
+          .map((option) => option.id);
 
         const allCurrentOptionIds = [...inputOptionIds, ...createdOptionIds];
 
         const optionIdsToDelete =
           existingOptionIds?.filter(
-            (existingId) => !allCurrentOptionIds.includes(String(existingId)),
+            (existingId) => !allCurrentOptionIds.includes(existingId),
           ) ?? [];
 
         if (optionIdsToDelete.length > 0) {
@@ -262,7 +281,7 @@ export const formRouter = createTRPCRouter({
         const inputAgreementIds = input.components
           .flatMap((component) => component.agreements ?? [])
           .filter((agreement) => agreement.id !== undefined)
-          .map((agreement) => String(agreement.id));
+          .map((agreement) => agreement.id);
 
         const allCurrentAgreementIds = [
           ...inputAgreementIds,
@@ -271,8 +290,7 @@ export const formRouter = createTRPCRouter({
 
         const agreementIdsToDelete =
           existingAgreementIds?.filter(
-            (existingId) =>
-              !allCurrentAgreementIds.includes(String(existingId)),
+            (existingId) => !allCurrentAgreementIds.includes(existingId),
           ) ?? [];
 
         if (agreementIdsToDelete.length > 0) {

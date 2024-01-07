@@ -84,7 +84,6 @@ export function FormBuilder({ initialData }: { initialData?: Form }) {
         initialData?: ComponentItems;
         updateFormData: Dispatch<SetStateAction<any>>;
       }) => JSX.Element;
-      updated?: boolean;
       initialData?: ComponentItems;
     }[]
   >([]);
@@ -92,7 +91,7 @@ export function FormBuilder({ initialData }: { initialData?: Form }) {
     Record<string | number, FormComponent>
   >({});
 
-  const componentsIds = useMemo(
+  const componentIds = useMemo(
     () => components.map(({ id }) => String(id)),
     [components],
   );
@@ -107,25 +106,16 @@ export function FormBuilder({ initialData }: { initialData?: Form }) {
     }),
   );
 
-  //TODO: add order logic
-
-  function rearrangeObjectKeys(
-    obj: Record<string | number, FormComponent>,
-    keyOrder: string[],
-  ) {
-    const newObj: Record<string | number, FormComponent> = {};
-    keyOrder.forEach((key) => {
-      if (obj[key]) {
-        newObj[key] = obj[key]!;
-      }
-    });
-    return newObj;
-  }
+  const { mutateAsync: createForm, error: _createError } =
+    api.form.create.useMutation();
+  const { mutateAsync: updateForm, error: _updateError } =
+    api.form.update.useMutation();
 
   useEffect(() => {
     if (!initialData) return;
     setFormTitle(initialData.title);
     setFormDescription(initialData.description);
+    setFormData({});
     setComponents(
       initialData.components.map(({ id, type, ...rest }) => ({
         id,
@@ -142,8 +132,8 @@ export function FormBuilder({ initialData }: { initialData?: Form }) {
 
     if (active.id !== over?.id) {
       setComponents((items) => {
-        const oldIndex = componentsIds.indexOf(String(active.id));
-        const newIndex = componentsIds.indexOf(String(over?.id));
+        const oldIndex = componentIds.indexOf(String(active.id));
+        const newIndex = componentIds.indexOf(String(over?.id));
         return arrayMove(items, oldIndex, newIndex);
       });
     }
@@ -153,10 +143,17 @@ export function FormBuilder({ initialData }: { initialData?: Form }) {
     setComponents((prev) => [...prev].filter(({ id }) => id !== idx));
   }
 
-  const { mutateAsync: createForm, error: createError } =
-    api.form.create.useMutation();
-  const { mutateAsync: updateForm, error: updateError } =
-    api.form.update.useMutation();
+  function sortArrayByOrder(array: FormComponent[], order: string[]) {
+    return array.sort((a, b) => {
+      const indexA = order.indexOf(String(a.id));
+      const indexB = order.indexOf(String(b.id));
+
+      if (indexA === -1) return 1;
+      if (indexB === -1) return -1;
+
+      return indexA - indexB;
+    });
+  }
 
   return (
     <div className="flex flex-col gap-2">
@@ -199,7 +196,6 @@ export function FormBuilder({ initialData }: { initialData?: Form }) {
                 type: value,
                 name: formItems[value].name,
                 component: formItems[value].component,
-                updated: true,
               },
             ]);
           }}
@@ -214,18 +210,11 @@ export function FormBuilder({ initialData }: { initialData?: Form }) {
         modifiers={[restrictToVerticalAxis]}
       >
         <SortableContext
-          items={componentsIds}
+          items={componentIds}
           strategy={verticalListSortingStrategy}
         >
           {components.map(
-            ({
-              id,
-              name,
-              type,
-              updated,
-              initialData,
-              component: Component,
-            }) => (
+            ({ id, name, type, initialData, component: Component }) => (
               <FormWrapper
                 key={id}
                 name={name}
@@ -239,8 +228,8 @@ export function FormBuilder({ initialData }: { initialData?: Form }) {
                       ...prev,
                       [id]: {
                         ...input,
+                        id,
                         type,
-                        id: updated ? undefined : id,
                       },
                     }))
                   }
@@ -256,9 +245,10 @@ export function FormBuilder({ initialData }: { initialData?: Form }) {
           const input = {
             title: formTitle,
             description: formDescription,
-            components: Object.values(
-              rearrangeObjectKeys(formData, componentsIds),
-            ),
+            components: sortArrayByOrder(
+              Object.values(formData),
+              componentIds,
+            ).map((component, order) => ({ ...component, order })),
           };
           try {
             setIsLoading(true);
@@ -275,7 +265,6 @@ export function FormBuilder({ initialData }: { initialData?: Form }) {
                 description: "Pomyślnie zapisano formularz",
               });
               router.push("/forms");
-              router.refresh();
             }
           } catch (error) {
             toast({
@@ -284,6 +273,7 @@ export function FormBuilder({ initialData }: { initialData?: Form }) {
               variant: "destructive",
             });
           } finally {
+            router.refresh();
             setIsLoading(false);
           }
         }}

@@ -44,7 +44,7 @@ export function Selection({
 
   useEffect(() => {
     updateFormData({ question, options });
-  }, [question, options]);
+  }, [question, options, initialData]);
 
   return (
     <div className="grid gap-1.5">

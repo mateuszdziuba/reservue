@@ -11,7 +11,7 @@ import { mySqlTable } from "./_table";
 import { business } from "./business";
 
 export const form = mySqlTable("form", {
-  id: int("id").primaryKey().autoincrement(),
+  id: int("id").autoincrement().primaryKey(),
   title: varchar("title", { length: 256 }).default("").notNull(),
   description: varchar("description", { length: 256 }).default("").notNull(),
   createdAt: timestamp("created_at")
@@ -22,25 +22,26 @@ export const form = mySqlTable("form", {
 });
 
 export const formComponent = mySqlTable("form_component", {
-  id: int("id").primaryKey().autoincrement(),
+  id: int("id").autoincrement().primaryKey(),
   type: varchar("type", { length: 256 }).notNull(),
   formId: int("form_id"),
+  order: int("order"),
 });
 
 export const formQuestion = mySqlTable("form_question", {
-  id: int("id").primaryKey().autoincrement(),
+  id: int("id").autoincrement().primaryKey(),
   content: varchar("content", { length: 256 }).notNull(),
   componentId: int("component_id"),
 });
 
 export const formOption = mySqlTable("form_option", {
-  id: int("id").primaryKey().autoincrement(),
+  id: int("id").autoincrement().primaryKey(),
   content: varchar("content", { length: 256 }).notNull(),
   componentId: int("component_id"),
 });
 
 export const formAgreement = mySqlTable("form_agreement", {
-  id: int("id").primaryKey().autoincrement(),
+  id: int("id").autoincrement().primaryKey(),
   content: varchar("content", { length: 256 }).notNull(),
   required: boolean("required"),
   componentId: int("component_id"),

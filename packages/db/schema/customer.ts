@@ -5,7 +5,7 @@ import { mySqlTable } from "./_table";
 import { users } from "./auth";
 
 export const customer = mySqlTable("customer", {
-  id: int("id").primaryKey().autoincrement(),
+  id: int("id").autoincrement().primaryKey(),
   firstName: varchar("first_name", { length: 256 }).notNull(),
   lastName: varchar("last_name", { length: 256 }).notNull(),
   phoneNumber: varchar("phone_number", { length: 256 }).notNull(),
