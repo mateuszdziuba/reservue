@@ -20,14 +20,14 @@ export const authNavItems = [
   { href: "/dashboard", title: "Dashboard", icon: BarChart },
 
   {
-    href: "/customers",
-    title: "Klienci",
-    icon: Users,
-  },
-  {
     href: "/treatments",
     title: "Zabiegi",
     icon: HeartHandshake,
+  },
+  {
+    href: "/customers",
+    title: "Klienci",
+    icon: Users,
   },
   {
     href: "/forms",

@@ -55,8 +55,6 @@ export function DataTable<TData, TValue>({
       sorting,
     },
   });
-  const pathname = usePathname();
-  const router = useRouter();
 
   return (
     <div className="space-y-4">

@@ -1,12 +1,12 @@
 import { relations, sql } from "drizzle-orm";
-import { int, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { int, serial, timestamp, varchar } from "drizzle-orm/mysql-core";
 
 import { mySqlTable } from "./_table";
 import { users } from "./auth";
 import { formsToCustomers } from "./forms-customers";
 
 export const customer = mySqlTable("customer", {
-  id: int("id").autoincrement().primaryKey(),
+  id: serial("id").primaryKey(),
   firstName: varchar("first_name", { length: 256 }).notNull(),
   lastName: varchar("last_name", { length: 256 }).notNull(),
   phoneNumber: varchar("phone_number", { length: 256 }).notNull(),

@@ -10,6 +10,7 @@ export const formsToCustomers = mySqlTable(
   {
     formId: int("form_id").notNull(),
     customerId: int("customer_id").notNull(),
+    status: int("status").default(0),
   },
   (t) => ({
     pk: primaryKey({ columns: [t.formId, t.customerId] }),

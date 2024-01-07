@@ -1,11 +1,11 @@
 import { relations, sql } from "drizzle-orm";
-import { int, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { int, serial, timestamp, varchar } from "drizzle-orm/mysql-core";
 
 import { mySqlTable } from "./_table";
 import { users } from "./auth";
 
 export const business = mySqlTable("business", {
-  id: int("id").autoincrement().primaryKey(),
+  id: serial("id").primaryKey(),
   name: varchar("name", { length: 256 }).default("").notNull(),
   vatin: varchar("vatin", { length: 10 }).default("").notNull(),
   streetName: varchar("street_name", { length: 256 }).default("").notNull(),
