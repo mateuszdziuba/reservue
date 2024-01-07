@@ -9,6 +9,7 @@ import {
 
 import { mySqlTable } from "./_table";
 import { business } from "./business";
+import { formsToCustomers } from "./forms-customers";
 
 export const form = mySqlTable("form", {
   id: int("id").autoincrement().primaryKey(),
@@ -53,6 +54,7 @@ export const formRelations = relations(form, ({ one, many }) => ({
     references: [business.id],
   }),
   components: many(formComponent),
+  formsToCustomers: many(formsToCustomers),
 }));
 
 export const formComponentRelations = relations(

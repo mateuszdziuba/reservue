@@ -246,36 +246,38 @@ export function CreateCustomerForm({
         </div>
 
         {defaultValues ? (
-          canBeEdited ? (
-            <div className="flex flex-col gap-1">
+          <div className="flex flex-col items-end gap-1">
+            {canBeEdited ? (
+              <>
+                <Button
+                  disabled={
+                    form.formState.isSubmitting || !form.formState.isDirty
+                  }
+                >
+                  Zapisz
+                </Button>
+                <Button
+                  variant="secondary"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setCanBeEdited(false);
+                    form.reset(defaultValues);
+                  }}
+                >
+                  Anuluj
+                </Button>
+              </>
+            ) : (
               <Button
-                disabled={
-                  form.formState.isSubmitting || !form.formState.isDirty
-                }
-              >
-                Zapisz
-              </Button>
-              <Button
-                variant="secondary"
                 onClick={(e) => {
                   e.preventDefault();
-                  setCanBeEdited(false);
-                  form.reset(defaultValues);
+                  setCanBeEdited(true);
                 }}
               >
-                Anuluj
+                Edytuj
               </Button>
-            </div>
-          ) : (
-            <Button
-              onClick={(e) => {
-                e.preventDefault();
-                setCanBeEdited(true);
-              }}
-            >
-              Edytuj
-            </Button>
-          )
+            )}
+          </div>
         ) : (
           <Button type="submit" disabled={form.formState.isSubmitting}>
             {form.formState.isSubmitting && <Spinner className="mr-1" />}Dodaj

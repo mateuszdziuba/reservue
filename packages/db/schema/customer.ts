@@ -3,6 +3,7 @@ import { int, timestamp, varchar } from "drizzle-orm/mysql-core";
 
 import { mySqlTable } from "./_table";
 import { users } from "./auth";
+import { formsToCustomers } from "./forms-customers";
 
 export const customer = mySqlTable("customer", {
   id: int("id").autoincrement().primaryKey(),
@@ -23,9 +24,10 @@ export const customer = mySqlTable("customer", {
   createdBy: varchar("created_by", { length: 255 }).notNull(),
 });
 
-export const customerRelations = relations(customer, ({ one }) => ({
+export const customerRelations = relations(customer, ({ one, many }) => ({
   admin: one(users, {
     fields: [customer.createdBy],
     references: [users.id],
   }),
+  formsToCustomers: many(formsToCustomers),
 }));
