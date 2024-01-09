@@ -11,12 +11,12 @@ import type {
 import { Button } from "~/components/ui/button";
 import { Form } from "~/components/ui/form";
 import { api } from "~/trpc/react";
-import { Agreements } from "./components/agreements";
-import { DropdownMenu } from "./components/dropdown-menu";
-import { LongAnswer } from "./components/long-answer";
-import { MultipleSelection } from "./components/multiple-selection";
-import { ShortAnswer } from "./components/short-answer";
-import { SingleSelection } from "./components/single-selection";
+import { Agreements } from "./_components/agreements";
+import { DropdownMenu } from "./_components/dropdown-menu";
+import { LongAnswer } from "./_components/long-answer";
+import { MultipleSelection } from "./_components/multiple-selection";
+import { ShortAnswer } from "./_components/short-answer";
+import { SingleSelection } from "./_components/single-selection";
 
 interface Props {
   data: FormData;

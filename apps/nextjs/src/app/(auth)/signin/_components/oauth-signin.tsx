@@ -4,7 +4,7 @@ import { Facebook } from "lucide-react";
 import { auth, signIn, signOut } from "@reservue/auth";
 
 import { Button } from "~/components/ui/button";
-import { Icons } from "./icons";
+import { Icons } from "../../../../components/icons";
 
 export async function OauthSignin() {
   const session = await auth();
