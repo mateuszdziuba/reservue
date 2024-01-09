@@ -62,3 +62,15 @@ export const createFormSchema = z.object({
   description: z.string().min(1).max(256),
   components: z.array(componentSchema),
 });
+
+export const answerSchema = z.object({
+  field: z.string().min(1).max(256),
+  value: z.string().min(1).max(256),
+});
+
+export const formAnswersSchema = z.array(answerSchema);
+
+export const createCustomerFormSchema = z.object({
+  formId: z.number(),
+  customerId: z.number(),
+});

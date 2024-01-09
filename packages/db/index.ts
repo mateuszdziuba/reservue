@@ -5,8 +5,15 @@ import * as auth from "./schema/auth";
 import * as business from "./schema/business";
 import * as customer from "./schema/customer";
 import * as form from "./schema/form";
+import * as formsToCustomers from "./schema/forms-customers";
 
-export const schema = { ...auth, ...business, ...customer, ...form };
+export const schema = {
+  ...auth,
+  ...business,
+  ...customer,
+  ...form,
+  ...formsToCustomers,
+};
 
 export { mySqlTable as tableCreator } from "./schema/_table";
 

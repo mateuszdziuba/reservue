@@ -15,6 +15,7 @@ interface Props {
   data: ComponentItems;
   control: Control;
   name: string;
+  disabled: boolean;
 }
 
 export function SingleSelection(props: Props) {
@@ -24,6 +25,7 @@ export function SingleSelection(props: Props) {
     <FormField
       control={props.control}
       name={props.name}
+      disabled={props.disabled}
       render={({ field }) => (
         <FormItem className="space-y-3">
           <FormLabel className="text-base">
@@ -33,6 +35,7 @@ export function SingleSelection(props: Props) {
             <RadioGroup
               onValueChange={field.onChange}
               defaultValue={field.value}
+              disabled={props.disabled}
               className="flex flex-col space-y-1"
             >
               {props.data.options?.map((option) => (

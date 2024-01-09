@@ -53,4 +53,5 @@ export interface FormFieldProps {
   data: ComponentItems;
   control: Control;
   name: string;
+  disabled: boolean;
 }

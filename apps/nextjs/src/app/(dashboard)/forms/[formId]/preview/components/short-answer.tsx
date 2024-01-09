@@ -16,6 +16,7 @@ interface Props {
   data: ComponentItems;
   control: Control;
   name: string;
+  disabled: boolean;
 }
 
 export function ShortAnswer(props: Props) {
@@ -25,9 +26,12 @@ export function ShortAnswer(props: Props) {
     <FormField
       control={props.control}
       name={props.name}
+      disabled={props.disabled}
       render={({ field }) => (
         <FormItem>
-          <FormLabel className="text-base">{props.data.question?.content}</FormLabel>
+          <FormLabel className="text-base">
+            {props.data.question?.content}
+          </FormLabel>
           <FormControl>
             <Input placeholder="Wpisz swoją odpowiedź" {...field} />
           </FormControl>

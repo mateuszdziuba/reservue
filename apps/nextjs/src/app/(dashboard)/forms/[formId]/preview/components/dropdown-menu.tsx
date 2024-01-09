@@ -22,6 +22,7 @@ interface Props {
   data: ComponentItems;
   control: Control;
   name: string;
+  disabled: boolean;
 }
 
 export function DropdownMenu(props: Props) {
@@ -31,6 +32,7 @@ export function DropdownMenu(props: Props) {
     <FormField
       control={props.control}
       name={props.name}
+      disabled={props.disabled}
       render={({ field }) => (
         <FormItem>
           <FormLabel className="text-base">

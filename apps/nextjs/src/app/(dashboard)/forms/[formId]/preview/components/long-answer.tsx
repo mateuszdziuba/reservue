@@ -16,6 +16,7 @@ interface Props {
   data: ComponentItems;
   control: Control;
   name: string;
+  disabled: boolean;
 }
 
 export function LongAnswer(props: Props) {
@@ -25,6 +26,7 @@ export function LongAnswer(props: Props) {
     <FormField
       control={props.control}
       name={props.name}
+      disabled={props.disabled}
       render={({ field }) => (
         <FormItem>
           <FormLabel className="text-base">

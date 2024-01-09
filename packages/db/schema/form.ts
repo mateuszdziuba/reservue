@@ -12,7 +12,7 @@ import { business } from "./business";
 import { formsToCustomers } from "./forms-customers";
 
 export const form = mySqlTable("form", {
-  id: int("id").autoincrement().primaryKey(),
+  id: serial("id").primaryKey(),
   title: varchar("title", { length: 256 }).default("").notNull(),
   description: varchar("description", { length: 256 }).default("").notNull(),
   createdAt: timestamp("created_at")
@@ -23,29 +23,36 @@ export const form = mySqlTable("form", {
 });
 
 export const formComponent = mySqlTable("form_component", {
-  id: int("id").autoincrement().primaryKey(),
+  id: serial("id").primaryKey(),
   type: varchar("type", { length: 256 }).notNull(),
   formId: int("form_id"),
   order: int("order"),
 });
 
 export const formQuestion = mySqlTable("form_question", {
-  id: int("id").autoincrement().primaryKey(),
+  id: serial("id").primaryKey(),
   content: varchar("content", { length: 256 }).notNull(),
   componentId: int("component_id"),
 });
 
 export const formOption = mySqlTable("form_option", {
-  id: int("id").autoincrement().primaryKey(),
+  id: serial("id").primaryKey(),
   content: varchar("content", { length: 256 }).notNull(),
   componentId: int("component_id"),
 });
 
 export const formAgreement = mySqlTable("form_agreement", {
-  id: int("id").autoincrement().primaryKey(),
+  id: serial("id").primaryKey(),
   content: varchar("content", { length: 256 }).notNull(),
   required: boolean("required"),
   componentId: int("component_id"),
+});
+
+export const formAnswer = mySqlTable("form_answer", {
+  id: serial("id").primaryKey(),
+  field: varchar("field", { length: 256 }).notNull(),
+  value: varchar("value", { length: 256 }).notNull(),
+  customerFormId: int("customer_form_id"),
 });
 
 export const formRelations = relations(form, ({ one, many }) => ({
@@ -88,5 +95,12 @@ export const formAgreementRelations = relations(formAgreement, ({ one }) => ({
   component: one(formComponent, {
     fields: [formAgreement.componentId],
     references: [formComponent.id],
+  }),
+}));
+
+export const formAnswerRelations = relations(formAnswer, ({ one }) => ({
+  customerForm: one(formsToCustomers, {
+    fields: [formAnswer.customerFormId],
+    references: [formsToCustomers.id],
   }),
 }));

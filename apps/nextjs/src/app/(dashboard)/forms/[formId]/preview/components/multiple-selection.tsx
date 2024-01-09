@@ -16,6 +16,7 @@ interface Props {
   data: ComponentItems;
   control: Control;
   name: string;
+  disabled: boolean;
 }
 
 export function MultipleSelection(props: Props) {
@@ -26,6 +27,7 @@ export function MultipleSelection(props: Props) {
       control={props.control}
       name={props.name}
       defaultValue={[]}
+      disabled={props.disabled}
       render={() => (
         <FormItem>
           <div className="mb-4">
@@ -38,7 +40,8 @@ export function MultipleSelection(props: Props) {
             <FormField
               key={item.id}
               control={props.control}
-              name={`${props.name}-${item.id}`}
+              name={props.name}
+              disabled={props.disabled}
               render={({ field }) => {
                 field.value ??= [];
                 return (
@@ -60,6 +63,7 @@ export function MultipleSelection(props: Props) {
                             );
                           }
                         }}
+                        disabled={props.disabled}
                       />
                     </FormControl>
                     <FormLabel className="font-normal">

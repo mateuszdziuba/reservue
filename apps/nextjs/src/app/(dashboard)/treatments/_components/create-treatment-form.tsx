@@ -1,5 +1,6 @@
 "use client";
 
+import { redirect, useRouter } from "next/navigation";
 import { ArrowUpDown, CheckIcon } from "lucide-react";
 import * as z from "zod";
 
@@ -27,9 +28,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "~/components/ui/popover";
-import { toast } from "~/components/ui/use-toast";
+import { useToast } from "~/components/ui/use-toast";
 import { cn } from "~/lib/utils";
 import { useZodForm } from "~/lib/zod-form";
+import { api } from "~/trpc/react";
 
 const FormSchema = z.object({
   formId: z.number({
@@ -46,16 +48,27 @@ export function CreateTreatmentForm({
   customers: { label: string; value: number }[];
 }) {
   const form = useZodForm({ schema: FormSchema });
+  const { toast } = useToast();
+  const router = useRouter();
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+  const { mutateAsync: createCustomerForm } =
+    api.customerForm.create.useMutation();
+
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    try {
+      const res = await createCustomerForm(data);
+      toast({
+        title: "Dodano formularz do klienta",
+      });
+      router.push(`/treatments/${res.insertId}`);
+    } catch (error) {
+      toast({
+        title: "Błąd",
+        description:
+          "Nie udało się dodać formularza do klienta. Prawdopodobnie klient już posiada ten formularz.",
+        variant: "destructive",
+      });
+    }
   }
 
   return (
