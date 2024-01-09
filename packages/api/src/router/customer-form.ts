@@ -33,6 +33,19 @@ export const customerFormRouter = createTRPCRouter({
     });
   }),
 
+  byCutomerId: protectedProcedure.input(z.number()).query(({ ctx, input }) => {
+    if (!ctx.session?.user?.id) {
+      throw new Error("User not authenticated");
+    }
+
+    return ctx.db.query.formsToCustomers.findMany({
+      where: eq(schema.formsToCustomers.customerId, input),
+      with: {
+        form: true,
+      },
+    });
+  }),
+
   updateStatus: protectedProcedure
     .input(z.object({ id: z.number(), status: z.number() }))
     .mutation(({ ctx, input }) => {
@@ -78,4 +91,19 @@ export const customerFormRouter = createTRPCRouter({
         }
       });
     }),
+
+  delete: protectedProcedure.input(z.number()).mutation(({ ctx, input }) => {
+    if (!ctx.session?.user?.id) {
+      throw new Error("User not authenticated");
+    }
+    return ctx.db.transaction(async (trx) => {
+      await trx
+        .delete(schema.formsToCustomers)
+        .where(eq(schema.formsToCustomers.id, input));
+
+      await trx
+        .delete(schema.formAnswer)
+        .where(eq(schema.formAnswer.customerFormId, input));
+    });
+  }),
 });

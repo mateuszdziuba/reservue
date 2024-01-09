@@ -7,6 +7,10 @@ import { NewCustomerDialog } from "./_components/new-customer-dialog";
 
 export default async function Customers() {
   const data = await api.customer.byCreatorId.query();
+  const tableData = data?.map((customer) => ({
+    ...customer,
+    fullName: `${customer.lastName} ${customer.firstName}`,
+  }));
 
   return (
     <DashboardShell
@@ -15,7 +19,11 @@ export default async function Customers() {
       headerAction={<NewCustomerDialog />}
     >
       {data && (
-        <DataTable data={data} columns={columns} toolbar={DataTableToolbar} />
+        <DataTable
+          data={tableData}
+          columns={columns}
+          toolbar={DataTableToolbar}
+        />
       )}
     </DashboardShell>
   );

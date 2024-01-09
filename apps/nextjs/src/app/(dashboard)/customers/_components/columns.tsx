@@ -33,6 +33,7 @@ export interface Customer {
   id: number | string;
   firstName: string;
   lastName: string;
+  fullName: string;
   phoneNumber: string;
   email: string | null;
   lastVisitDate: Date | null;
@@ -40,23 +41,20 @@ export interface Customer {
 
 export const columns: ColumnDef<Customer>[] = [
   {
-    accessorKey: "lastName",
+    accessorKey: "fullName",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Nazwisko
+          Nazwa
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
   },
-  {
-    accessorKey: "firstName",
-    header: "Imię",
-  },
+
   {
     accessorKey: "phoneNumber",
     header: "Nr telefonu",

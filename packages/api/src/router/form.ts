@@ -342,6 +342,22 @@ export const formRouter = createTRPCRouter({
       await trx
         .delete(schema.formAgreement)
         .where(inArray(schema.formAgreement.componentId, componentIds));
+
+      const customerFormIdsToDelete = await trx
+        .select({ id: schema.formsToCustomers.id })
+        .from(schema.formsToCustomers)
+        .where(eq(schema.formsToCustomers.formId, input))
+        .then((res) => res.map(({ id }) => id));
+
+      await trx
+        .delete(schema.formsToCustomers)
+        .where(eq(schema.formsToCustomers.formId, input));
+
+      await trx
+        .delete(schema.formAnswer)
+        .where(
+          inArray(schema.formAnswer.customerFormId, customerFormIdsToDelete),
+        );
     });
   }),
 });

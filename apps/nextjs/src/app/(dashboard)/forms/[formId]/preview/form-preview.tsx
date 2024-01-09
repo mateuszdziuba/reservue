@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 import type {
@@ -38,6 +38,7 @@ const formComponents: Record<
 
 export function FormPreview({ data, defaultValues, isSubmitEnabled }: Props) {
   const id = useParams().treatmentId;
+  const router = useRouter();
 
   const { mutateAsync: addAnswers } = api.customerForm.addAnswers.useMutation();
 
@@ -52,6 +53,7 @@ export function FormPreview({ data, defaultValues, isSubmitEnabled }: Props) {
       }));
     try {
       await addAnswers({ id: Number(id), answers });
+      router.push("/");
     } catch (error) {}
   }
 

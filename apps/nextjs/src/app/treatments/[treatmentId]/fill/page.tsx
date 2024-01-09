@@ -20,7 +20,11 @@ export default async function CustomerFormPage({
     <main>
       <div className="container flex flex-col pt-4">
         <p className="text-base">{`Klient: ${data?.customer.firstName} ${data?.customer.lastName}`}</p>
-        <FormPreview data={formData as Form} isSubmitEnabled />
+        {data?.status === 2 ? (
+          <p className="text-2xl">Formularz został ju wypełniony</p>
+        ) : (
+          <FormPreview data={formData as Form} isSubmitEnabled />
+        )}
       </div>
     </main>
   );

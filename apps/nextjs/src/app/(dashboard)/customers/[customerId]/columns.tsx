@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Eye, MoreHorizontal, Pencil, Trash } from "lucide-react";
 
-import type { Form } from "./types";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,6 +16,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
+import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import {
   DropdownMenu,
@@ -27,21 +27,46 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { useToast } from "~/components/ui/use-toast";
+import { cn } from "~/lib/utils";
 import { api } from "~/trpc/react";
 
-export const columns: ColumnDef<Form>[] = [
+export interface CustomerFormColumn {
+  title: string;
+  status: 0 | 1 | 2;
+  id: number;
+}
+
+export const columns: ColumnDef<CustomerFormColumn>[] = [
   {
     accessorKey: "title",
-    header: "Tytuł",
+    header: "Formularz",
   },
   {
-    accessorKey: "description",
-    header: "Opis",
+    accessorKey: "status",
+    header: "Status",
+    cell: function Status(t) {
+      const status = t.row.original.status;
+
+      return (
+        <Badge
+          variant="outline"
+          className={cn(
+            status === 0 && "border-gray-200 text-gray-800",
+            status === 1 && "border-yellow-200 text-yellow-800",
+            status === 2 && "border-green-200 text-green-800",
+          )}
+        >
+          {status === 0 && "Przypisany do klienta"}
+          {status === 1 && "W trakcie"}
+          {status === 2 && "Ukończony"}
+        </Badge>
+      );
+    },
   },
   {
     id: "actions",
     cell: function Actions(t) {
-      const { mutateAsync: deleteForm } = api.form.delete.useMutation();
+      const { mutateAsync: deleteForm } = api.customerForm.delete.useMutation();
       const { toast } = useToast();
       const router = useRouter();
 
@@ -51,11 +76,11 @@ export const columns: ColumnDef<Form>[] = [
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle>
-                  Czy na pewno chcesz usunąć formularz?
+                  Czy na pewno chcesz usunąć formularz klienta?
                 </AlertDialogTitle>
                 <AlertDialogDescription>
-                  Formularz zostanie usunięty z serwera, nie będzie mozna go
-                  odzyskać.
+                  Formularz klienta zostanie usunięty z serwera, nie będzie
+                  mozna go odzyskać.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -93,15 +118,18 @@ export const columns: ColumnDef<Form>[] = [
                 {/* <DropdownMenuLabel>Akcje</DropdownMenuLabel> */}
                 {/* <DropdownMenuSeparator /> */}
                 <DropdownMenuItem asChild>
-                  <Link href={`/forms/${t.row.original.id}/preview`}>
+                  <Link href={`/treatments/${t.row.original.id}/view`}>
                     <Eye className="mr-2 h-4 w-4" />
                     <span>Podgląd</span>
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href={`/forms/${t.row.original.id}/edit`}>
+                <DropdownMenuItem
+                  asChild
+                  disabled={t.row.original.status === 2}
+                >
+                  <Link href={`/treatments/${t.row.original.id}/fill`}>
                     <Pencil className="mr-2 h-4 w-4" />
-                    <span>Edytuj</span>
+                    <span>Dokończ uzupełniać</span>
                   </Link>
                 </DropdownMenuItem>
                 <AlertDialogTrigger asChild>
