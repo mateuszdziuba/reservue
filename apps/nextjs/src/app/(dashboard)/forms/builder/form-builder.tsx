@@ -20,7 +20,8 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { v4 as uuidv4 } from "uuid";
+
+// import { v4 as uuidv4 } from "uuid";
 
 import type {
   ComponentItems,
@@ -41,10 +42,10 @@ import {
 } from "~/components/ui/select";
 import { useToast } from "~/components/ui/use-toast";
 import { api } from "~/trpc/react";
-import { Agreements } from "./components/agreements";
-import { Answer } from "./components/answer";
-import { FormWrapper } from "./components/form-wrapper";
-import { Selection } from "./components/selection";
+import { Agreements } from "./_components/agreements";
+import { Answer } from "./_components/answer";
+import { FormWrapper } from "./_components/component-wrapper";
+import { Selection } from "./_components/selection";
 
 const formItems: Record<
   ComponentType,
@@ -192,7 +193,7 @@ export function FormBuilder({ initialData }: { initialData?: Form }) {
             setComponents((prev) => [
               ...prev,
               {
-                id: uuidv4(),
+                id: 1,
                 type: value,
                 name: formItems[value].name,
                 component: formItems[value].component,

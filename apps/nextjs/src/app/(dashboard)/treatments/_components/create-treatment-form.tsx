@@ -1,7 +1,7 @@
 "use client";
 
 import { redirect, useRouter } from "next/navigation";
-import { ArrowUpDown, CheckIcon } from "lucide-react";
+import { CheckIcon, ChevronsUpDown } from "lucide-react";
 import * as z from "zod";
 
 import type { Customer } from "../../customers/_components/columns";
@@ -96,7 +96,7 @@ export function CreateTreatmentForm({
                             (customer) => customer.value === field.value,
                           )?.label
                         : "Wybierz klienta"}
-                      <ArrowUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
@@ -156,7 +156,7 @@ export function CreateTreatmentForm({
                       {field.value
                         ? forms.find((f) => f.value === field.value)?.label
                         : "Wybierz formularz"}
-                      <ArrowUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                   </FormControl>
                 </PopoverTrigger>

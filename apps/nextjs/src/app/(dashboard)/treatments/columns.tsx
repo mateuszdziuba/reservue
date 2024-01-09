@@ -3,14 +3,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  ChevronsUpDown,
-  Eye,
-  MoreHorizontal,
-  Pencil,
-  Trash,
-} from "lucide-react";
-import { z } from "zod";
+import { Eye, MoreHorizontal, Pencil, Trash } from "lucide-react";
 
 import {
   AlertDialog,
@@ -23,76 +16,62 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
+import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { useToast } from "~/components/ui/use-toast";
+import { cn } from "~/lib/utils";
 import { api } from "~/trpc/react";
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-export interface Customer {
-  id: number | string;
-  firstName: string;
-  lastName: string;
-  fullName: string;
-  phoneNumber: string;
-  email: string | null;
-  lastVisitDate: Date | null;
+export interface TreatmentColumn {
+  customer: string;
+  status: "0" | "1" | "2";
+  id: number;
+  form: string;
 }
 
-export const columns: ColumnDef<Customer>[] = [
+export const columns: ColumnDef<TreatmentColumn>[] = [
   {
-    accessorKey: "fullName",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Nazwa
-          <ChevronsUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    accessorKey: "customer",
+    header: "Klient",
   },
+  {
+    accessorKey: "form",
+    header: "Formularz",
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: function Status(t) {
+      const status = t.row.original.status;
 
-  {
-    accessorKey: "phoneNumber",
-    header: "Nr telefonu",
-  },
-  {
-    accessorKey: "email",
-    header: "Email",
-  },
-  {
-    accessorKey: "lastVisitDate",
-    header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        <Badge
+          variant="outline"
+          className={cn(
+            status === "0" && "border-gray-200 text-gray-800",
+            status === "1" && "border-yellow-200 text-yellow-800",
+            status === "2" && "border-green-200 text-green-800",
+          )}
         >
-          Ostatni zabieg
-          <ChevronsUpDown className="ml-2 h-4 w-4" />
-        </Button>
+          {status === "0" && "Przypisany do klienta"}
+          {status === "1" && "W trakcie"}
+          {status === "2" && "Ukończony"}
+        </Badge>
       );
     },
-    cell: ({ row }) =>
-      new Intl.DateTimeFormat("pl-PL", {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-      }).format(row.getValue("lastVisitDate")),
   },
   {
     id: "actions",
     cell: function Actions(t) {
-      const { mutateAsync: deleteCustomer } = api.customer.delete.useMutation();
+      const { mutateAsync: deleteForm } = api.customerForm.delete.useMutation();
       const { toast } = useToast();
       const router = useRouter();
 
@@ -102,11 +81,11 @@ export const columns: ColumnDef<Customer>[] = [
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle>
-                  Czy na pewno chcesz usunąć klienta?
+                  Czy na pewno chcesz usunąć formularz klienta?
                 </AlertDialogTitle>
                 <AlertDialogDescription>
-                  Klient zostanie usunięty z serwera, nie będzie mozna go
-                  odzyskać.
+                  Formularz klienta zostanie usunięty z serwera, nie będzie
+                  mozna go odzyskać.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -114,16 +93,16 @@ export const columns: ColumnDef<Customer>[] = [
                 <AlertDialogAction
                   onClick={async () => {
                     try {
-                      await deleteCustomer(Number(t.row.original.id));
+                      await deleteForm(Number(t.row.original.id));
                       router.refresh();
                       toast({
                         title: "Sukces",
-                        description: `Pomyślnie usunięto klienta: ${t.row.original.firstName} ${t.row.original.lastName}`,
+                        description: `Pomyślnie usunięto formularz o nazwie: ${t.row.original.form} przypisany do klienta ${t.row.original.customer}`,
                       });
                     } catch {
                       toast({
                         description:
-                          "Nie udało się usunąć klienta, spróbuj ponownie później",
+                          "Nie udało się usunąć formularza, spróbuj ponownie później",
                         variant: "destructive",
                       });
                     }
@@ -144,9 +123,9 @@ export const columns: ColumnDef<Customer>[] = [
                 {/* <DropdownMenuLabel>Akcje</DropdownMenuLabel> */}
                 {/* <DropdownMenuSeparator /> */}
                 <DropdownMenuItem asChild>
-                  <Link href={`/customers/${t.row.original.id}`}>
+                  <Link href={`/treatments/${t.row.original.id}/view`}>
                     <Eye className="mr-2 h-4 w-4" />
-                    <span>Szczegóły</span>
+                    <span>Podgląd</span>
                   </Link>
                 </DropdownMenuItem>
 

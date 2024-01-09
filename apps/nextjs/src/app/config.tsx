@@ -3,11 +3,15 @@ import type { Route } from "next";
 import {
   BarChart,
   BookUser,
+  CheckCircle,
   ClipboardEdit,
   FileQuestion,
   HeartHandshake,
+  User,
   Users,
 } from "lucide-react";
+
+import type { Option } from "~/components/data-table-faceted-filter";
 
 export const guestNavItems = [
   {
@@ -57,4 +61,10 @@ export const marketingFeatures = [
       </>
     ),
   },
+];
+
+export const statusOptions: Option[] = [
+  { value: "0", label: "Przypisany do klienta", icon: User },
+  { value: "1", label: "W trakcie", icon: ClipboardEdit },
+  { value: "2", label: "Ukończony", icon: CheckCircle },
 ];

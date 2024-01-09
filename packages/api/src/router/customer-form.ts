@@ -9,6 +9,29 @@ import {
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
 export const customerFormRouter = createTRPCRouter({
+  all: protectedProcedure.query(({ ctx }) => {
+    if (!ctx.session?.user?.id) {
+      throw new Error("User not authenticated");
+    }
+
+    return ctx.db.query.formsToCustomers.findMany({
+      orderBy: desc(schema.formsToCustomers.updatedAt),
+      with: {
+        customer: {
+          columns: {
+            firstName: true,
+            lastName: true,
+          },
+        },
+        form: {
+          columns: {
+            title: true,
+          },
+        },
+      },
+    });
+  }),
+
   create: protectedProcedure
     .input(createCustomerFormSchema)
     .mutation(({ ctx, input }) => {

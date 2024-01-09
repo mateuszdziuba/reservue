@@ -1,8 +1,12 @@
+import type { TreatmentColumn } from "./columns";
+import { DataTable } from "~/components/data-table";
 import { Button } from "~/components/ui/button";
 import { api } from "~/trpc/server";
 import { DashboardShell } from "../components/dashboard-shell";
 import { NewTreatmentDialog } from "./_components/create-treatment-dialog";
 import { CreateTreatmentForm } from "./_components/create-treatment-form";
+import { DataTableToolbar } from "./_components/data-table-toolbar";
+import { columns } from "./columns";
 
 export default async function Treatments() {
   const formsData = await api.form.byCreatorId.query();
@@ -18,6 +22,14 @@ export default async function Treatments() {
     value: customer.id,
   }));
 
+  const data = await api.customerForm.all.query();
+  const tableData = data.map((row) => ({
+    id: row.id,
+    customer: `${row.customer.lastName} ${row.customer.firstName}`,
+    form: row.form.title,
+    status: String(row.status),
+  }));
+
   return (
     <DashboardShell
       title="Zabiegi"
@@ -28,7 +40,11 @@ export default async function Treatments() {
         </NewTreatmentDialog>
       }
     >
-      <></>
+      <DataTable
+        columns={columns}
+        data={tableData as TreatmentColumn[]}
+        toolbar={DataTableToolbar}
+      />
     </DashboardShell>
   );
 }
