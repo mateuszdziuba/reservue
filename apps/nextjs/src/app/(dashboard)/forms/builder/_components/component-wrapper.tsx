@@ -2,7 +2,7 @@ import type { UniqueIdentifier } from "@dnd-kit/core";
 import type { ReactNode } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { GripVertical, Trash } from "lucide-react";
+import { Copy, GripVertical, Trash } from "lucide-react";
 
 import { Button } from "~/components/ui/button";
 
@@ -36,6 +36,9 @@ export function FormWrapper({
       <div className="flex w-full justify-between">
         <p>{name}</p>
         <div className="flex gap-2">
+          <Button size="icon" variant="secondary">
+            <Copy />
+          </Button>
           <Button size="icon" onClick={onDeleteClick}>
             <Trash />
           </Button>

@@ -12,7 +12,7 @@ export const env = createEnv({
         ? z.string().min(1)
         : z.string().min(1).optional(),
     AUTH_URL: z.preprocess(
-      // This makes Vercel deployments not fail if you don't set NEXTAUTH_URL
+      // This makes Vercel deployments not fail if you don't set AUTH_URL
       // Since NextAuth.js automatically uses the VERCEL_URL if present.
       (str) => process.env.VERCEL_URL ?? str,
       // VERCEL_URL doesn't include `https` so it cant be validated as a URL

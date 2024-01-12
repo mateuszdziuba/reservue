@@ -4,7 +4,7 @@ import Link from "next/link";
 import { OauthSignin } from "~/app/(auth)/signin/_components/oauth-signin";
 import { EmailSignIn } from "./_components/email-signin";
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 
 export default function AuthenticationPage() {
   return (

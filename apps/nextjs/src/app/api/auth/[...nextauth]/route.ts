@@ -1,3 +1,3 @@
 export { GET, POST } from "@reservue/auth";
 
-export const runtime = "edge";
+export const runtime = "nodejs";

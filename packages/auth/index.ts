@@ -26,15 +26,11 @@ export const {
 } = NextAuth({
   adapter: DrizzleAdapter(db, tableCreator),
   providers: [
-    Facebook,
+    Facebook({
+      allowDangerousEmailAccountLinking: true,
+    }),
     Google({
-      authorization: {
-        params: {
-          prompt: "consent",
-          access_type: "offline",
-          response_type: "code",
-        },
-      },
+      allowDangerousEmailAccountLinking: true,
     }),
   ],
   callbacks: {

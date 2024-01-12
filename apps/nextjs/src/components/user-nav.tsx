@@ -38,8 +38,8 @@ export async function UserNav() {
             </Avatar>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuContent className="min-w-[200px]">
+          <DropdownMenuLabel>Moje konto</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
             <Link href="/dashboard">Dashboard</Link>
