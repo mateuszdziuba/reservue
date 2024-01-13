@@ -3,6 +3,7 @@
 import type { Account, DefaultSession, Profile } from "next-auth";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import NextAuth from "next-auth";
+import Email from "next-auth/providers/email";
 import Facebook from "next-auth/providers/facebook";
 import Google from "next-auth/providers/google";
 
@@ -26,6 +27,17 @@ export const {
 } = NextAuth({
   adapter: DrizzleAdapter(db, tableCreator),
   providers: [
+    Email({
+      server: {
+        host: process.env.EMAIL_SERVER_HOST,
+        port: process.env.EMAIL_SERVER_PORT,
+        auth: {
+          user: process.env.EMAIL_SERVER_USER,
+          pass: process.env.EMAIL_SERVER_PASSWORD,
+        },
+      },
+      from: process.env.EMAIL_FROM,
+    }),
     Facebook({
       allowDangerousEmailAccountLinking: true,
     }),

@@ -1,12 +1,19 @@
 import type { Route } from "next";
 import Link from "next/link";
 
+import { signIn } from "@reservue/auth";
+
 import { OauthSignin } from "~/app/(auth)/signin/_components/oauth-signin";
 import { EmailSignIn } from "./_components/email-signin";
 
 export const runtime = "nodejs";
 
 export default function AuthenticationPage() {
+  async function emailSignIn(email: string) {
+    "use server";
+    await signIn("email", { email, redirectTo: "/dashboard" });
+  }
+
   return (
     <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
       <div className="flex flex-col space-y-2 text-center">
@@ -16,7 +23,7 @@ export default function AuthenticationPage() {
         </p>
       </div>
       <div className="grid gap-6">
-        <EmailSignIn />
+        <EmailSignIn emailSignIn={emailSignIn} />
 
         <div className="relative">
           <div className="absolute inset-0 flex items-center">

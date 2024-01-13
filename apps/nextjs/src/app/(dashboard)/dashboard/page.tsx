@@ -19,7 +19,7 @@ import { CalendarDateRangePicker } from "./components/date-range-picker";
 import { Overview } from "./components/overview";
 import { RecentCustomers } from "./components/recent-customers";
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 
 export default function Dashboard() {
   // You don't need to fetch these here, just showing different usages

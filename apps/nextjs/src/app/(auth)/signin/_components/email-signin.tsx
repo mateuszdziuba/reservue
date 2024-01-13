@@ -1,11 +1,20 @@
+"use client";
+
+import { useState } from "react";
+
+import { signIn } from "@reservue/auth";
+
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 
-export function EmailSignIn() {
+export function EmailSignIn({ emailSignIn }) {
+  const [email, setEmail] = useState("");
   return (
-    <form className="grid gap-2">
+    <form action={async () => await emailSignIn(email)} className="grid gap-2">
       <div className="grid gap-1">
         <Input
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           name="email"
           placeholder="name@example.com"
           type="email"
@@ -15,7 +24,7 @@ export function EmailSignIn() {
           className="bg-background"
         />
       </div>
-      <Button>
+      <Button type="submit">
         {/* {isLoading && <Icons.Spinner className="mr-2 h-4 w-4 animate-spin" />} */}
         Zaloguj się adresem email
       </Button>

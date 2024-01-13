@@ -10,7 +10,7 @@ import {
 } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 
 export default function Home() {
   return (

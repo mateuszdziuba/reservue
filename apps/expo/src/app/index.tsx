@@ -2,13 +2,14 @@ import React from "react";
 import { Button, Pressable, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link, Stack } from "expo-router";
+import { useAuth } from "@clerk/clerk-expo";
 import { FlashList } from "@shopify/flash-list";
 
 import type { RouterOutputs } from "~/utils/api";
 import { api } from "~/utils/api";
 
 function PostCard(props: {
-  post: RouterOutputs["post"]["all"][number];
+  customer: RouterOutputs["customer"]["all"][number];
   onDelete: () => void;
 }) {
   return (
@@ -17,15 +18,15 @@ function PostCard(props: {
         <Link
           asChild
           href={{
-            pathname: "/post/[id]",
-            params: { id: props.post.id },
+            pathname: "/customers/[id]",
+            params: { id: props.customer.id },
           }}
         >
           <Pressable>
             <Text className="text-xl font-semibold text-pink-400">
-              {props.post.title}
+              {props.customer.firstName}
             </Text>
-            <Text className="mt-2 text-white">{props.post.content}</Text>
+            <Text className="mt-2 text-white">{props.customer.lastName}</Text>
           </Pressable>
         </Link>
       </View>
@@ -42,11 +43,11 @@ function CreatePost() {
   const [title, setTitle] = React.useState("");
   const [content, setContent] = React.useState("");
 
-  const { mutate, error } = api.post.create.useMutation({
+  const { mutate, error } = api.customer.create.useMutation({
     async onSuccess() {
       setTitle("");
       setContent("");
-      await utils.post.all.invalidate();
+      await utils.customer.all.invalidate();
     },
   });
 
@@ -77,7 +78,7 @@ function CreatePost() {
         </Text>
       )}
       <Pressable
-        className="rounded bg-pink-400 p-2"
+        className="bg-primary rounded p-2"
         onPress={() => {
           mutate({
             title,
@@ -99,23 +100,58 @@ function CreatePost() {
 const Index = () => {
   const utils = api.useUtils();
 
-  const postQuery = api.post.all.useQuery();
+  const postQuery = api.customer.all.useQuery();
+  console.log(postQuery.data);
 
-  const deletePostMutation = api.post.delete.useMutation({
-    onSettled: () => utils.post.all.invalidate(),
+  const deletePostMutation = api.customer.delete.useMutation({
+    onSettled: () => utils.customer.all.invalidate(),
   });
 
   return (
     <SafeAreaView className="bg-[#1F104A]">
+      {/* <SignedOut> */}
+      {/* <View className="h-full w-full p-4">
+            <Text className="pb-2 text-center text-5xl font-bold text-white">
+              reservue
+            </Text>
+
+            <Button
+              onPress={() => void utils.customer.all.invalidate()}
+              title="Refresh posts"
+              color={"#f472b6"}
+            />
+
+            <View className="py-2">
+              <Text className="font-semibold italic text-white">
+                Press on a post
+              </Text>
+            </View>
+
+            <FlashList
+              data={postQuery.data}
+              estimatedItemSize={20}
+              ItemSeparatorComponent={() => <View className="h-2" />}
+              renderItem={(p) => (
+                <PostCard
+                  customer={p.item}
+                  onDelete={() => deletePostMutation.mutate(p.item.id)}
+                />
+              )}
+            />
+
+            <CreatePost />
+          </View> */}
+      {/* </SignedOut> */}
+      {/* <SignedIn> */}
       {/* Changes page title visible on the header */}
       <Stack.Screen options={{ title: "Home Page" }} />
       <View className="h-full w-full p-4">
         <Text className="pb-2 text-center text-5xl font-bold text-white">
-          Create <Text className="text-pink-400">T3</Text> Turbo
+          reservue
         </Text>
 
         <Button
-          onPress={() => void utils.post.all.invalidate()}
+          onPress={() => void utils.customer.all.invalidate()}
           title="Refresh posts"
           color={"#f472b6"}
         />
@@ -132,7 +168,7 @@ const Index = () => {
           ItemSeparatorComponent={() => <View className="h-2" />}
           renderItem={(p) => (
             <PostCard
-              post={p.item}
+              customer={p.item}
               onDelete={() => deletePostMutation.mutate(p.item.id)}
             />
           )}
@@ -140,6 +176,7 @@ const Index = () => {
 
         <CreatePost />
       </View>
+      {/* </SignedIn> */}
     </SafeAreaView>
   );
 };
