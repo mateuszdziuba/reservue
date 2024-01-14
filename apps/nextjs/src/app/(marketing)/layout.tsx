@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { Suspense } from "react";
 import { Book } from "lucide-react";
 
-import { DashboardLink } from "~/components/dashboard-link";
+import { DashboardLink } from "~/app/(marketing)/_components/dashboard-link";
 import { SiteFooter } from "~/components/footer";
 import { MainNav } from "~/components/main-nav";
 import { guestNavItems } from "../config";

@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { Balancer } from "react-wrap-balancer";
 
-import { CreateBusinessForm } from "~/components/create-business-form";
+import { CreateBusinessForm } from "~/app/(marketing)/create-business/_components/create-business-form";
 
 export default function CreateBusiness() {
   return (

@@ -15,9 +15,9 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { DashboardShell } from "../components/dashboard-shell";
-import { CalendarDateRangePicker } from "./components/date-range-picker";
-import { Overview } from "./components/overview";
-import { RecentCustomers } from "./components/recent-customers";
+import { CalendarDateRangePicker } from "./_components/date-range-picker";
+import { Overview } from "./_components/overview";
+import { RecentCustomers } from "./_components/recent-customers";
 
 export const runtime = "nodejs";
 

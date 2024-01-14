@@ -107,6 +107,8 @@ const Index = () => {
     onSettled: () => utils.customer.all.invalidate(),
   });
 
+  const { isLoaded, isSignedIn } = useAuth();
+  console.log(isSignedIn);
   return (
     <SafeAreaView className="bg-[#1F104A]">
       {/* <SignedOut> */}
@@ -147,7 +149,7 @@ const Index = () => {
       <Stack.Screen options={{ title: "Home Page" }} />
       <View className="h-full w-full p-4">
         <Text className="pb-2 text-center text-5xl font-bold text-white">
-          reservue
+          reservue {String(isSignedIn)}
         </Text>
 
         <Button

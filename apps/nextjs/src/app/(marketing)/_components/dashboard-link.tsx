@@ -3,7 +3,7 @@ import { ChevronRight } from "lucide-react";
 
 import { auth } from "@reservue/auth";
 
-import { buttonVariants } from "./ui/button";
+import { buttonVariants } from "../../../components/ui/button";
 
 export async function DashboardLink() {
   const session = await auth();
