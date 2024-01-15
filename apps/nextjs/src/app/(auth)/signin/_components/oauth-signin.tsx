@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Facebook } from "lucide-react";
 
-import { auth, signIn, signOut } from "@reservue/auth";
+import { auth, signIn } from "@reservue/auth";
 
 import { Button } from "~/components/ui/button";
 import { Icons } from "../../../../components/icons";

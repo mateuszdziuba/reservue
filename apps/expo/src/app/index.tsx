@@ -2,39 +2,29 @@ import React from "react";
 import { Button, Pressable, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link, Stack } from "expo-router";
-import { SignedIn, SignedOut, useAuth } from "@clerk/clerk-expo";
 import { FlashList } from "@shopify/flash-list";
 
-import type { RouterOutputs } from "~/utils/api";
 import { api } from "~/utils/api";
-import SignInWithOAuth from "./components/oauth-signin";
+import { useSignIn, useSignOut, useUser } from "~/utils/auth";
 
-function PostCard(props: {
-  customer: RouterOutputs["customer"]["all"][number];
-  onDelete: () => void;
-}) {
+function MobileAuth() {
+  const user = useUser();
+  const signIn = useSignIn();
+  const signOut = useSignOut();
+
   return (
-    <View className="flex flex-row rounded-lg bg-white/10 p-4">
-      <View className="flex-grow">
-        <Link
-          asChild
-          href={{
-            pathname: "/customers/[id]",
-            params: { id: props.customer.id },
-          }}
-        >
-          <Pressable>
-            <Text className="text-xl font-semibold text-pink-400">
-              {props.customer.firstName}
-            </Text>
-            <Text className="mt-2 text-white">{props.customer.lastName}</Text>
-          </Pressable>
-        </Link>
-      </View>
-      <Pressable onPress={props.onDelete}>
-        <Text className="font-bold uppercase text-pink-400">Delete</Text>
-      </Pressable>
-    </View>
+    <>
+      <Text className="pb-2 text-center text-xl font-semibold text-white">
+        {user?.name ?? "Not logged in"}
+      </Text>
+      <Button
+        onPress={() => (user ? signOut() : signIn())}
+        title={user ? "Sign Out" : "Sign In With Discord"}
+        color={"#5B65E9"}
+      />
+      <Button onPress={signOut} title={"Sign Out"} color={"#5B65E9"} />
+      <Link href="/login">Login</Link>
+    </>
   );
 }
 
@@ -78,15 +68,7 @@ function CreatePost() {
           {error.data.zodError.fieldErrors.content}
         </Text>
       )}
-      <Pressable
-        className="bg-primary rounded p-2"
-        onPress={() => {
-          mutate({
-            title,
-            content,
-          });
-        }}
-      >
+      <Pressable className="bg-primary rounded p-2" onPress={console.log}>
         <Text className="font-semibold text-white">Publish post</Text>
       </Pressable>
       {error?.data?.code === "UNAUTHORIZED" && (
@@ -104,52 +86,40 @@ const Index = () => {
   const postQuery = api.customer.all.useQuery();
   console.log(postQuery.data);
 
-  const deletePostMutation = api.customer.delete.useMutation({
-    onSettled: () => utils.customer.all.invalidate(),
-  });
-
-  const { isLoaded, isSignedIn } = useAuth();
-  console.log(isSignedIn);
   return (
-    <SafeAreaView className="bg-[#1F104A]">
-      <SignedOut>
-        <SignInWithOAuth />
-      </SignedOut>
-      <SignedIn>
-        {/* Changes page title visible on the header */}
-        <Stack.Screen options={{ title: "Home Page" }} />
-        <View className="h-full w-full p-4">
-          <Text className="pb-2 text-center text-5xl font-bold text-white">
-            reservue {String(isSignedIn)}
+    <SafeAreaView style={{ backgroundColor: "#1F104A" }}>
+      {/* Changes page title visible on the header */}
+      <Stack.Screen options={{ title: "Home Page" }} />
+      <View className="h-full w-full p-4">
+        <Text className="pb-2 text-center text-5xl font-bold text-white">
+          Create <Text className="text-pink-400">T3</Text> Turbo
+        </Text>
+
+        <MobileAuth />
+
+        <Button
+          onPress={() => void utils.customer.all.invalidate()}
+          title="Refresh posts"
+          color={"#f472b6"}
+        />
+
+        <View className="py-2">
+          <Text className="font-semibold italic text-white">
+            Press on a post
           </Text>
-
-          <Button
-            onPress={() => void utils.customer.all.invalidate()}
-            title="Refresh posts"
-            color={"#f472b6"}
-          />
-
-          <View className="py-2">
-            <Text className="font-semibold italic text-white">
-              Press on a post
-            </Text>
-          </View>
-
-          <FlashList
-            data={postQuery.data}
-            estimatedItemSize={20}
-            ItemSeparatorComponent={() => <View className="h-2" />}
-            renderItem={(p) => (
-              <PostCard
-                customer={p.item}
-                onDelete={() => deletePostMutation.mutate(p.item.id)}
-              />
-            )}
-          />
-
-          <CreatePost />
         </View>
-      </SignedIn>
+        <FlashList
+          data={postQuery.data}
+          estimatedItemSize={20}
+          ItemSeparatorComponent={() => <View className="h-2" />}
+          renderItem={(p) => (
+            <Text>
+              {p.item.firstName} {p.item.lastName}
+            </Text>
+          )}
+        />
+        <CreatePost />
+      </View>
     </SafeAreaView>
   );
 };
