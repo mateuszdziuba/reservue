@@ -2,27 +2,29 @@
   "name": "@reservue/db",
   "version": "0.1.0",
   "private": true,
-  "main": "./index.ts",
-  "types": "./index.ts",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
   "license": "MIT",
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
-    "lint": "eslint .",
     "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint .",
     "push": "drizzle-kit push:mysql",
     "studio": "drizzle-kit studio",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@planetscale/database": "^1.11.0",
-    "drizzle-orm": "^0.29.1"
+    "@planetscale/database": "^1.13.0",
+    "drizzle-orm": "^0.29.3"
   },
   "devDependencies": {
     "@reservue/eslint-config": "workspace:^0.2.0",
     "@reservue/prettier-config": "workspace:^0.1.0",
     "@reservue/tsconfig": "workspace:^0.1.0",
     "dotenv-cli": "^7.3.0",
-    "drizzle-kit": "^0.20.6",
+    "drizzle-kit": "^0.20.10",
     "eslint": "^8.56.0",
     "prettier": "^3.1.1",
     "typescript": "^5.3.3"
