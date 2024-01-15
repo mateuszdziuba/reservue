@@ -11,7 +11,7 @@ export default async function FormEditor({
 }: {
   params: { formId: string };
 }) {
-  const data = await api.form.byId.query({ formId: params.formId });
+  const data = await api.form.byId({ formId: params.formId });
 
   return (
     <DashboardShell

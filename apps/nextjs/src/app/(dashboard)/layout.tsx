@@ -19,7 +19,7 @@ export default async function DashboardLayout(props: { children: ReactNode }) {
     redirect("/signin");
   }
 
-  const business = await api.business.byOwnerId.query();
+  const business = await api.business.byOwnerId();
   if (!business) redirect("/create-business");
 
   return (

@@ -7,10 +7,10 @@ export default async function CustomerFormPage({
 }: {
   params: { treatmentId: string };
 }) {
-  const data = await api.customerForm.byId.query(Number(params.treatmentId));
-  const formData = await api.form.byId.query({ formId: String(data?.formId) });
+  const data = await api.customerForm.byId(Number(params.treatmentId));
+  const formData = await api.form.byId({ formId: String(data?.formId) });
   if (data?.status === 0) {
-    await api.customerForm.updateStatus.mutate({
+    await api.customerForm.updateStatus({
       id: Number(params.treatmentId),
       status: 1,
     });

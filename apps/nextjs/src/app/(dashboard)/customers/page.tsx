@@ -6,7 +6,7 @@ import { DataTableToolbar } from "./_components/data-table-toolbar";
 import { NewCustomerDialog } from "./_components/new-customer-dialog";
 
 export default async function Customers() {
-  const data = await api.customer.byCreatorId.query();
+  const data = await api.customer.byCreatorId();
   const tableData = data?.map((customer) => ({
     ...customer,
     fullName: `${customer.lastName} ${customer.firstName}`,

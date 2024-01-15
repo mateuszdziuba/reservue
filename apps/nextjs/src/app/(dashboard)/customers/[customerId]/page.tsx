@@ -16,8 +16,8 @@ export default async function CustomerPage({
 }: {
   params: { customerId: string };
 }) {
-  const data = await api.customer.byId.query({ id: Number(params.customerId) });
-  const formsData = await api.customerForm.byCutomerId.query(
+  const data = await api.customer.byId({ id: Number(params.customerId) });
+  const formsData = await api.customerForm.byCutomerId(
     Number(params.customerId),
   );
 

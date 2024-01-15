@@ -11,13 +11,13 @@ export default async function CustomerFormPage({
 }: {
   params: { treatmentId: string };
 }) {
-  const customerFormData = await api.customerForm.byId.query(
+  const customerFormData = await api.customerForm.byId(
     Number(params.treatmentId),
   );
-  const formData = await api.form.byId.query({
+  const formData = await api.form.byId({
     formId: String(customerFormData?.formId),
   });
-  const answersData = await api.customerForm.getAnswers.query(
+  const answersData = await api.customerForm.getAnswers(
     Number(params.treatmentId),
   );
 

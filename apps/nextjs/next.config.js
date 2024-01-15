@@ -1,6 +1,6 @@
 // Importing env files here to validate on build
-import "./src/env.mjs";
-import "@reservue/auth/env.mjs";
+import "./src/env.js";
+import "@reservue/auth/env";
 
 /** @type {import("next").NextConfig} */
 const config = {

@@ -9,8 +9,8 @@ import { DataTableToolbar } from "./_components/data-table-toolbar";
 import { columns } from "./columns";
 
 export default async function Treatments() {
-  const formsData = await api.form.byCreatorId.query();
-  const customersData = await api.customer.byCreatorId.query();
+  const formsData = await api.form.byCreatorId();
+  const customersData = await api.customer.byCreatorId();
 
   const forms = formsData.map((form) => ({
     label: form.title,
@@ -22,7 +22,7 @@ export default async function Treatments() {
     value: customer.id,
   }));
 
-  const data = await api.customerForm.all.query();
+  const data = await api.customerForm.all();
   const tableData = data.map((row) => ({
     id: row.id,
     customer: `${row.customer.lastName} ${row.customer.firstName}`,

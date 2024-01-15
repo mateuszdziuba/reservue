@@ -9,7 +9,7 @@ export default async function CustomerFormPage({
 }: {
   params: { treatmentId: string };
 }) {
-  const data = await api.customerForm.byId.query(Number(params.treatmentId));
+  const data = await api.customerForm.byId(Number(params.treatmentId));
 
   return (
     <DashboardShell

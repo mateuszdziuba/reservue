@@ -9,7 +9,7 @@ import { DataTableToolbar } from "./_components/data-table-toolbar";
 import { columns } from "./columns";
 
 export default async function Forms() {
-  const data = await api.form.byCreatorId.query();
+  const data = await api.form.byCreatorId();
 
   return (
     <DashboardShell
