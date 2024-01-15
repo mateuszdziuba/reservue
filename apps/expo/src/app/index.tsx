@@ -2,11 +2,12 @@ import React from "react";
 import { Button, Pressable, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link, Stack } from "expo-router";
-import { useAuth } from "@clerk/clerk-expo";
+import { SignedIn, SignedOut, useAuth } from "@clerk/clerk-expo";
 import { FlashList } from "@shopify/flash-list";
 
 import type { RouterOutputs } from "~/utils/api";
 import { api } from "~/utils/api";
+import SignInWithOAuth from "./components/oauth-signin";
 
 function PostCard(props: {
   customer: RouterOutputs["customer"]["all"][number];
@@ -111,74 +112,44 @@ const Index = () => {
   console.log(isSignedIn);
   return (
     <SafeAreaView className="bg-[#1F104A]">
-      {/* <SignedOut> */}
-      {/* <View className="h-full w-full p-4">
-            <Text className="pb-2 text-center text-5xl font-bold text-white">
-              reservue
-            </Text>
-
-            <Button
-              onPress={() => void utils.customer.all.invalidate()}
-              title="Refresh posts"
-              color={"#f472b6"}
-            />
-
-            <View className="py-2">
-              <Text className="font-semibold italic text-white">
-                Press on a post
-              </Text>
-            </View>
-
-            <FlashList
-              data={postQuery.data}
-              estimatedItemSize={20}
-              ItemSeparatorComponent={() => <View className="h-2" />}
-              renderItem={(p) => (
-                <PostCard
-                  customer={p.item}
-                  onDelete={() => deletePostMutation.mutate(p.item.id)}
-                />
-              )}
-            />
-
-            <CreatePost />
-          </View> */}
-      {/* </SignedOut> */}
-      {/* <SignedIn> */}
-      {/* Changes page title visible on the header */}
-      <Stack.Screen options={{ title: "Home Page" }} />
-      <View className="h-full w-full p-4">
-        <Text className="pb-2 text-center text-5xl font-bold text-white">
-          reservue {String(isSignedIn)}
-        </Text>
-
-        <Button
-          onPress={() => void utils.customer.all.invalidate()}
-          title="Refresh posts"
-          color={"#f472b6"}
-        />
-
-        <View className="py-2">
-          <Text className="font-semibold italic text-white">
-            Press on a post
+      <SignedOut>
+        <SignInWithOAuth />
+      </SignedOut>
+      <SignedIn>
+        {/* Changes page title visible on the header */}
+        <Stack.Screen options={{ title: "Home Page" }} />
+        <View className="h-full w-full p-4">
+          <Text className="pb-2 text-center text-5xl font-bold text-white">
+            reservue {String(isSignedIn)}
           </Text>
+
+          <Button
+            onPress={() => void utils.customer.all.invalidate()}
+            title="Refresh posts"
+            color={"#f472b6"}
+          />
+
+          <View className="py-2">
+            <Text className="font-semibold italic text-white">
+              Press on a post
+            </Text>
+          </View>
+
+          <FlashList
+            data={postQuery.data}
+            estimatedItemSize={20}
+            ItemSeparatorComponent={() => <View className="h-2" />}
+            renderItem={(p) => (
+              <PostCard
+                customer={p.item}
+                onDelete={() => deletePostMutation.mutate(p.item.id)}
+              />
+            )}
+          />
+
+          <CreatePost />
         </View>
-
-        <FlashList
-          data={postQuery.data}
-          estimatedItemSize={20}
-          ItemSeparatorComponent={() => <View className="h-2" />}
-          renderItem={(p) => (
-            <PostCard
-              customer={p.item}
-              onDelete={() => deletePostMutation.mutate(p.item.id)}
-            />
-          )}
-        />
-
-        <CreatePost />
-      </View>
-      {/* </SignedIn> */}
+      </SignedIn>
     </SafeAreaView>
   );
 };
