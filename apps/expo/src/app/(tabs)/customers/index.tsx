@@ -67,7 +67,7 @@ const Index = () => {
   // if (!user) return <Redirect href="/login" />;
 
   return (
-    <SafeAreaView style={{ backgroundColor: "#1F104A" }}>
+    <SafeAreaView className="bg-red-500">
       {/* Changes page title visible on the header */}
       <View className="h-full w-full p-4">
         <Text className="pb-2 text-center text-5xl font-bold text-white">

@@ -15,16 +15,21 @@ const RootLayout = () => {
         The Stack component displays the current page.
         It also allows you to configure your screens 
       */}
-
-      <Stack
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: "#1F104A",
-          },
-        }}
-      >
+      <Stack>
         <Stack.Screen
           name="(tabs)"
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="settings/index"
+          options={{
+            headerTitle: "Ustawienia",
+          }}
+        />
+        <Stack.Screen
+          name="(auth)/signin"
           options={{
             headerShown: false,
           }}

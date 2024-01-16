@@ -1,4 +1,5 @@
 import * as Linking from "expo-linking";
+import { router } from "expo-router";
 import * as Browser from "expo-web-browser";
 
 import { api } from "./api";
@@ -31,6 +32,7 @@ export const useSignIn = () => {
   return async () => {
     await signIn();
     await utils.invalidate();
+    router.push("/(tabs)/");
   };
 };
 
@@ -42,6 +44,7 @@ export const useSignOut = () => {
     const res = await signOut.mutateAsync();
     if (!res.success) return;
     await deleteToken();
+    router.push("/(auth)/signin");
     await utils.invalidate();
   };
 };

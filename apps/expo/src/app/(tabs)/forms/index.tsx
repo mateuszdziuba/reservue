@@ -21,7 +21,7 @@ function CreatePost() {
   });
 
   return (
-    <View className="mt-4">
+    <View>
       <TextInput
         className="mb-2 rounded bg-white/10 p-2 text-white"
         placeholderTextColor="rgba(255, 255, 255, 0.5)"
@@ -66,7 +66,7 @@ const Index = () => {
   // if (!user) return <Redirect href="/login" />;
 
   return (
-    <SafeAreaView style={{ backgroundColor: "#1F104A" }}>
+    <SafeAreaView className="bg-red-500">
       {/* Changes page title visible on the header */}
       <View className="h-full w-full p-4">
         <Text className="pb-2 text-center text-5xl font-bold text-white">

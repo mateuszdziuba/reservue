@@ -8,7 +8,7 @@ const Index = () => {
   // if (!user) return <Redirect href="/login" />;
 
   return (
-    <SafeAreaView style={{ backgroundColor: "#1F104A" }}>
+    <SafeAreaView>
       <View className="h-full w-full p-4">
         <Text>Dashboard</Text>
       </View>
