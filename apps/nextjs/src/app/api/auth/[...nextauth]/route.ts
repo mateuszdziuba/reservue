@@ -16,6 +16,7 @@ export const GET = async (
   const nextauthAction = props.params.nextauth[0];
   const isExpoSignIn = req.nextUrl.searchParams.get("expo-redirect");
   const isExpoCallback = cookies().get(EXPO_COOKIE_NAME);
+  console.log(nextauthAction);
 
   if (nextauthAction === "signin" && !!isExpoSignIn) {
     // set a cookie we can read in the callback
@@ -32,7 +33,10 @@ export const GET = async (
     cookies().delete(EXPO_COOKIE_NAME);
 
     const authResponse = await DEFAULT_GET(req);
-    const setCookie = authResponse.headers.getSetCookie()[0];
+    const setCookies = authResponse.headers.getSetCookie();
+    const setCookie = setCookies.find((cookie) =>
+      AUTH_COOKIE_PATTERN.test(cookie),
+    );
     const match = setCookie?.match(AUTH_COOKIE_PATTERN)?.[1];
     if (!match) throw new Error("Unable to find session cookie");
 
