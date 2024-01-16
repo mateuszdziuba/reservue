@@ -1,32 +1,11 @@
 import React from "react";
 import { Button, Pressable, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Link, Stack } from "expo-router";
+import { Link, Redirect, Stack, Tabs } from "expo-router";
 import { FlashList } from "@shopify/flash-list";
 
 import { api } from "~/utils/api";
 import { useSignIn, useSignOut, useUser } from "~/utils/auth";
-
-function MobileAuth() {
-  const user = useUser();
-  const signIn = useSignIn();
-  const signOut = useSignOut();
-
-  return (
-    <>
-      <Text className="pb-2 text-center text-xl font-semibold text-white">
-        {user?.name ?? "Not logged in"}
-      </Text>
-      <Button
-        onPress={() => (user ? signOut() : signIn())}
-        title={user ? "Sign Out" : "Sign In With Discord"}
-        color={"#5B65E9"}
-      />
-      <Button onPress={signOut} title={"Sign Out"} color={"#5B65E9"} />
-      <Link href="/login">Login</Link>
-    </>
-  );
-}
 
 function CreatePost() {
   const utils = api.useUtils();
@@ -38,7 +17,6 @@ function CreatePost() {
     async onSuccess() {
       setTitle("");
       setContent("");
-      await utils.customer.all.invalidate();
     },
   });
 
@@ -68,7 +46,7 @@ function CreatePost() {
           {error.data.zodError.fieldErrors.content}
         </Text>
       )}
-      <Pressable className="bg-primary rounded p-2" onPress={console.log}>
+      <Pressable className="bg-primary rounded p-2" onPress={null}>
         <Text className="font-semibold text-white">Publish post</Text>
       </Pressable>
       {error?.data?.code === "UNAUTHORIZED" && (
@@ -83,41 +61,24 @@ function CreatePost() {
 const Index = () => {
   const utils = api.useUtils();
 
-  const postQuery = api.customer.all.useQuery();
-  console.log(postQuery.data);
+  const user = useUser();
+
+  // if (!user) return <Redirect href="/login" />;
 
   return (
     <SafeAreaView style={{ backgroundColor: "#1F104A" }}>
       {/* Changes page title visible on the header */}
-      <Stack.Screen options={{ title: "Home Page" }} />
       <View className="h-full w-full p-4">
         <Text className="pb-2 text-center text-5xl font-bold text-white">
-          Create <Text className="text-pink-400">T3</Text> Turbo
+          Forms
         </Text>
 
-        <MobileAuth />
-
         <Button
-          onPress={() => void utils.customer.all.invalidate()}
+          onPress={() => void utils.customer.invalidate()}
           title="Refresh posts"
           color={"#f472b6"}
         />
 
-        <View className="py-2">
-          <Text className="font-semibold italic text-white">
-            Press on a post
-          </Text>
-        </View>
-        <FlashList
-          data={postQuery.data}
-          estimatedItemSize={20}
-          ItemSeparatorComponent={() => <View className="h-2" />}
-          renderItem={(p) => (
-            <Text>
-              {p.item.firstName} {p.item.lastName}
-            </Text>
-          )}
-        />
         <CreatePost />
       </View>
     </SafeAreaView>
