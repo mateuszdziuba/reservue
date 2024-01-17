@@ -17,7 +17,7 @@ export default async function CustomerPage({
   params: { customerId: string };
 }) {
   const data = await api.customer.byId({ id: Number(params.customerId) });
-  const formsData = await api.customerForm.byCutomerId(
+  const formsData = await api.customerForm.byCustomerId(
     Number(params.customerId),
   );
 

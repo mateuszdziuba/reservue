@@ -1,6 +1,12 @@
 import React from "react";
-import { Button, Pressable, Text, TextInput, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  Button,
+  Pressable,
+  SafeAreaView,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import { Link, Redirect, Stack, Tabs } from "expo-router";
 import { FlashList } from "@shopify/flash-list";
 
@@ -66,8 +72,7 @@ const Index = () => {
   // if (!user) return <Redirect href="/login" />;
 
   return (
-    <SafeAreaView style={{ backgroundColor: "#1F104A" }}>
-      {/* Changes page title visible on the header */}
+    <SafeAreaView>
       <View className="h-full w-full p-4">
         <Text className="pb-2 text-center text-5xl font-bold text-white">
           Treatments

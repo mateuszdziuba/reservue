@@ -1,7 +1,6 @@
 import { relations, sql } from "drizzle-orm";
 import {
   int,
-  primaryKey,
   serial,
   timestamp,
   uniqueIndex,
@@ -23,6 +22,7 @@ export const formsToCustomers = mySqlTable(
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updated_at").onUpdateNow(),
+    createdBy: varchar("created_by", { length: 255 }).notNull().default(""),
   },
   (t) => ({
     customerFormIdx: uniqueIndex("customer_form_idx").on(

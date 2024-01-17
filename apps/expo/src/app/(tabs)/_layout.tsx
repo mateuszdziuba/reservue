@@ -1,6 +1,12 @@
 import React from "react";
-import { Button, Image, Pressable, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  Button,
+  Image,
+  Pressable,
+  SafeAreaView,
+  Text,
+  View,
+} from "react-native";
 import { Link, Redirect, router, Tabs, usePathname } from "expo-router";
 import {
   BarChart,
@@ -20,7 +26,6 @@ export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: "#EF4444",
         headerRight: () => (
           <View className="flex w-full items-end pr-8">
             <Link href="/settings/" asChild>
@@ -34,12 +39,13 @@ export default function TabsLayout() {
             </Link>
           </View>
         ),
-        headerStyle: {
-          backgroundColor: "#EF4444",
-          shadowColor: "transparent",
-          elevation: 0,
-        },
+        headerShadowVisible: false,
         headerTitle: "",
+        tabBarActiveTintColor: "#EF4444",
+        tabBarStyle: {
+          elevation: 0,
+          borderTopWidth: 0,
+        },
       }}
     >
       <Tabs.Screen

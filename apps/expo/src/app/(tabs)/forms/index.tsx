@@ -1,87 +1,54 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Pressable, Text, TextInput, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Link, Redirect, Stack, Tabs } from "expo-router";
 import { FlashList } from "@shopify/flash-list";
+import { MoreVertical } from "lucide-react-native";
 
+import { TabShell } from "~/app/components/tab-shell";
 import { api } from "~/utils/api";
 import { useSignIn, useSignOut, useUser } from "~/utils/auth";
 
-function CreatePost() {
-  const utils = api.useUtils();
-
-  const [title, setTitle] = React.useState("");
-  const [content, setContent] = React.useState("");
-
-  const { mutate, error } = api.customer.create.useMutation({
-    async onSuccess() {
-      setTitle("");
-      setContent("");
-    },
-  });
-
-  return (
-    <View>
-      <TextInput
-        className="mb-2 rounded bg-white/10 p-2 text-white"
-        placeholderTextColor="rgba(255, 255, 255, 0.5)"
-        value={title}
-        onChangeText={setTitle}
-        placeholder="Title"
-      />
-      {error?.data?.zodError?.fieldErrors.title && (
-        <Text className="mb-2 text-red-500">
-          {error.data.zodError.fieldErrors.title}
-        </Text>
-      )}
-      <TextInput
-        className="mb-2 rounded bg-white/10 p-2 text-white"
-        placeholderTextColor="rgba(255, 255, 255, 0.5)"
-        value={content}
-        onChangeText={setContent}
-        placeholder="Content"
-      />
-      {error?.data?.zodError?.fieldErrors.content && (
-        <Text className="mb-2 text-red-500">
-          {error.data.zodError.fieldErrors.content}
-        </Text>
-      )}
-      <Pressable className="bg-primary rounded p-2" onPress={null}>
-        <Text className="font-semibold text-white">Publish post</Text>
-      </Pressable>
-      {error?.data?.code === "UNAUTHORIZED" && (
-        <Text className="mt-2 text-red-500">
-          You need to be logged in to create a post
-        </Text>
-      )}
-    </View>
-  );
-}
-
 const Index = () => {
-  const utils = api.useUtils();
+  const [data, setData] = useState([]);
+  const [filter, setFilter] = useState("");
 
-  const user = useUser();
+  const formsQuery = api.form.byCreatorId.useQuery();
 
-  // if (!user) return <Redirect href="/login" />;
+  useEffect(() => {
+    if (!formsQuery?.data) return;
+    setData(formsQuery.data);
+  }, [formsQuery?.data]);
 
   return (
-    <SafeAreaView className="bg-red-500">
-      {/* Changes page title visible on the header */}
-      <View className="h-full w-full p-4">
-        <Text className="pb-2 text-center text-5xl font-bold text-white">
-          Forms
-        </Text>
-
-        <Button
-          onPress={() => void utils.customer.invalidate()}
-          title="Refresh posts"
-          color={"#f472b6"}
+    <>
+      <TabShell title="Formualrze" description="Zarządzaj formularzami">
+        <TextInput
+          className="mb-2 rounded bg-white p-2 text-black"
+          placeholderTextColor="rgba(255, 255, 255, 0.5)"
+          placeholder="Szukaj formularza..."
+          onChangeText={setFilter}
+          value={filter}
         />
-
-        <CreatePost />
-      </View>
-    </SafeAreaView>
+        <View className="h-full w-full">
+          <FlashList
+            data={data}
+            estimatedItemSize={20}
+            ItemSeparatorComponent={() => <View className="h-2" />}
+            renderItem={(p) => (
+              <View className="rounded bg-white p-4">
+                <View className="flex flex-row justify-between">
+                  <Text className="text-lg font-semibold">{p.item.title}</Text>
+                  <Pressable>
+                    <MoreVertical className="text-red-500/60" />
+                  </Pressable>
+                </View>
+                <Text>{p.item.description}</Text>
+              </View>
+            )}
+          />
+        </View>
+      </TabShell>
+    </>
   );
 };
 

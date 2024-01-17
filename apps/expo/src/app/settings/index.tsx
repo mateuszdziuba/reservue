@@ -1,6 +1,6 @@
-import { Button, Pressable, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Button, Pressable, SafeAreaView, Text, View } from "react-native";
 import { router } from "expo-router";
+import { LogOut } from "lucide-react-native";
 
 import { api } from "~/utils/api";
 import { useSignOut } from "~/utils/auth";
@@ -10,7 +10,7 @@ export default function Settings() {
   const utils = api.useUtils();
 
   return (
-    <SafeAreaView className=" bg-red-500">
+    <SafeAreaView className="bg-white">
       <View className="flex h-full flex-col items-center  p-4">
         <Pressable
           onPress={async () => {
@@ -18,9 +18,12 @@ export default function Settings() {
             await utils.auth.invalidate();
             router.push("/(auth)/signin");
           }}
-          className="w-full rounded bg-white/40 p-4 font-semibold"
+          className="flex w-full flex-row items-center gap-4 rounded bg-red-300/40 p-4 font-semibold"
         >
-          <Text className="text-2xl font-semibold text-white">Wyloguj się</Text>
+          <LogOut className="text-5xl text-red-500" />
+          <Text className="text-2xl font-semibold text-red-500">
+            Wyloguj się
+          </Text>
         </Pressable>
       </View>
     </SafeAreaView>

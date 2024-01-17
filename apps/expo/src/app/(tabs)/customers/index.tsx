@@ -1,9 +1,9 @@
-import React from "react";
-import { Button, Pressable, Text, TextInput, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Link, Redirect, Stack, Tabs } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { Pressable, Text, TextInput, View } from "react-native";
 import { FlashList } from "@shopify/flash-list";
+import { MoreVertical } from "lucide-react-native";
 
+import { TabShell } from "~/app/components/tab-shell";
 import { api } from "~/utils/api";
 import { useSignIn, useSignOut, useUser } from "~/utils/auth";
 
@@ -59,42 +59,57 @@ function CreatePost() {
 }
 
 const Index = () => {
-  const utils = api.useUtils();
+  const [data, setData] = useState([]);
+  const [filter, setFilter] = useState("");
 
-  const user = useUser();
-  const postQuery = api.customer.byCreatorId.useQuery();
-  console.log(postQuery.data);
-  // if (!user) return <Redirect href="/login" />;
+  const customersQuery = api.customer.byCreatorId.useQuery();
+
+  useEffect(() => {
+    if (!customersQuery?.data) return;
+    setData(customersQuery.data);
+  }, [customersQuery?.data]);
+
+  function filterData(filter) {
+    const filtered = customersQuery.data.filter((item) => {
+      const fullName = `${item.firstName} ${item.lastName}`;
+      return fullName.toLowerCase().includes(filter.toLowerCase());
+    });
+    setData(filtered);
+  }
 
   return (
-    <SafeAreaView className="bg-red-500">
-      {/* Changes page title visible on the header */}
-      <View className="h-full w-full p-4">
-        <Text className="pb-2 text-center text-5xl font-bold text-white">
-          Customers
-        </Text>
-
-        <Button title="Refresh posts" color={"#f472b6"} />
-
-        <FlashList
-          data={postQuery.data}
-          estimatedItemSize={20}
-          ItemSeparatorComponent={() => <View className="h-2" />}
-          renderItem={(p) => (
-            <Text>
-              {p.item.firstName} {p.item.lastName}
-            </Text>
-          )}
+    <>
+      <TabShell title="Klienci" description="Zarządzaj klientami">
+        <TextInput
+          className="mb-2 rounded bg-white p-2 text-black"
+          placeholderTextColor="rgba(255, 255, 255, 0.5)"
+          placeholder="Szukaj klienta..."
+          onChangeText={setFilter}
+          value={filter}
         />
-        <Pressable
-          className="bg-primary rounded p-2"
-          onPress={() => utils.customer.byCreatorId.invalidate()}
-        >
-          <Text>Refresh</Text>
-        </Pressable>
-        <CreatePost />
-      </View>
-    </SafeAreaView>
+        <View className="h-full w-full">
+          <FlashList
+            data={data}
+            estimatedItemSize={20}
+            ItemSeparatorComponent={() => <View className="h-2" />}
+            renderItem={(p) => (
+              <View className="rounded bg-white p-4">
+                <View className="flex flex-row justify-between">
+                  <Text className="text-lg font-semibold">
+                    {p.item.lastName} {p.item.firstName}
+                  </Text>
+                  <Pressable>
+                    <MoreVertical className="text-red-500/60" />
+                  </Pressable>
+                </View>
+                <Text>{p.item.email}</Text>
+                <Text>{p.item.phoneNumber}</Text>
+              </View>
+            )}
+          />
+        </View>
+      </TabShell>
+    </>
   );
 };
 

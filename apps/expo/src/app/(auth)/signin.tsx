@@ -1,5 +1,4 @@
-import { Button, Pressable, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Button, Pressable, SafeAreaView, Text, View } from "react-native";
 import { Book } from "lucide-react-native";
 
 import { useSignIn } from "~/utils/auth";

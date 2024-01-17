@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { and, desc, eq, schema } from "@reservue/db";
+import { desc, eq, schema } from "@reservue/db";
 import {
   createCustomerFormSchema,
   formAnswersSchema,
@@ -16,6 +16,8 @@ export const customerFormRouter = createTRPCRouter({
 
     return ctx.db.query.formsToCustomers.findMany({
       orderBy: desc(schema.formsToCustomers.updatedAt),
+      where: (formsToCustomers, { eq }) =>
+        eq(formsToCustomers.createdBy, ctx.session.user.id),
       with: {
         customer: {
           columns: {
@@ -39,7 +41,9 @@ export const customerFormRouter = createTRPCRouter({
         throw new Error("User not authenticated");
       }
 
-      return ctx.db.insert(schema.formsToCustomers).values(input);
+      return ctx.db
+        .insert(schema.formsToCustomers)
+        .values({ ...input, createdBy: ctx.session.user.id });
     }),
 
   byId: protectedProcedure.input(z.number()).query(({ ctx, input }) => {
@@ -56,7 +60,7 @@ export const customerFormRouter = createTRPCRouter({
     });
   }),
 
-  byCutomerId: protectedProcedure.input(z.number()).query(({ ctx, input }) => {
+  byCustomerId: protectedProcedure.input(z.number()).query(({ ctx, input }) => {
     if (!ctx.session?.user?.id) {
       throw new Error("User not authenticated");
     }
