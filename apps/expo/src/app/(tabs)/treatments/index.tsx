@@ -1,88 +1,72 @@
-import React from "react";
-import {
-  Button,
-  Pressable,
-  SafeAreaView,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
-import { Link, Redirect, Stack, Tabs } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { Pressable, Text, TextInput, View } from "react-native";
 import { FlashList } from "@shopify/flash-list";
+import { MoreVertical } from "lucide-react-native";
 
+import { Status } from "~/app/components/status";
+import { TabShell } from "~/app/components/tab-shell";
 import { api } from "~/utils/api";
-import { useSignIn, useSignOut, useUser } from "~/utils/auth";
-
-function CreatePost() {
-  const utils = api.useUtils();
-
-  const [title, setTitle] = React.useState("");
-  const [content, setContent] = React.useState("");
-
-  const { mutate, error } = api.customer.create.useMutation({
-    async onSuccess() {
-      setTitle("");
-      setContent("");
-    },
-  });
-
-  return (
-    <View className="mt-4">
-      <TextInput
-        className="mb-2 rounded bg-white/10 p-2 text-white"
-        placeholderTextColor="rgba(255, 255, 255, 0.5)"
-        value={title}
-        onChangeText={setTitle}
-        placeholder="Title"
-      />
-      {error?.data?.zodError?.fieldErrors.title && (
-        <Text className="mb-2 text-red-500">
-          {error.data.zodError.fieldErrors.title}
-        </Text>
-      )}
-      <TextInput
-        className="mb-2 rounded bg-white/10 p-2 text-white"
-        placeholderTextColor="rgba(255, 255, 255, 0.5)"
-        value={content}
-        onChangeText={setContent}
-        placeholder="Content"
-      />
-      {error?.data?.zodError?.fieldErrors.content && (
-        <Text className="mb-2 text-red-500">
-          {error.data.zodError.fieldErrors.content}
-        </Text>
-      )}
-      <Pressable className="bg-primary rounded p-2" onPress={null}>
-        <Text className="font-semibold text-white">Publish post</Text>
-      </Pressable>
-      {error?.data?.code === "UNAUTHORIZED" && (
-        <Text className="mt-2 text-red-500">
-          You need to be logged in to create a post
-        </Text>
-      )}
-    </View>
-  );
-}
 
 const Index = () => {
-  const utils = api.useUtils();
+  const [data, setData] = useState([]);
+  const [filter, setFilter] = useState("");
 
-  const user = useUser();
+  const customerFormsQuery = api.customerForm.all.useQuery();
 
-  // if (!user) return <Redirect href="/login" />;
+  useEffect(() => {
+    if (!customerFormsQuery?.data) return;
+    setData(customerFormsQuery.data);
+  }, [customerFormsQuery?.data]);
+
+  useEffect(() => {
+    filterData(filter);
+  }, [filter]);
+
+  function filterData(filter) {
+    const filtered = customerFormsQuery.data?.filter((item) => {
+      const fullName = `${item.customer.lastName} ${item.customer.firstName}`;
+      return fullName.toLowerCase().includes(filter.toLowerCase());
+    });
+    setData(filtered);
+  }
 
   return (
-    <SafeAreaView>
-      <View className="h-full w-full p-4">
-        <Text className="pb-2 text-center text-5xl font-bold text-white">
-          Treatments
-        </Text>
-
-        <Button title="Refresh posts" color={"#f472b6"} />
-
-        <CreatePost />
-      </View>
-    </SafeAreaView>
+    <>
+      <TabShell title="Formularze" description="Zarządzaj formularzami">
+        <TextInput
+          className="mb-2 rounded bg-white p-2 text-black"
+          placeholderTextColor="rgba(255, 255, 255, 0.5)"
+          placeholder="Szukaj formularza..."
+          onChangeText={setFilter}
+          value={filter}
+        />
+        <View className="h-full w-full">
+          <FlashList
+            data={data}
+            estimatedItemSize={20}
+            ItemSeparatorComponent={() => <View className="h-2" />}
+            renderItem={(p) => (
+              <View className="gap-2 rounded bg-white p-4">
+                <View>
+                  <View className="flex flex-row justify-between">
+                    <Text className="text-lg font-semibold">
+                      {p.item.customer.lastName} {p.item.customer.firstName}
+                    </Text>
+                    <Pressable>
+                      <MoreVertical className="text-red-500/60" />
+                    </Pressable>
+                  </View>
+                  <Text>{p.item.form.title}</Text>
+                </View>
+                <View className="flex w-full flex-row justify-start">
+                  <Status value={p.item.status} />
+                </View>
+              </View>
+            )}
+          />
+        </View>
+      </TabShell>
+    </>
   );
 };
 

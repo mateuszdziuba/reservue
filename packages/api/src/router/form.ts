@@ -3,7 +3,7 @@ import { z } from "zod";
 import { and, eq, inArray, schema } from "@reservue/db";
 import { createFormSchema } from "@reservue/validators";
 
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const formRouter = createTRPCRouter({
   byCreatorId: protectedProcedure.query(({ ctx }) => {

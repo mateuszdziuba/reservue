@@ -69,9 +69,13 @@ const Index = () => {
     setData(customersQuery.data);
   }, [customersQuery?.data]);
 
+  useEffect(() => {
+    filterData(filter);
+  }, [filter]);
+
   function filterData(filter) {
-    const filtered = customersQuery.data.filter((item) => {
-      const fullName = `${item.firstName} ${item.lastName}`;
+    const filtered = customersQuery.data?.filter((item) => {
+      const fullName = `${item.lastName} ${item.firstName}`;
       return fullName.toLowerCase().includes(filter.toLowerCase());
     });
     setData(filtered);

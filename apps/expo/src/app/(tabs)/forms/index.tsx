@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Button, Pressable, Text, TextInput, View } from "react-native";
-import { Link, Redirect, Stack, Tabs } from "expo-router";
+import { Pressable, Text, TextInput, View } from "react-native";
 import { FlashList } from "@shopify/flash-list";
 import { MoreVertical } from "lucide-react-native";
 
 import { TabShell } from "~/app/components/tab-shell";
 import { api } from "~/utils/api";
-import { useSignIn, useSignOut, useUser } from "~/utils/auth";
 
 const Index = () => {
   const [data, setData] = useState([]);
@@ -18,6 +16,17 @@ const Index = () => {
     if (!formsQuery?.data) return;
     setData(formsQuery.data);
   }, [formsQuery?.data]);
+
+  useEffect(() => {
+    filterData(filter);
+  }, [filter]);
+
+  function filterData(filter) {
+    const filtered = formsQuery.data?.filter(({ title }) => {
+      return title.toLowerCase().includes(filter.toLowerCase());
+    });
+    setData(filtered);
+  }
 
   return (
     <>

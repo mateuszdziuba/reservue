@@ -32,7 +32,7 @@ import { api } from "~/trpc/react";
 
 export interface TreatmentColumn {
   customer: string;
-  status: "0" | "1" | "2";
+  status: 0 | 1 | 2;
   id: number;
   form: string;
 }
@@ -56,14 +56,14 @@ export const columns: ColumnDef<TreatmentColumn>[] = [
         <Badge
           variant="outline"
           className={cn(
-            status === "0" && "border-gray-200 text-gray-800",
-            status === "1" && "border-yellow-200 text-yellow-800",
-            status === "2" && "border-green-200 text-green-800",
+            status === 0 && "border-gray-200 text-gray-800",
+            status === 1 && "border-yellow-200 text-yellow-800",
+            status === 2 && "border-green-200 text-green-800",
           )}
         >
-          {status === "0" && "Przypisany do klienta"}
-          {status === "1" && "W trakcie"}
-          {status === "2" && "Ukończony"}
+          {status === 0 && "Przypisany do klienta"}
+          {status === 1 && "W trakcie"}
+          {status === 2 && "Ukończony"}
         </Badge>
       );
     },

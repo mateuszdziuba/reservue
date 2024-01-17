@@ -6,7 +6,7 @@ import {
   formAnswersSchema,
 } from "@reservue/validators";
 
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const customerFormRouter = createTRPCRouter({
   all: protectedProcedure.query(({ ctx }) => {
