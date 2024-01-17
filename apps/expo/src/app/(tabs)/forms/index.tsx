@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from "react";
+import type { BottomSheetModal } from "@gorhom/bottom-sheet";
+import React, { useEffect, useRef, useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
 import { FlashList } from "@shopify/flash-list";
-import { MoreVertical } from "lucide-react-native";
+import { Eye, MoreVertical, Trash } from "lucide-react-native";
 
+import { CustomBottomSheetModal } from "~/app/components/custom-bottom-sheet-modal";
 import { TabShell } from "~/app/components/tab-shell";
 import { api } from "~/utils/api";
 
 const Index = () => {
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState("");
+  const bottomSheetRef = useRef<BottomSheetModal>(null);
 
   const formsQuery = api.form.byCreatorId.useQuery();
 
@@ -47,7 +50,7 @@ const Index = () => {
               <View className="rounded bg-white p-4">
                 <View className="flex flex-row justify-between">
                   <Text className="text-lg font-semibold">{p.item.title}</Text>
-                  <Pressable>
+                  <Pressable onPress={() => bottomSheetRef.current?.present()}>
                     <MoreVertical className="text-red-500/60" />
                   </Pressable>
                 </View>
@@ -56,6 +59,18 @@ const Index = () => {
             )}
           />
         </View>
+        <CustomBottomSheetModal ref={bottomSheetRef}>
+          <View className="gap-2 pb-8">
+            <Pressable className="flex flex-row items-center gap-2 rounded p-2">
+              <Eye className="text-black" />
+              <Text>Podgląd</Text>
+            </Pressable>
+            <Pressable className="flex flex-row items-center gap-2 rounded bg-red-500/10 p-2">
+              <Trash className="text-red-500" />
+              <Text className="text-red-500">Usuń</Text>
+            </Pressable>
+          </View>
+        </CustomBottomSheetModal>
       </TabShell>
     </>
   );

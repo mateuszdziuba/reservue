@@ -6,6 +6,8 @@ import { TRPCProvider } from "~/utils/api";
 
 import "../styles.css";
 
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+
 // This is the main layout of the app
 // It wraps your pages with the providers they need
 const RootLayout = () => {
@@ -15,27 +17,29 @@ const RootLayout = () => {
         The Stack component displays the current page.
         It also allows you to configure your screens 
       */}
-      <Stack screenOptions={{ headerTintColor: "#EF4444" }}>
-        <Stack.Screen
-          name="(tabs)"
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="settings/index"
-          options={{
-            headerTitle: "Ustawienia",
-            headerShadowVisible: false,
-          }}
-        />
-        <Stack.Screen
-          name="(auth)/signin"
-          options={{
-            headerShown: false,
-          }}
-        />
-      </Stack>
+      <BottomSheetModalProvider>
+        <Stack screenOptions={{ headerTintColor: "#EF4444" }}>
+          <Stack.Screen
+            name="(tabs)"
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="settings/index"
+            options={{
+              headerTitle: "Ustawienia",
+              headerShadowVisible: false,
+            }}
+          />
+          <Stack.Screen
+            name="(auth)/signin"
+            options={{
+              headerShown: false,
+            }}
+          />
+        </Stack>
+      </BottomSheetModalProvider>
       <StatusBar />
     </TRPCProvider>
   );
