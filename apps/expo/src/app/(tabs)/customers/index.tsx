@@ -1,12 +1,13 @@
 import type { BottomSheetModal } from "@gorhom/bottom-sheet";
 import React, { useEffect, useRef, useState } from "react";
-import { Alert, Pressable, Text, TextInput, View } from "react-native";
+import { Alert, Modal, Pressable, Text, TextInput, View } from "react-native";
 import { FlashList } from "@shopify/flash-list";
-import { MoreVertical, Trash } from "lucide-react-native";
+import { MoreVertical, Plus, Trash } from "lucide-react-native";
 
 import { CustomBottomSheetModal } from "~/app/components/custom-bottom-sheet-modal";
 import { TabShell } from "~/app/components/tab-shell";
 import { api } from "~/utils/api";
+import { CreateCustomerForm } from "./_components/create-customer-form";
 
 function CreatePost() {
   const [title, setTitle] = React.useState("");
@@ -61,7 +62,9 @@ function CreatePost() {
 const Index = () => {
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState("");
-  const [activeItem, setActiveItem] = React.useState();
+  const [activeItem, setActiveItem] = React.useState(null);
+  const [isVisible, setIsVisible] = React.useState(false);
+
   const bottomSheetRef = useRef<BottomSheetModal>(null);
 
   const utils = api.useUtils();
@@ -88,39 +91,54 @@ const Index = () => {
   return (
     <>
       <TabShell title="Klienci" description="Zarządzaj klientami">
-        <TextInput
-          className="mb-2 rounded bg-white p-2 text-black"
-          placeholderTextColor="rgba(255, 255, 255, 0.5)"
-          placeholder="Szukaj klienta..."
-          onChangeText={setFilter}
-          value={filter}
-        />
-        <View className="h-full w-full">
-          <FlashList
-            data={data}
-            estimatedItemSize={20}
-            ItemSeparatorComponent={() => <View className="h-2" />}
-            renderItem={(p) => (
-              <View className="rounded bg-white p-4">
-                <View className="flex flex-row justify-between">
-                  <Text className="text-lg font-semibold">
-                    {p.item.lastName} {p.item.firstName}
-                  </Text>
-                  <Pressable
-                    onPress={() => {
-                      bottomSheetRef.current?.present();
-                      setActiveItem(p.item);
-                    }}
-                  >
-                    <MoreVertical className="text-red-500/60" />
-                  </Pressable>
-                </View>
-                <Text>{p.item.email}</Text>
-                <Text>{p.item.phoneNumber}</Text>
-              </View>
-            )}
-          />
-        </View>
+        <Pressable
+          onPress={() => setIsVisible(true)}
+          className="mb-2 flex flex-row items-center gap-2 self-start rounded bg-red-500 p-3 font-semibold"
+        >
+          <Plus className=" text-white" />
+          <Text className="text-lg font-semibold text-white">
+            Dodaj klienta
+          </Text>
+        </Pressable>
+        {data?.length > 0 ? (
+          <>
+            <TextInput
+              className="mb-2 rounded bg-white p-2 text-black"
+              placeholderTextColor="rgba(255, 255, 255, 0.5)"
+              placeholder="Szukaj klienta..."
+              onChangeText={setFilter}
+              value={filter}
+            />
+            <View className="h-full w-full">
+              <FlashList
+                data={data}
+                estimatedItemSize={20}
+                ItemSeparatorComponent={() => <View className="h-2" />}
+                renderItem={(p) => (
+                  <View className="rounded bg-white p-4">
+                    <View className="flex flex-row justify-between">
+                      <Text className="text-lg font-semibold">
+                        {p.item.lastName} {p.item.firstName}
+                      </Text>
+                      <Pressable
+                        onPress={() => {
+                          bottomSheetRef.current?.present();
+                          setActiveItem(p.item);
+                        }}
+                      >
+                        <MoreVertical className="text-red-500/60" />
+                      </Pressable>
+                    </View>
+                    <Text>{p.item.email}</Text>
+                    <Text>{p.item.phoneNumber}</Text>
+                  </View>
+                )}
+              />
+            </View>
+          </>
+        ) : (
+          <Text>Brak danych.</Text>
+        )}
         <CustomBottomSheetModal ref={bottomSheetRef}>
           <View className="gap-2 pb-8">
             <Pressable
@@ -154,6 +172,9 @@ const Index = () => {
             </Pressable>
           </View>
         </CustomBottomSheetModal>
+        <Modal animationType="slide" visible={isVisible}>
+          <CreateCustomerForm setIsVisible={setIsVisible} />
+        </Modal>
       </TabShell>
     </>
   );

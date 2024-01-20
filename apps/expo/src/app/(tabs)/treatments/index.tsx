@@ -40,48 +40,50 @@ const Index = () => {
   return (
     <>
       <TabShell title="Formularze" description="Zarządzaj formularzami">
-        <TextInput
-          className="mb-2 rounded bg-white p-2 text-black"
-          placeholderTextColor="rgba(255, 255, 255, 0.5)"
-          placeholder="Szukaj formularza..."
-          onChangeText={setFilter}
-          value={filter}
-        />
-        <View className="h-full w-full">
-          {data?.length > 0 ? (
-            <FlashList
-              data={data}
-              estimatedItemSize={20}
-              ItemeparatorComponent={() => <View className="h-2" />}
-              renderItem={(p) => (
-                <View className="gap-2 rounded bg-white p-4">
-                  <View>
-                    <View className="flex flex-row justify-between">
-                      <Text className="text-lg font-semibold">
-                        {p.item?.customer?.lastName}{" "}
-                        {p.item?.customer?.firstName}
-                      </Text>
-                      <Pressable
-                        onPress={() => {
-                          bottomSheetRef.current?.present();
-                          setActiveItem(p.item);
-                        }}
-                      >
-                        <MoreVertical className="text-red-500/60" />
-                      </Pressable>
-                    </View>
-                    <Text>{p.item?.form?.title}</Text>
-                  </View>
-                  <View className="flex w-full flex-row justify-start">
-                    <Status value={p.item?.status} />
-                  </View>
-                </View>
-              )}
+        {data?.length > 0 ? (
+          <>
+            <TextInput
+              className="mb-2 rounded bg-white p-2 text-black"
+              placeholderTextColor="rgba(255, 255, 255, 0.5)"
+              placeholder="Szukaj formularza..."
+              onChangeText={setFilter}
+              value={filter}
             />
-          ) : (
-            <Text>Brak danych.</Text>
-          )}
-        </View>
+            <View className="h-full w-full">
+              <FlashList
+                data={data}
+                estimatedItemSize={20}
+                ItemeparatorComponent={() => <View className="h-2" />}
+                renderItem={(p) => (
+                  <View className="gap-2 rounded bg-white p-4">
+                    <View>
+                      <View className="flex flex-row justify-between">
+                        <Text className="text-lg font-semibold">
+                          {p.item?.customer?.lastName}{" "}
+                          {p.item?.customer?.firstName}
+                        </Text>
+                        <Pressable
+                          onPress={() => {
+                            bottomSheetRef.current?.present();
+                            setActiveItem(p.item);
+                          }}
+                        >
+                          <MoreVertical className="text-red-500/60" />
+                        </Pressable>
+                      </View>
+                      <Text>{p.item?.form?.title}</Text>
+                    </View>
+                    <View className="flex w-full flex-row justify-start">
+                      <Status value={p.item?.status} />
+                    </View>
+                  </View>
+                )}
+              />
+            </View>
+          </>
+        ) : (
+          <Text>Brak danych.</Text>
+        )}
         <CustomBottomSheetModal ref={bottomSheetRef}>
           <View className="gap-2 pb-8">
             <Pressable
