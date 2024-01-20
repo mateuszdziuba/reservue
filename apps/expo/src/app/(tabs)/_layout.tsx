@@ -70,7 +70,7 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="forms/index"
+        name="forms"
         options={{
           tabBarIcon: (props) => <ClipboardEdit {...props} />,
           tabBarLabel: "Formularze",

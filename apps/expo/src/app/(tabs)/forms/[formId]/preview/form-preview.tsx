@@ -1,7 +1,4 @@
-"use client";
-
-import { Pressable, View } from "react-native";
-import { useParams, useRouter } from "next/navigation";
+import { Pressable, Text, View } from "react-native";
 import { useForm } from "react-hook-form";
 
 import { api } from "~/utils/api";
@@ -30,9 +27,6 @@ const formComponents: Record<
 };
 
 export function FormPreview({ data, defaultValues, isSubmitEnabled }: Props) {
-  const id = useParams().treatmentId;
-  const router = useRouter();
-
   const { mutateAsync: addAnswers } = api.customerForm.addAnswers.useMutation();
 
   async function onSubmit(values: Record<string, string>) {
@@ -46,7 +40,6 @@ export function FormPreview({ data, defaultValues, isSubmitEnabled }: Props) {
       }));
     try {
       await addAnswers({ id: Number(id), answers });
-      router.push("/");
     } catch (error) {}
   }
 
@@ -54,10 +47,10 @@ export function FormPreview({ data, defaultValues, isSubmitEnabled }: Props) {
   return (
     <>
       {isSubmitEnabled && (
-        <div className="mb-4 flex flex-col border-b">
-          <p className="text-base">Tytuł: {data.title}</p>
-          <p className="text-base">Opis: {data.description}</p>
-        </div>
+        <View className="mb-4 flex flex-col border-b">
+          <Text className="text-base">Tytuł: {data.title}</Text>
+          <Text className="text-base">Opis: {data.description}</Text>
+        </View>
       )}
 
       <View className="w-2/3 space-y-6">

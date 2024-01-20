@@ -63,6 +63,12 @@ importers:
       '@gorhom/bottom-sheet':
         specifier: ^4
         version: 4.6.0(@types/react@18.2.48)(react-native-gesture-handler@2.12.1)(react-native-reanimated@3.3.0)(react-native@0.72.6)(react@18.2.0)
+      '@react-native-picker/picker':
+        specifier: 2.4.10
+        version: 2.4.10(react-native@0.72.6)(react@18.2.0)
+      '@reservue/validators':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/validators
       '@shopify/flash-list':
         specifier: 1.4.3
         version: 1.4.3(@babel/runtime@7.23.8)(react-native@0.72.6)(react@18.2.0)
@@ -78,6 +84,9 @@ importers:
       expo:
         specifier: ^49.0.21
         version: 49.0.21(@babel/core@7.23.7)
+      expo-checkbox:
+        specifier: ~2.4.0
+        version: 2.4.0
       expo-constants:
         specifier: ~14.4.2
         version: 14.4.2(expo@49.0.21)
@@ -111,6 +120,9 @@ importers:
       react-dom:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
+      react-hook-form:
+        specifier: ^7.49.3
+        version: 7.49.3(react@18.2.0)
       react-native:
         specifier: 0.72.6
         version: 0.72.6(@babel/core@7.23.7)(@babel/preset-env@7.23.8)(react@18.2.0)
@@ -4806,6 +4818,16 @@ packages:
       - utf-8-validate
     dev: false
 
+  /@react-native-picker/picker@2.4.10(react-native@0.72.6)(react@18.2.0):
+    resolution: {integrity: sha512-EvAlHmPEPOwvbP6Pjg/gtDV3XJzIjIxr10fXFNlX5r9HeHw582G1Zt2o8FLyB718nOttgj8HYUTGxvhu4N65sQ==}
+    peerDependencies:
+      react: '>=16'
+      react-native: '>=0.57'
+    dependencies:
+      react: 18.2.0
+      react-native: 0.72.6(@babel/core@7.23.7)(@babel/preset-env@7.23.8)(react@18.2.0)
+    dev: false
+
   /@react-native/assets-registry@0.72.0:
     resolution: {integrity: sha512-Im93xRJuHHxb1wniGhBMsxLwcfzdYreSZVQGDoMJgkd6+Iky61LInGEHnQCTN0fKNYF1Dvcofb4uMmE1RQHXHQ==}
     dev: false
@@ -8393,6 +8415,10 @@ packages:
     transitivePeerDependencies:
       - expo
       - supports-color
+    dev: false
+
+  /expo-checkbox@2.4.0:
+    resolution: {integrity: sha512-ZEe79B73I+NDkLZQ2pR1E5rv9ey1oleNI/s2/Jdb9zKWztS0KVU2K+drFn2t/zyoSbR1U+CNwik2v7h6JxrXcA==}
     dev: false
 
   /expo-constants@14.4.2(expo@49.0.21):
