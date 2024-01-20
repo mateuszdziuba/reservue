@@ -63,7 +63,6 @@ export const formRouter = createTRPCRouter({
           createdBy: ctx.session.user.id,
         });
 
-        // Iterate and insert questions
         for (const component of input.components) {
           const insertedComponent = await trx
             .insert(schema.formComponent)
@@ -72,13 +71,15 @@ export const formRouter = createTRPCRouter({
               formId: Number(insertedForm.insertId),
             });
 
-          // If there are options, insert them
+          // Iterate and insert questions
           if (component.question) {
             await trx.insert(schema.formQuestion).values({
               content: component.question.content,
               componentId: Number(insertedComponent.insertId),
             });
           }
+
+          // If there are options, insert them
           if (component.options) {
             for (const option of component.options) {
               await trx.insert(schema.formOption).values({
@@ -116,8 +117,9 @@ export const formRouter = createTRPCRouter({
         for (const component of input.components) {
           let componentId =
             typeof component.id === "number" ? component.id : undefined;
-
+          console.log(component.id, typeof component.id);
           if (!componentId) {
+            console.log("inserting component");
             const insertedComponent = await trx
               .insert(schema.formComponent)
               .values({

@@ -20,8 +20,7 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-
-// import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4 } from "uuid";
 
 import type {
   ComponentItems,
@@ -193,7 +192,7 @@ export function FormBuilder({ initialData }: { initialData?: Form }) {
             setComponents((prev) => [
               ...prev,
               {
-                id: 1,
+                id: uuidv4(),
                 type: value,
                 name: formItems[value].name,
                 component: formItems[value].component,
