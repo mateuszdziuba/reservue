@@ -2,6 +2,7 @@ import React from "react";
 import { SafeAreaView, Text, View } from "react-native";
 import { ClipboardEdit, FileStack, Sticker, Users } from "lucide-react-native";
 
+import { api } from "~/utils/api";
 import { TabShell } from "../components/tab-shell";
 
 const stats = [
@@ -16,6 +17,8 @@ const stats = [
 ];
 
 const Index = () => {
+  const { data } = api.business.getStats.useQuery();
+  console.log(data);
   return (
     <SafeAreaView>
       <TabShell title="Dashboard" description="Welcome to your dashboard">

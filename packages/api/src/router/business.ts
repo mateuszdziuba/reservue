@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { and, desc, eq, schema } from "@reservue/db";
+import { and, count, desc, eq, schema } from "@reservue/db";
 import { createBusinessSchema } from "@reservue/validators";
 
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
@@ -58,5 +58,28 @@ export const businessRouter = createTRPCRouter({
           eq(schema.business.ownerId, ctx.session.user.id),
         ),
       );
+  }),
+
+  getStats: protectedProcedure.query(({ ctx }) => {
+    if (!ctx.session?.user?.id) {
+      throw new Error("User not authenticated");
+    }
+    return ctx.db.transaction(async (trx) => {
+      const customerCount = await trx
+        .select({ value: count() })
+        .from(schema.customer)
+        .where(eq(schema.customer.createdBy, ctx.session.user.id));
+
+      const formCount = await trx
+        .select({ value: count() })
+        .from(schema.form)
+        .where(eq(schema.form.createdBy, ctx.session.user.id));
+
+      const customerFormCount = await trx
+        .select({ value: count() })
+        .from(schema.formsToCustomers)
+        .where(eq(schema.formsToCustomers.createdBy, ctx.session.user.id));
+      return { customerCount, formCount, customerFormCount };
+    });
   }),
 });
