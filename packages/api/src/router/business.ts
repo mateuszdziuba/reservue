@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { and, count, desc, eq, schema } from "@reservue/db";
+import { and, count, desc, eq, schema, sql } from "@reservue/db";
 import { createBusinessSchema } from "@reservue/validators";
 
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
@@ -79,10 +79,18 @@ export const businessRouter = createTRPCRouter({
         .select({ value: count() })
         .from(schema.formsToCustomers)
         .where(eq(schema.formsToCustomers.createdBy, ctx.session.user.id));
+
+      const pageCount = await trx
+        .select({
+          value: sql<number>`CEILING(COUNT(*) / 6)`.mapWith(Number),
+        })
+        .from(schema.formAnswer)
+        .groupBy(schema.formAnswer.customerFormId);
       return {
         customerCount: customerCount?.[0]?.value,
         formCount: formCount?.[0]?.value,
         customerFormCount: customerFormCount?.[0]?.value,
+        pageCount: pageCount?.[0]?.value,
       };
     });
   }),

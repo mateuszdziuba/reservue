@@ -16,11 +16,19 @@ const Index = () => {
     },
     {
       title: "Dodane formularze",
-      value: 14,
+      value: data?.formCount,
       icon: FileStack,
     },
-    { title: "Wypełnione formularze", value: 45, icon: ClipboardEdit },
-    { title: "Oszczędzone kartki papieru", value: 52, icon: Sticker },
+    {
+      title: "Wypełnione formularze",
+      value: data?.customerFormCount,
+      icon: ClipboardEdit,
+    },
+    {
+      title: "Oszczędzone kartki papieru",
+      value: data?.pageCount,
+      icon: Sticker,
+    },
   ];
 
   return (
