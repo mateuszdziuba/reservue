@@ -1,9 +1,14 @@
 import { View } from "react-native";
 
-export function Spinner() {
+import { cn } from "~/utils/utils";
+
+export function Spinner({ className }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <View
-      className="border-background h-full w-full animate-spin rounded-full border-2 border-r-transparent"
+      className={cn(
+        "border-background h-3 w-3 animate-spin rounded-full border-2 border-r-transparent",
+        className,
+      )}
       role="status"
     />
   );

@@ -1,6 +1,6 @@
 import React from "react";
 import { Image, Pressable, View } from "react-native";
-import { Link, Redirect, Tabs, usePathname } from "expo-router";
+import { Link, Tabs } from "expo-router";
 import {
   BarChart,
   ClipboardEdit,

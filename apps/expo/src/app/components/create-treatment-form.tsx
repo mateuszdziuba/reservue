@@ -40,7 +40,6 @@ export function CreateTreatmentForm({
     });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(data);
     try {
       const res = await createCustomerForm({
         formId: Number(data.formId),

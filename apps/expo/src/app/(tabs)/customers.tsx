@@ -9,6 +9,7 @@ import { CustomBottomSheetModal } from "~/app/components/custom-bottom-sheet-mod
 import { TabShell } from "~/app/components/tab-shell";
 import { api } from "~/utils/api";
 import { CreateCustomerForm } from "../components/create-customer-form";
+import { Spinner } from "../components/spinner";
 
 function CreatePost() {
   const [title, setTitle] = React.useState("");
@@ -101,20 +102,27 @@ const Index = () => {
             Dodaj klienta
           </Text>
         </Pressable>
-        {data?.length > 0 ? (
+        {customersQuery.isLoading ? (
+          <Spinner className="h-8 w-8 border-red-500 border-r-transparent" />
+        ) : (
           <>
-            <TextInput
-              className="mb-2 rounded bg-white p-2 text-black"
-              placeholderTextColor="rgba(255, 255, 255, 0.5)"
-              placeholder="Szukaj klienta..."
-              onChangeText={setFilter}
-              value={filter}
-            />
             <View className="h-full w-full">
               <FlashList
                 data={data}
                 estimatedItemSize={20}
                 ItemSeparatorComponent={() => <View className="h-2" />}
+                ListHeaderComponent={
+                  data.length > 0 ? (
+                    <TextInput
+                      className="mb-2 rounded bg-white p-2 text-black"
+                      placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                      placeholder="Szukaj klienta..."
+                      onChangeText={setFilter}
+                      value={filter}
+                    />
+                  ) : null
+                }
+                ListEmptyComponent={() => <Text>Brak danych.</Text>}
                 renderItem={(p) => (
                   <Link asChild href={`/customers/${p.item.id}`}>
                     <Pressable className="rounded bg-white p-4">
@@ -140,8 +148,6 @@ const Index = () => {
               />
             </View>
           </>
-        ) : (
-          <Text>Brak danych.</Text>
         )}
         <CustomBottomSheetModal ref={bottomSheetRef}>
           <View className="gap-2 pb-8">

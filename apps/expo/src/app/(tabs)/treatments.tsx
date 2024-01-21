@@ -10,6 +10,7 @@ import { Status } from "~/app/components/status";
 import { TabShell } from "~/app/components/tab-shell";
 import { api } from "~/utils/api";
 import { CreateTreatmentForm } from "../components/create-treatment-form";
+import { Spinner } from "../components/spinner";
 
 const Index = () => {
   const [data, setData] = useState([]);
@@ -52,20 +53,26 @@ const Index = () => {
             Wypełnij formularz
           </Text>
         </Pressable>
-        {data?.length > 0 ? (
+        {customerFormsQuery.isLoading ? (
+          <Spinner className="h-8 w-8 border-red-500 border-r-transparent" />
+        ) : (
           <>
-            <TextInput
-              className="mb-2 rounded bg-white p-2 text-black"
-              placeholderTextColor="rgba(255, 255, 255, 0.5)"
-              placeholder="Szukaj formularza..."
-              onChangeText={setFilter}
-              value={filter}
-            />
             <View className="h-full w-full">
               <FlashList
                 data={data}
                 estimatedItemSize={20}
                 ItemeparatorComponent={() => <View className="h-2" />}
+                ListHeaderComponent={
+                  data?.length > 0 ? (
+                    <TextInput
+                      className="mb-2 rounded bg-white p-2 text-black"
+                      placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                      placeholder="Szukaj formularza..."
+                      onChangeText={setFilter}
+                      value={filter}
+                    />
+                  ) : null
+                }
                 renderItem={(p) => (
                   <View className="gap-2 rounded bg-white p-4">
                     <View>
@@ -93,8 +100,6 @@ const Index = () => {
               />
             </View>
           </>
-        ) : (
-          <Text>Brak danych.</Text>
         )}
         <CustomBottomSheetModal ref={bottomSheetRef}>
           <View className="gap-2 pb-8">
