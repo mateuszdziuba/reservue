@@ -49,7 +49,7 @@ const Index = () => {
                 estimatedItemSize={20}
                 ItemSeparatorComponent={() => <View className="h-2" />}
                 ListHeaderComponent={
-                  data.length > 0 ? (
+                  data?.length > 0 ? (
                     <TextInput
                       className="mb-2 rounded bg-white p-2 text-black"
                       placeholderTextColor="rgba(255, 255, 255, 0.5)"

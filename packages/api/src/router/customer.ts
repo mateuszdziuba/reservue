@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { and, desc, eq, schema } from "@reservue/db";
+import { and, desc, eq, inArray, schema } from "@reservue/db";
 import { createCustomerSchema } from "@reservue/validators";
 
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
@@ -70,13 +70,27 @@ export const customerRouter = createTRPCRouter({
     if (!ctx.session?.user?.id) {
       throw new Error("User not authenticated");
     }
-    return ctx.db
-      .delete(schema.customer)
-      .where(
-        and(
-          eq(schema.customer.id, input),
-          eq(schema.customer.createdBy, ctx.session.user.id),
-        ),
-      );
+    return ctx.db.transaction(async (trx) => {
+      await trx
+        .delete(schema.customer)
+        .where(
+          and(
+            eq(schema.customer.id, input),
+            eq(schema.customer.createdBy, ctx.session.user.id),
+          ),
+        );
+
+      const customerFormIdsToDelete = await trx
+        .select({ id: schema.formsToCustomers.id })
+        .from(schema.formsToCustomers)
+        .where(eq(schema.formsToCustomers.customerId, input))
+        .then((res) => res.map(({ id }) => id));
+
+      await trx
+        .delete(schema.formAnswer)
+        .where(
+          inArray(schema.formAnswer.customerFormId, customerFormIdsToDelete),
+        );
+    });
   }),
 });
