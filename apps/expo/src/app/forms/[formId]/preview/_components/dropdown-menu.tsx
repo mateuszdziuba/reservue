@@ -23,7 +23,7 @@ export function DropdownMenu(props: Props) {
       disabled={props.disabled}
       render={({ field }) => (
         <View>
-          <Text className="text-base">{props.data.question?.content}</Text>
+          <Text className="text-lg">{props.data.question?.content}</Text>
           <Picker onValueChange={field.onChange} selectedValue={field.value}>
             {props.data.options?.map((option) => (
               <Picker.Item

@@ -1,12 +1,13 @@
-import { Pressable, Text, View } from "react-native";
+import { Pressable, ScrollView, Text, View } from "react-native";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useForm } from "react-hook-form";
 
 import { api } from "~/utils/api";
-import { Agreements } from "./_components/agreements";
-import { DropdownMenu } from "./_components/dropdown-menu";
-import { LongAnswer } from "./_components/long-answer";
-import { MultipleSelection } from "./_components/multiple-selection";
-import { ShortAnswer } from "./_components/short-answer";
+import { Agreements } from "./agreements";
+import { DropdownMenu } from "./dropdown-menu";
+import { LongAnswer } from "./long-answer";
+import { MultipleSelection } from "./multiple-selection";
+import { ShortAnswer } from "./short-answer";
 
 interface Props {
   data: FormData;
@@ -27,7 +28,16 @@ const formComponents: Record<
 };
 
 export function FormPreview({ data, defaultValues, isSubmitEnabled }: Props) {
-  const { mutateAsync: addAnswers } = api.customerForm.addAnswers.useMutation();
+  const utils = api.useUtils();
+
+  const { mutateAsync: addAnswers } = api.customerForm.addAnswers.useMutation({
+    async onSuccess() {
+      await utils.invalidate();
+      router.push("/(tabs)/treatments");
+    },
+  });
+  const { treatmentId } = useLocalSearchParams();
+  const router = useRouter();
 
   async function onSubmit(values: Record<string, string>) {
     if (!isSubmitEnabled) return;
@@ -39,7 +49,7 @@ export function FormPreview({ data, defaultValues, isSubmitEnabled }: Props) {
         value: JSON.stringify(value),
       }));
     try {
-      await addAnswers({ id: Number(id), answers });
+      await addAnswers({ id: Number(treatmentId), answers });
     } catch (error) {}
   }
 
@@ -53,7 +63,7 @@ export function FormPreview({ data, defaultValues, isSubmitEnabled }: Props) {
         </View>
       )}
 
-      <View className="w-2/3 space-y-6">
+      <View className="gap-4 p-4">
         {data.components.map((component) => {
           const Component = formComponents[component.type];
           return (
@@ -67,7 +77,9 @@ export function FormPreview({ data, defaultValues, isSubmitEnabled }: Props) {
           );
         })}
         {isSubmitEnabled && (
-          <Pressable onPress={form.handleSubmit(onSubmit)}>Wyślij</Pressable>
+          <Pressable onPress={form.handleSubmit(onSubmit)}>
+            <Text>Wyślij</Text>
+          </Pressable>
         )}
       </View>
     </>

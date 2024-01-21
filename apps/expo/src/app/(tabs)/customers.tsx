@@ -7,7 +7,7 @@ import { MoreVertical, Plus, Trash } from "lucide-react-native";
 import { CustomBottomSheetModal } from "~/app/components/custom-bottom-sheet-modal";
 import { TabShell } from "~/app/components/tab-shell";
 import { api } from "~/utils/api";
-import { CreateCustomerForm } from "./_components/create-customer-form";
+import { CreateCustomerForm } from "../components/create-customer-form";
 
 function CreatePost() {
   const [title, setTitle] = React.useState("");

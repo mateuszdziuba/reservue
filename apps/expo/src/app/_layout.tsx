@@ -38,6 +38,21 @@ const RootLayout = () => {
               headerShown: false,
             }}
           />
+          <Stack.Screen name="forms/[formId]/preview/index" />
+          <Stack.Screen
+            name="treatments/[treatmentId]/index"
+            options={{
+              headerTitle: "Wypełnij formularz",
+              headerShadowVisible: false,
+            }}
+          />
+          <Stack.Screen
+            name="treatments/[treatmentId]/fill"
+            options={{
+              headerTitle: "Wypełnij formularz",
+              headerShadowVisible: false,
+            }}
+          />
         </Stack>
       </BottomSheetModalProvider>
       <StatusBar />

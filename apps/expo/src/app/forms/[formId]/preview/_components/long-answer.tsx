@@ -21,13 +21,15 @@ export function LongAnswer(props: Props) {
       name={props.name}
       disabled={props.disabled}
       render={({ field }) => (
-        <View>
-          <Text className="text-base">{props.data.question?.content}</Text>
+        <View className="gap-3">
+          <Text className="text-lg">{props.data.question?.content}</Text>
           <TextInput
             placeholder="Wpisz swoją odpowiedź"
+            multiline
             value={field.value}
             onChangeText={field.onChange}
             onBlur={field.onBlur}
+            className="text-lg"
           />
         </View>
       )}

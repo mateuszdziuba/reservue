@@ -25,14 +25,19 @@ export function Agreements(props: Props) {
           name={`${props.name}-${agreement.id}`}
           disabled={props.disabled}
           render={({ field }) => (
-            <View className="flex flex-row items-start space-x-3 space-y-0 ">
+            <View className="flex flex-row items-start gap-2">
               <Checkbox
                 value={field.value}
                 onValueChange={field.onChange}
                 // required={agreement.required}
                 disabled={props.disabled}
               />
-              <Text>{agreement.content}</Text>
+              <Text className="text-md ">
+                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Labore
+                est expedita dolorem quasi inventore! Officiis iste mollitia
+                alias? Soluta sequi minus rerum, quam mollitia incidunt veniam
+                recusandae est et consectetur?
+              </Text>
             </View>
           )}
         />

@@ -54,7 +54,7 @@ export function CreateCustomerForm({
     }
   }
 
-  async function onSubmitUpdate(values: any) {
+  async function onSubmitUpdate(values: CreateCustomer) {
     try {
       await updateCustomer({ id: Number("12"), data: values });
     } catch {}

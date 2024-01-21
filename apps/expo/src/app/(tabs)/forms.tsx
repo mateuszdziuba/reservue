@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Alert, Pressable, Text, TextInput, View } from "react-native";
 import { Link } from "expo-router";
 import { FlashList } from "@shopify/flash-list";
-import { MoreVertical, Trash } from "lucide-react-native";
+import { Eye, MoreVertical, Trash } from "lucide-react-native";
 
 import { CustomBottomSheetModal } from "~/app/components/custom-bottom-sheet-modal";
 import { TabShell } from "~/app/components/tab-shell";
@@ -53,24 +53,22 @@ const Index = () => {
                 estimatedItemSize={20}
                 ItemSeparatorComponent={() => <View className="h-2" />}
                 renderItem={(p) => (
-                  <Link asChild href={`/(tabs)/forms/${p.item.id}/preview`}>
-                    <Pressable className="rounded bg-white p-4">
-                      <View className="flex flex-row justify-between">
-                        <Text className="text-lg font-semibold">
-                          {p.item.title}
-                        </Text>
-                        <Pressable
-                          onPress={() => {
-                            setActiveItem(p.item);
-                            bottomSheetRef.current?.present();
-                          }}
-                        >
-                          <MoreVertical className="text-red-500/60" />
-                        </Pressable>
-                      </View>
-                      <Text>{p.item.description}</Text>
-                    </Pressable>
-                  </Link>
+                  <View className="rounded bg-white p-4">
+                    <View className="flex flex-row justify-between">
+                      <Text className="text-lg font-semibold">
+                        {p.item.title}
+                      </Text>
+                      <Pressable
+                        onPress={() => {
+                          setActiveItem(p.item);
+                          bottomSheetRef.current?.present();
+                        }}
+                      >
+                        <MoreVertical className="text-red-500/60" />
+                      </Pressable>
+                    </View>
+                    <Text>{p.item.description}</Text>
+                  </View>
                 )}
               />
             </View>
@@ -80,6 +78,15 @@ const Index = () => {
         )}
         <CustomBottomSheetModal ref={bottomSheetRef}>
           <View className="gap-2 pb-8">
+            <Link asChild href={`/forms/${activeItem?.id}/preview`}>
+              <Pressable
+                className="flex flex-row items-center gap-2 rounded  p-2"
+                onPress={() => bottomSheetRef.current?.close()}
+              >
+                <Eye className="text-black" />
+                <Text>Podgląd</Text>
+              </Pressable>
+            </Link>
             <Pressable
               className="flex flex-row items-center gap-2 rounded bg-red-500/10 p-2"
               onPress={() =>

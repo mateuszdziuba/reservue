@@ -1,18 +1,20 @@
 import type { BottomSheetModal } from "@gorhom/bottom-sheet";
 import React, { useEffect, useRef, useState } from "react";
-import { Alert, Pressable, Text, TextInput, View } from "react-native";
+import { Alert, Modal, Pressable, Text, TextInput, View } from "react-native";
 import { FlashList } from "@shopify/flash-list";
-import { MoreVertical, Trash } from "lucide-react-native";
+import { MoreVertical, Pen, Trash } from "lucide-react-native";
 
 import { CustomBottomSheetModal } from "~/app/components/custom-bottom-sheet-modal";
 import { Status } from "~/app/components/status";
 import { TabShell } from "~/app/components/tab-shell";
 import { api } from "~/utils/api";
+import { CreateTreatmentForm } from "../components/create-treatment-form";
 
 const Index = () => {
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState("");
   const [activeItem, setActiveItem] = useState(null);
+  const [isVisible, setIsVisible] = useState(false);
   const bottomSheetRef = useRef<BottomSheetModal>(null);
 
   const utils = api.useUtils();
@@ -40,6 +42,15 @@ const Index = () => {
   return (
     <>
       <TabShell title="Formularze" description="Zarządzaj formularzami">
+        <Pressable
+          onPress={() => setIsVisible(true)}
+          className="mb-2 flex flex-row items-center gap-2 self-start rounded bg-red-500 p-3 font-semibold"
+        >
+          <Pen className=" text-white" />
+          <Text className="text-lg font-semibold text-white">
+            Wypełnij formularz
+          </Text>
+        </Pressable>
         {data?.length > 0 ? (
           <>
             <TextInput
@@ -117,6 +128,9 @@ const Index = () => {
             </Pressable>
           </View>
         </CustomBottomSheetModal>
+        <Modal animationType="slide" visible={isVisible}>
+          <CreateTreatmentForm setIsVisible={setIsVisible} />
+        </Modal>
       </TabShell>
     </>
   );

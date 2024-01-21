@@ -1,13 +1,6 @@
 import React from "react";
-import {
-  Button,
-  Image,
-  Pressable,
-  SafeAreaView,
-  Text,
-  View,
-} from "react-native";
-import { Link, Redirect, router, Tabs, usePathname } from "expo-router";
+import { Image, Pressable, View } from "react-native";
+import { Link, Tabs, usePathname } from "expo-router";
 import {
   BarChart,
   ClipboardEdit,
@@ -56,14 +49,14 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="treatments/index"
+        name="treatments"
         options={{
           tabBarIcon: (props) => <HeartHandshake {...props} />,
           tabBarLabel: "Zabiegi",
         }}
       />
       <Tabs.Screen
-        name="customers/index"
+        name="customers"
         options={{
           tabBarIcon: (props) => <Users {...props} />,
           tabBarLabel: "Klienci",
