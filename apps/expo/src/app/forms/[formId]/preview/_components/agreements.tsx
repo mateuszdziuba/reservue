@@ -4,7 +4,7 @@ import { Text, View } from "react-native";
 import { Checkbox } from "expo-checkbox";
 import { Controller } from "react-hook-form";
 
-import type { ComponentItems } from "../../../types";
+import type { ComponentItems } from "~/utils/types";
 
 interface Props {
   data: ComponentItems;

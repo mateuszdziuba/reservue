@@ -3,7 +3,7 @@ import React from "react";
 import { Text, TextInput, View } from "react-native";
 import { Controller } from "react-hook-form";
 
-import type { ComponentItems } from "../../../types";
+import type { ComponentItems } from "~/utils/types";
 
 interface Props {
   data: ComponentItems;

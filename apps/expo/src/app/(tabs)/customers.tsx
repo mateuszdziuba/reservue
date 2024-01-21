@@ -5,66 +5,20 @@ import { Link } from "expo-router";
 import { FlashList } from "@shopify/flash-list";
 import { MoreVertical, Plus, Trash } from "lucide-react-native";
 
+import type { CreateCustomer } from "@reservue/validators";
+
 import { CustomBottomSheetModal } from "~/app/components/custom-bottom-sheet-modal";
 import { TabShell } from "~/app/components/tab-shell";
 import { api } from "~/utils/api";
 import { CreateCustomerForm } from "../components/create-customer-form";
 import { Spinner } from "../components/spinner";
 
-function CreatePost() {
-  const [title, setTitle] = React.useState("");
-  const [content, setContent] = React.useState("");
-
-  const utils = api.useUtils();
-  const { mutate, error } = api.customer.create.useMutation({
-    async onSuccess() {
-      setTitle("");
-      setContent("");
-    },
-  });
-
-  return (
-    <View className="mt-4">
-      <TextInput
-        className="mb-2 rounded bg-white/10 p-2 text-white"
-        placeholderTextColor="rgba(255, 255, 255, 0.5)"
-        value={title}
-        onChangeText={setTitle}
-        placeholder="Title"
-      />
-      {error?.data?.zodError?.fieldErrors.title && (
-        <Text className="mb-2 text-red-500">
-          {error.data.zodError.fieldErrors.title}
-        </Text>
-      )}
-      <TextInput
-        className="mb-2 rounded bg-white/10 p-2 text-white"
-        placeholderTextColor="rgba(255, 255, 255, 0.5)"
-        value={content}
-        onChangeText={setContent}
-        placeholder="Content"
-      />
-      {error?.data?.zodError?.fieldErrors.content && (
-        <Text className="mb-2 text-red-500">
-          {error.data.zodError.fieldErrors.content}
-        </Text>
-      )}
-      <Pressable className="bg-primary rounded p-2" onPress={null}>
-        <Text className="font-semibold text-white">Publish post</Text>
-      </Pressable>
-      {error?.data?.code === "UNAUTHORIZED" && (
-        <Text className="mt-2 text-red-500">
-          You need to be logged in to create a post
-        </Text>
-      )}
-    </View>
-  );
-}
+type Customer = CreateCustomer & { id: number };
 
 const Index = () => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<Customer[]>([]);
   const [filter, setFilter] = useState("");
-  const [activeItem, setActiveItem] = React.useState(null);
+  const [activeItem, setActiveItem] = React.useState<Customer | null>(null);
   const [isVisible, setIsVisible] = React.useState(false);
 
   const bottomSheetRef = useRef<BottomSheetModal>(null);
@@ -75,19 +29,20 @@ const Index = () => {
 
   useEffect(() => {
     if (!customersQuery?.data) return;
-    setData(customersQuery.data);
+    setData(customersQuery.data as Customer[]);
   }, [customersQuery?.data]);
 
   useEffect(() => {
     filterData(filter);
   }, [filter]);
 
-  function filterData(filter) {
-    const filtered = customersQuery.data?.filter((item) => {
-      const fullName = `${item.lastName} ${item.firstName}`;
-      return fullName.toLowerCase().includes(filter.toLowerCase());
-    });
-    setData(filtered);
+  function filterData(filter: string) {
+    const filtered =
+      customersQuery.data?.filter((item) => {
+        const fullName = `${item.lastName} ${item.firstName}`;
+        return fullName.toLowerCase().includes(filter.toLowerCase());
+      }) ?? [];
+    setData(filtered as Customer[]);
   }
 
   return (
@@ -156,13 +111,15 @@ const Index = () => {
               onPress={() =>
                 Alert.alert(
                   "Uwaga!",
-                  `Czy na pewno chcesz usunąć klienta ${activeItem.lastName} ${activeItem.firstName}?`,
+                  `Czy na pewno chcesz usunąć klienta ${activeItem?.lastName} ${activeItem?.firstName}?`,
                   [
                     { text: "Nie", style: "cancel", onPress: () => null },
                     {
                       text: "Tak",
                       style: "destructive",
+                      // eslint-disable-next-line @typescript-eslint/no-misused-promises
                       onPress: async () => {
+                        if (!activeItem) return;
                         try {
                           await deleteCustomer(activeItem.id);
                           await utils.invalidate();

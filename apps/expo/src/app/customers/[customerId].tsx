@@ -12,12 +12,14 @@ import { Link, useLocalSearchParams } from "expo-router";
 import { FlashList } from "@shopify/flash-list";
 import { Eye, MoreVertical, Trash } from "lucide-react-native";
 
+import type { CreateCustomer } from "~/utils/validators";
 import { api } from "~/utils/api";
 import { CreateCustomerForm } from "../components/create-customer-form";
 import { CustomBottomSheetModal } from "../components/custom-bottom-sheet-modal";
+import { Status } from "../components/status";
 
 export default function CustomerPage() {
-  const [activeItem, setActiveItem] = useState(null);
+  const [activeItem, setActiveItem] = useState<any | null>(null);
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const { customerId } = useLocalSearchParams();
   const { data } = api.customer.byId.useQuery({ id: Number(customerId) });
@@ -32,7 +34,7 @@ export default function CustomerPage() {
   return (
     <SafeAreaView>
       <ScrollView>
-        <CreateCustomerForm defaultValues={data} />
+        <CreateCustomerForm defaultValues={data as CreateCustomer} />
         <View className="h-full w-full p-4">
           <FlashList
             data={formsData}
@@ -53,7 +55,9 @@ export default function CustomerPage() {
                     <MoreVertical className="text-red-500/60" />
                   </Pressable>
                 </View>
-                <Text>{p.item.description}</Text>
+                <View className="self-end">
+                  <Status value={p.item.status as 0 | 1 | 2} />
+                </View>
               </View>
             )}
           />

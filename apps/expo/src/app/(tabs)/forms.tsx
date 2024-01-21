@@ -5,15 +5,16 @@ import { Link } from "expo-router";
 import { FlashList } from "@shopify/flash-list";
 import { Eye, MoreVertical, Trash } from "lucide-react-native";
 
+import type { Form } from "~/utils/types";
 import { CustomBottomSheetModal } from "~/app/components/custom-bottom-sheet-modal";
 import { TabShell } from "~/app/components/tab-shell";
 import { api } from "~/utils/api";
 import { Spinner } from "../components/spinner";
 
 const Index = () => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<Form[]>([]);
   const [filter, setFilter] = useState("");
-  const [activeItem, setActiveItem] = useState(null);
+  const [activeItem, setActiveItem] = useState<Form | null>(null);
   const bottomSheetRef = useRef<BottomSheetModal>(null);
 
   const utils = api.useUtils();
@@ -22,23 +23,24 @@ const Index = () => {
 
   useEffect(() => {
     if (!formsQuery?.data) return;
-    setData(formsQuery.data);
+    setData(formsQuery.data as Form[]);
   }, [formsQuery?.data]);
 
   useEffect(() => {
     filterData(filter);
   }, [filter]);
 
-  function filterData(filter) {
-    const filtered = formsQuery.data?.filter(({ title }) => {
-      return title.toLowerCase().includes(filter.toLowerCase());
-    });
-    setData(filtered);
+  function filterData(filter: string) {
+    const filtered =
+      formsQuery.data?.filter(({ title }) => {
+        return title.toLowerCase().includes(filter.toLowerCase());
+      }) ?? [];
+    setData(filtered as Form[]);
   }
 
   return (
     <>
-      <TabShell title="Formualrze" description="Zarządzaj formularzami">
+      <TabShell title="Formularze" description="Zarządzaj formularzami">
         {formsQuery.isLoading ? (
           <Spinner className="h-8 w-8 self-center border-red-500 border-r-transparent" />
         ) : (
@@ -84,7 +86,7 @@ const Index = () => {
         )}
         <CustomBottomSheetModal ref={bottomSheetRef}>
           <View className="gap-2 pb-8">
-            <Link asChild href={`/forms/${activeItem?.id}/preview`}>
+            <Link asChild href={`/forms/${activeItem?.id}/preview/`}>
               <Pressable
                 className="flex flex-row items-center gap-2 rounded  p-2"
                 onPress={() => bottomSheetRef.current?.close()}
@@ -98,13 +100,15 @@ const Index = () => {
               onPress={() =>
                 Alert.alert(
                   "Uwaga!",
-                  `Czy na pewno chcesz usunąć formularz ${activeItem.title}?`,
+                  `Czy na pewno chcesz usunąć formularz ${activeItem?.title}?`,
                   [
                     { text: "Nie", style: "cancel", onPress: () => null },
                     {
                       text: "Tak",
                       style: "destructive",
+                      // eslint-disable-next-line @typescript-eslint/no-misused-promises
                       onPress: async () => {
+                        if (!activeItem) return;
                         try {
                           await deleteForm(activeItem.id);
                           await utils.invalidate();

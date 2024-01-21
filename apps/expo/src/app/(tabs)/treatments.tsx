@@ -5,6 +5,7 @@ import { Link } from "expo-router";
 import { FlashList } from "@shopify/flash-list";
 import { Eye, MoreVertical, Pen, Trash } from "lucide-react-native";
 
+import type { CustomerForm } from "~/utils/types";
 import { CustomBottomSheetModal } from "~/app/components/custom-bottom-sheet-modal";
 import { Status } from "~/app/components/status";
 import { TabShell } from "~/app/components/tab-shell";
@@ -13,9 +14,9 @@ import { CreateTreatmentForm } from "../components/create-treatment-form";
 import { Spinner } from "../components/spinner";
 
 const Index = () => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<CustomerForm[]>([]);
   const [filter, setFilter] = useState("");
-  const [activeItem, setActiveItem] = useState(null);
+  const [activeItem, setActiveItem] = useState<CustomerForm | null>(null);
   const [isVisible, setIsVisible] = useState(false);
   const bottomSheetRef = useRef<BottomSheetModal>(null);
 
@@ -33,11 +34,12 @@ const Index = () => {
     filterData(filter);
   }, [filter]);
 
-  function filterData(filter) {
-    const filtered = customerFormsQuery.data?.filter((item) => {
-      const fullName = `${item.customer.lastName} ${item.customer.firstName}`;
-      return fullName.toLowerCase().includes(filter.toLowerCase());
-    });
+  function filterData(filter: string) {
+    const filtered =
+      customerFormsQuery.data?.filter((item) => {
+        const fullName = `${item.customer.lastName} ${item.customer.firstName}`;
+        return fullName.toLowerCase().includes(filter.toLowerCase());
+      }) ?? [];
     setData(filtered);
   }
 
@@ -61,7 +63,7 @@ const Index = () => {
               <FlashList
                 data={data}
                 estimatedItemSize={20}
-                ItemeparatorComponent={() => <View className="h-2" />}
+                ItemSeparatorComponent={() => <View className="h-2" />}
                 ListHeaderComponent={
                   data?.length > 0 ? (
                     <TextInput
@@ -93,7 +95,7 @@ const Index = () => {
                       <Text>{p.item?.form?.title}</Text>
                     </View>
                     <View className="flex w-full flex-row justify-start">
-                      <Status value={p.item?.status} />
+                      <Status value={p.item?.status as 0 | 1 | 2} />
                     </View>
                   </View>
                 )}
@@ -117,13 +119,15 @@ const Index = () => {
               onPress={() =>
                 Alert.alert(
                   "Uwaga!",
-                  `Czy na pewno chcesz usunąć formularz ${activeItem.form?.title} klienta ${activeItem.customer?.lastName} ${activeItem.customer?.firstName}?`,
+                  `Czy na pewno chcesz usunąć formularz ${activeItem?.form?.title} klienta ${activeItem?.customer?.lastName} ${activeItem?.customer?.firstName}?`,
                   [
                     { text: "Nie", style: "cancel", onPress: () => null },
                     {
                       text: "Tak",
                       style: "destructive",
+                      // eslint-disable-next-line @typescript-eslint/no-misused-promises
                       onPress: async () => {
+                        if (!activeItem) return;
                         try {
                           await deleteCustomerForm(activeItem.id);
                           await utils.invalidate();

@@ -28,7 +28,7 @@ export function CreateTreatmentForm({
   const utils = api.useUtils();
   const form = useForm({
     resolver: zodResolver(FormSchema),
-    defaultValues: undefined,
+    defaultValues: { formId: "", customerId: "" },
   });
 
   const { mutateAsync: createCustomerForm } =
@@ -46,7 +46,7 @@ export function CreateTreatmentForm({
         customerId: Number(data.customerId),
       });
 
-      router.push(`/treatments/${res.insertId}`);
+      router.push(`/treatments/${res.insertId}/`);
     } catch (error) {}
   }
 

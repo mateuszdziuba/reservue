@@ -1,6 +1,7 @@
 import type { Dispatch, SetStateAction } from "react";
 import React, { useEffect, useState } from "react";
 import { Pressable, SafeAreaView, Text, TextInput, View } from "react-native";
+import { router, useLocalSearchParams } from "expo-router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 
@@ -15,9 +16,10 @@ export function CreateCustomerForm({
 }: {
   handleOnSuccess?: () => void;
   defaultValues?: CreateCustomer;
-  setIsVisible: Dispatch<SetStateAction<boolean>>;
+  setIsVisible?: Dispatch<SetStateAction<boolean>>;
 }) {
   const [canBeEdited, setCanBeEdited] = useState(!defaultValues);
+  const { customerId } = useLocalSearchParams();
 
   const utils = api.useUtils();
   const form = useForm({
@@ -29,14 +31,15 @@ export function CreateCustomerForm({
     async onSuccess() {
       handleOnSuccess?.();
       await utils.customer.byCreatorId.invalidate();
-      setIsVisible(false);
+      setIsVisible?.(false);
     },
   });
 
   const { mutateAsync: updateCustomer } = api.customer.update.useMutation({
     async onSuccess() {
       handleOnSuccess?.();
-      await utils.customer.byCreatorId.invalidate();
+      await utils.invalidate();
+      router.back();
     },
   });
 
@@ -56,7 +59,7 @@ export function CreateCustomerForm({
 
   async function onSubmitUpdate(values: CreateCustomer) {
     try {
-      await updateCustomer({ id: Number("12"), data: values });
+      await updateCustomer({ id: Number(customerId), data: values });
     } catch {}
   }
 
@@ -210,31 +213,39 @@ export function CreateCustomerForm({
         />
         {defaultValues ? (
           canBeEdited ? (
-            <>
+            <View className="flex flex-row gap-2">
               <Pressable
+                className="rounded bg-red-500/40 px-4 py-2 "
                 disabled={
                   form.formState.isSubmitting || !form.formState.isDirty
                 }
                 onPress={form.handleSubmit(onSubmitUpdate)}
               >
-                <Text> Zapisz</Text>
+                <Text className="text-lg font-semibold text-red-500">
+                  {" "}
+                  Zapisz
+                </Text>
               </Pressable>
               <Pressable
+                className="rounded bg-red-500/40 px-4 py-2 "
                 onPress={() => {
                   setCanBeEdited(false);
                   form.reset(defaultValues);
                 }}
               >
-                <Text>Anuluj</Text>
+                <Text className="text-lg font-semibold text-red-500">
+                  Anuluj
+                </Text>
               </Pressable>
-            </>
+            </View>
           ) : (
             <Pressable
+              className="self-start rounded bg-red-500/40 px-4 py-2"
               onPress={() => {
                 setCanBeEdited(true);
               }}
             >
-              <Text>Edytuj</Text>
+              <Text className="text-lg font-semibold text-red-500">Edytuj</Text>
             </Pressable>
           )
         ) : (
@@ -251,7 +262,7 @@ export function CreateCustomerForm({
             </Pressable>
             <Pressable
               className="rounded bg-red-500/40 px-4 py-2"
-              onPress={() => setIsVisible(false)}
+              onPress={() => setIsVisible?.(false)}
             >
               <Text className="text-lg font-semibold text-red-500">Anuluj</Text>
             </Pressable>
