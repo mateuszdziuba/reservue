@@ -14,6 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
+import { api } from "~/trpc/server";
 import { DashboardShell } from "../components/dashboard-shell";
 import { CalendarDateRangePicker } from "./_components/date-range-picker";
 import { Overview } from "./_components/overview";
@@ -21,10 +22,12 @@ import { RecentCustomers } from "./_components/recent-customers";
 
 export const runtime = "nodejs";
 
-export default function Dashboard() {
+export default async function Dashboard() {
   // You don't need to fetch these here, just showing different usages
   // If you don't want the Suspense loading state, you could pass these
   // posts as props as use as initialData in the query.
+
+  const data = await api.business.getStats();
 
   return (
     <>
@@ -62,7 +65,7 @@ export default function Dashboard() {
               <Users className="text-muted-foreground h-4 w-4" />
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">58</div>
+              <div className="text-3xl font-bold">{data.customerCount}</div>
               {/* <p className="text-muted-foreground text-xs">
                 +20.1% from last month
               </p> */}
@@ -76,7 +79,7 @@ export default function Dashboard() {
               <FileStack className="text-muted-foreground h-4 w-4" />
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">15</div>
+              <div className="text-3xl font-bold">{data.formCount}</div>
               {/* <p className="text-muted-foreground text-xs">
                 +180.1% from last month
               </p> */}
@@ -90,7 +93,7 @@ export default function Dashboard() {
               <ClipboardEdit className="text-muted-foreground h-4 w-4" />
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">45</div>
+              <div className="text-3xl font-bold">{data.customerFormCount}</div>
               {/* <p className="text-muted-foreground text-xs">
                 +19% from last month
               </p> */}
@@ -104,7 +107,7 @@ export default function Dashboard() {
               <Sticker className="text-muted-foreground h-4 w-4" />
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">52</div>
+              <div className="text-3xl font-bold">{data.pageCount}</div>
               {/* <p className="text-muted-foreground text-xs">
                 +201 since last hour
               </p> */}
