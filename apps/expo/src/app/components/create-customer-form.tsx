@@ -75,6 +75,7 @@ export function CreateCustomerForm({
               value={field.value}
               onChangeText={field.onChange}
               onBlur={field.onBlur}
+              editable={canBeEdited}
             />
           )}
         />
@@ -90,6 +91,7 @@ export function CreateCustomerForm({
               value={field.value}
               onChangeText={field.onChange}
               onBlur={field.onBlur}
+              editable={canBeEdited}
             />
           )}
         />
@@ -105,6 +107,7 @@ export function CreateCustomerForm({
               value={field.value}
               onChangeText={field.onChange}
               onBlur={field.onBlur}
+              editable={canBeEdited}
             />
           )}
         />
@@ -120,6 +123,7 @@ export function CreateCustomerForm({
               value={field.value}
               onChangeText={field.onChange}
               onBlur={field.onBlur}
+              editable={canBeEdited}
             />
           )}
         />
@@ -135,6 +139,7 @@ export function CreateCustomerForm({
               value={field.value}
               onChangeText={field.onChange}
               onBlur={field.onBlur}
+              editable={canBeEdited}
             />
           )}
         />
@@ -150,6 +155,7 @@ export function CreateCustomerForm({
               value={field.value}
               onChangeText={field.onChange}
               onBlur={field.onBlur}
+              editable={canBeEdited}
             />
           )}
         />
@@ -165,6 +171,7 @@ export function CreateCustomerForm({
               value={field.value}
               onChangeText={field.onChange}
               onBlur={field.onBlur}
+              editable={canBeEdited}
             />
           )}
         />
@@ -181,6 +188,7 @@ export function CreateCustomerForm({
               value={field.value}
               onChangeText={field.onChange}
               onBlur={field.onBlur}
+              editable={canBeEdited}
             />
           )}
         />
@@ -196,6 +204,7 @@ export function CreateCustomerForm({
               value={field.value}
               onChangeText={field.onChange}
               onBlur={field.onBlur}
+              editable={canBeEdited}
             />
           )}
         />

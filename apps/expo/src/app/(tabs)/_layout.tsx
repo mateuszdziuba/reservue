@@ -1,6 +1,6 @@
 import React from "react";
 import { Image, Pressable, View } from "react-native";
-import { Link, Tabs, usePathname } from "expo-router";
+import { Link, Redirect, Tabs, usePathname } from "expo-router";
 import {
   BarChart,
   ClipboardEdit,
@@ -14,7 +14,6 @@ import { useUser } from "~/utils/auth";
 // It wraps your pages with the providers they need
 export default function TabsLayout() {
   const user = useUser();
-  const pathname = usePathname();
 
   return (
     <Tabs

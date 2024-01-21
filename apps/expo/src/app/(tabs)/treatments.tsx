@@ -1,8 +1,9 @@
 import type { BottomSheetModal } from "@gorhom/bottom-sheet";
 import React, { useEffect, useRef, useState } from "react";
 import { Alert, Modal, Pressable, Text, TextInput, View } from "react-native";
+import { Link } from "expo-router";
 import { FlashList } from "@shopify/flash-list";
-import { MoreVertical, Pen, Trash } from "lucide-react-native";
+import { Eye, MoreVertical, Pen, Trash } from "lucide-react-native";
 
 import { CustomBottomSheetModal } from "~/app/components/custom-bottom-sheet-modal";
 import { Status } from "~/app/components/status";
@@ -97,6 +98,15 @@ const Index = () => {
         )}
         <CustomBottomSheetModal ref={bottomSheetRef}>
           <View className="gap-2 pb-8">
+            <Link asChild href={`/treatments/${activeItem?.id}/view`}>
+              <Pressable
+                className="flex flex-row items-center gap-2 rounded  p-2"
+                onPress={() => bottomSheetRef.current?.close()}
+              >
+                <Eye className="text-black" />
+                <Text>Podgląd</Text>
+              </Pressable>
+            </Link>
             <Pressable
               className="flex flex-row items-center gap-2 rounded bg-red-500/10 p-2"
               onPress={() =>

@@ -12,7 +12,7 @@ import { api } from "~/utils/api";
 const Index = () => {
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState("");
-  const [activeItem, setActiveItem] = useState(null); // [1
+  const [activeItem, setActiveItem] = useState(null);
   const bottomSheetRef = useRef<BottomSheetModal>(null);
 
   const utils = api.useUtils();

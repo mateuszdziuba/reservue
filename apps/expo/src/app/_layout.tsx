@@ -20,6 +20,12 @@ const RootLayout = () => {
       <BottomSheetModalProvider>
         <Stack screenOptions={{ headerTintColor: "#EF4444" }}>
           <Stack.Screen
+            name="(auth)/signin"
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
             name="(tabs)"
             options={{
               headerShown: false,
@@ -32,12 +38,7 @@ const RootLayout = () => {
               headerShadowVisible: false,
             }}
           />
-          <Stack.Screen
-            name="(auth)/signin"
-            options={{
-              headerShown: false,
-            }}
-          />
+
           <Stack.Screen name="forms/[formId]/preview/index" />
           <Stack.Screen
             name="treatments/[treatmentId]/index"

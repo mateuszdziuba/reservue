@@ -1,6 +1,7 @@
 import type { BottomSheetModal } from "@gorhom/bottom-sheet";
 import React, { useEffect, useRef, useState } from "react";
 import { Alert, Modal, Pressable, Text, TextInput, View } from "react-native";
+import { Link } from "expo-router";
 import { FlashList } from "@shopify/flash-list";
 import { MoreVertical, Plus, Trash } from "lucide-react-native";
 
@@ -115,23 +116,26 @@ const Index = () => {
                 estimatedItemSize={20}
                 ItemSeparatorComponent={() => <View className="h-2" />}
                 renderItem={(p) => (
-                  <View className="rounded bg-white p-4">
-                    <View className="flex flex-row justify-between">
-                      <Text className="text-lg font-semibold">
-                        {p.item.lastName} {p.item.firstName}
-                      </Text>
-                      <Pressable
-                        onPress={() => {
-                          bottomSheetRef.current?.present();
-                          setActiveItem(p.item);
-                        }}
-                      >
-                        <MoreVertical className="text-red-500/60" />
-                      </Pressable>
-                    </View>
-                    <Text>{p.item.email}</Text>
-                    <Text>{p.item.phoneNumber}</Text>
-                  </View>
+                  <Link asChild href={`/customers/${p.item.id}`}>
+                    <Pressable className="rounded bg-white p-4">
+                      <View className="flex flex-row justify-between">
+                        <Text className="text-lg font-semibold">
+                          {p.item.lastName} {p.item.firstName}
+                        </Text>
+                        <Pressable
+                          onPress={() => {
+                            bottomSheetRef.current?.present();
+                            setActiveItem(p.item);
+                          }}
+                        >
+                          <MoreVertical className="text-red-500/60" />
+                        </Pressable>
+                      </View>
+
+                      <Text>{p.item.email}</Text>
+                      <Text>{p.item.phoneNumber}</Text>
+                    </Pressable>
+                  </Link>
                 )}
               />
             </View>

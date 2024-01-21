@@ -1,10 +1,15 @@
-import { Button, Pressable, SafeAreaView, Text, View } from "react-native";
+import { Pressable, SafeAreaView, Text, View } from "react-native";
+import { Redirect } from "expo-router";
 import { Book } from "lucide-react-native";
 
-import { useSignIn } from "~/utils/auth";
+import { useSignIn, useUser } from "~/utils/auth";
 
 export default function Login() {
   const signIn = useSignIn();
+  const user = useUser();
+  if (user) {
+    return <Redirect href="/(tabs)" />;
+  }
 
   return (
     <SafeAreaView className="bg-red-500">
