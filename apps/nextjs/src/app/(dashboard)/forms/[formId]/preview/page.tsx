@@ -1,6 +1,7 @@
 import Link from "next/link";
 
-import type { Form } from "../../types";
+import type { Form } from "@reservue/types";
+
 import { DashboardShell } from "~/app/(dashboard)/components/dashboard-shell";
 import { Button } from "~/components/ui/button";
 import { api } from "~/trpc/server";

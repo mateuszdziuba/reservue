@@ -2,7 +2,8 @@ import { Pressable, Text, View } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useForm } from "react-hook-form";
 
-import type { ComponentType, Form, FormFieldProps } from "~/utils/types";
+import type { ComponentType, Form, FormFieldProps } from "@reservue/types";
+
 import { api } from "~/utils/api";
 import { Agreements } from "./agreements";
 import { DropdownMenu } from "./dropdown-menu";

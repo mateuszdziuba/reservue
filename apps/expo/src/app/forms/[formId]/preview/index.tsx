@@ -1,7 +1,8 @@
 import { SafeAreaView } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 
-import type { Form } from "~/utils/types";
+import type { Form } from "@reservue/types";
+
 import { api } from "~/utils/api";
 import { FormPreview } from "./_components/form-preview";
 

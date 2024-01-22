@@ -5,7 +5,8 @@ import { Link } from "expo-router";
 import { FlashList } from "@shopify/flash-list";
 import { Eye, MoreVertical, Pen, Trash } from "lucide-react-native";
 
-import type { CustomerForm } from "~/utils/types";
+import type { CustomerForm } from "@reservue/types";
+
 import { CustomBottomSheetModal } from "~/app/components/custom-bottom-sheet-modal";
 import { Status } from "~/app/components/status";
 import { TabShell } from "~/app/components/tab-shell";

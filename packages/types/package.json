@@ -1,5 +1,5 @@
 {
-  "name": "@reservue/validators",
+  "name": "@reservue/types",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -12,6 +12,9 @@
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@reservue/validators": "workspace:^0.1.0"
   },
   "devDependencies": {
     "@reservue/eslint-config": "workspace:^0.2.0",
@@ -26,8 +29,5 @@
       "@reservue/eslint-config/base"
     ]
   },
-  "prettier": "@reservue/prettier-config",
-  "dependencies": {
-    "zod": "^3.22.4"
-  }
+  "prettier": "@reservue/prettier-config"
 }

@@ -5,7 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Eye, MoreHorizontal, Pencil, Trash } from "lucide-react";
 
-import type { Form } from "./types";
+import type { Form } from "@reservue/types";
+
 import {
   AlertDialog,
   AlertDialogAction,

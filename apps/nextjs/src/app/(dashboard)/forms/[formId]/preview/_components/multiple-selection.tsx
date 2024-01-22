@@ -1,7 +1,8 @@
 import type { Control } from "react-hook-form";
 import React from "react";
 
-import type { ComponentItems } from "../../../types";
+import type { ComponentItems } from "@reservue/types";
+
 import { Checkbox } from "~/components/ui/checkbox";
 import {
   FormControl,

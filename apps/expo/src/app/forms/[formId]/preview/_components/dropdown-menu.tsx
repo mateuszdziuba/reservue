@@ -4,7 +4,7 @@ import { Text, View } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { Controller } from "react-hook-form";
 
-import type { ComponentItems } from "~/utils/types";
+import type { ComponentItems } from "@reservue/types";
 
 interface Props {
   data: ComponentItems;

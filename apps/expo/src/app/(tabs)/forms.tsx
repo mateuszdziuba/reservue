@@ -5,7 +5,8 @@ import { Link } from "expo-router";
 import { FlashList } from "@shopify/flash-list";
 import { Eye, MoreVertical, Trash } from "lucide-react-native";
 
-import type { Form } from "~/utils/types";
+import type { Form } from "@reservue/types";
+
 import { CustomBottomSheetModal } from "~/app/components/custom-bottom-sheet-modal";
 import { TabShell } from "~/app/components/tab-shell";
 import { api } from "~/utils/api";

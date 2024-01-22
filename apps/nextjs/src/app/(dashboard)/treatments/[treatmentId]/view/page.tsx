@@ -1,4 +1,5 @@
-import type { Form } from "~/app/(dashboard)/forms/types";
+import type { Form } from "@reservue/types";
+
 import { DashboardShell } from "~/app/(dashboard)/components/dashboard-shell";
 import { FormPreview } from "~/app/(dashboard)/forms/[formId]/preview/form-preview";
 import { api } from "~/trpc/server";

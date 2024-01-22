@@ -1,6 +1,8 @@
 import type { Control } from "react-hook-form";
 
-import type { CreateCustomer } from "./validators";
+import type { CreateCustomer } from "@reservue/validators";
+
+export const name = "types";
 
 export interface Agreement {
   id?: number;

@@ -7,7 +7,8 @@ import type {
   ComponentType,
   Form as FormData,
   FormFieldProps,
-} from "../../types";
+} from "@reservue/types";
+
 import { Button } from "~/components/ui/button";
 import { Form } from "~/components/ui/form";
 import { api } from "~/trpc/react";

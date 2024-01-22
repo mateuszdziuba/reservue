@@ -5,9 +5,10 @@ import { router, useLocalSearchParams } from "expo-router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 
-import type { CreateCustomer } from "~/utils/validators";
+import type { CreateCustomer } from "@reservue/validators";
+import { createCustomerSchema } from "@reservue/validators";
+
 import { api } from "~/utils/api";
-import { createCustomerSchema } from "~/utils/validators";
 
 export function CreateCustomerForm({
   handleOnSuccess,

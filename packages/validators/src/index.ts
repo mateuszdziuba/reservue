@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+export const name = "validators";
+
 export const createBusinessSchema = z.object({
   name: z.string().min(1).max(256),
   vatin: z.string().min(1).max(10),

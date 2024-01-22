@@ -1,7 +1,8 @@
 import type { Dispatch, SetStateAction } from "react";
 import { useEffect, useId, useState } from "react";
 
-import type { ComponentItems } from "../../types";
+import type { ComponentItems } from "@reservue/types";
+
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 

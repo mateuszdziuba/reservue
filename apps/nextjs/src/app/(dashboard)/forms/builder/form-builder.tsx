@@ -27,7 +27,8 @@ import type {
   ComponentType,
   Form,
   FormComponent,
-} from "../types";
+} from "@reservue/types";
+
 import { Spinner } from "~/components/spinner";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";

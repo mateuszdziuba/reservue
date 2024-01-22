@@ -2,7 +2,8 @@ import type { Dispatch, SetStateAction } from "react";
 import { useEffect, useState } from "react";
 import { Plus, Trash } from "lucide-react";
 
-import type { ComponentItems } from "../../types";
+import type { ComponentItems } from "@reservue/types";
+
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
 import { Label } from "~/components/ui/label";

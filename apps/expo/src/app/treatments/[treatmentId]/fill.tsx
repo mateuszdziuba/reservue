@@ -2,7 +2,8 @@ import { useEffect } from "react";
 import { ScrollView, Text } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 
-import type { Form } from "~/utils/types";
+import type { Form } from "@reservue/types";
+
 import { FormPreview } from "~/app/forms/[formId]/preview/_components/form-preview";
 import { api } from "~/utils/api";
 

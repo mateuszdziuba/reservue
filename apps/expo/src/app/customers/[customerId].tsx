@@ -12,7 +12,8 @@ import { Link, useLocalSearchParams } from "expo-router";
 import { FlashList } from "@shopify/flash-list";
 import { Eye, MoreVertical, Trash } from "lucide-react-native";
 
-import type { CreateCustomer } from "~/utils/validators";
+import type { CreateCustomer } from "@reservue/validators";
+
 import { api } from "~/utils/api";
 import { CreateCustomerForm } from "../components/create-customer-form";
 import { CustomBottomSheetModal } from "../components/custom-bottom-sheet-modal";
