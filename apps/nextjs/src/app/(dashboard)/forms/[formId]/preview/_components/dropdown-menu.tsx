@@ -27,8 +27,6 @@ interface Props {
 }
 
 export function DropdownMenu(props: Props) {
-  // Your component logic here
-
   return (
     <FormField
       control={props.control}

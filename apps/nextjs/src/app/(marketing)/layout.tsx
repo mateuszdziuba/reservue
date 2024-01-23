@@ -15,7 +15,6 @@ export default function MarketingLayout(props: { children: ReactNode }) {
           <Book className="mr-2 h-6 w-6" />
           <span className="text-lg font-bold tracking-tight">reservue</span>
         </div>
-        {/* <MobileDropdown /> */}
         <MainNav navItems={guestNavItems} />
         <div className="ml-auto flex items-center space-x-4">
           <Suspense>

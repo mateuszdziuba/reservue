@@ -21,8 +21,6 @@ interface Props {
 }
 
 export function LongAnswer(props: Props) {
-  // Your component logic here
-
   return (
     <FormField
       control={props.control}

@@ -1,12 +1,9 @@
 "use client";
 
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { CheckIcon, ChevronsUpDown } from "lucide-react";
 import * as z from "zod";
 
-import type { Form as FormType } from "@reservue/types";
-
-import type { Customer } from "../../customers/_components/columns";
 import { Button } from "~/components/ui/button";
 import {
   Command,

@@ -1,8 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 import type { CreateBusiness } from "@reservue/validators";
 import { createBusinessSchema } from "@reservue/validators";
@@ -22,7 +20,6 @@ import { useZodForm } from "~/lib/zod-form";
 import { api } from "~/trpc/react";
 
 export function CreateBusinessForm() {
-  const utils = api.useUtils();
   const router = useRouter();
 
   const form = useZodForm({ schema: createBusinessSchema });
@@ -38,8 +35,8 @@ export function CreateBusinessForm() {
     try {
       await createBusiness(values);
       router.push("/dashboard");
-    } catch {
-      // noop
+    } catch (error) {
+      console.error(error);
     }
   }
 

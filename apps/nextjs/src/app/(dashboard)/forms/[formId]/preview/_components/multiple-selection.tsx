@@ -21,8 +21,6 @@ interface Props {
 }
 
 export function MultipleSelection(props: Props) {
-  // Your component logic here
-
   return (
     <FormField
       control={props.control}

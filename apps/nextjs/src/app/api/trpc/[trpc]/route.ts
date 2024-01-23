@@ -7,7 +7,6 @@ export const runtime = "nodejs";
 
 /**
  * Configure basic CORS headers
- * You should extend this to match your needs
  */
 function setCorsHeaders(res: Response) {
   res.headers.set("Access-Control-Allow-Origin", "*");

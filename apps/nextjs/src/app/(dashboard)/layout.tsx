@@ -29,12 +29,8 @@ export default async function DashboardLayout(props: { children: ReactNode }) {
           <div className="mr-8 hidden items-center md:flex">
             <Book className="mr-2 h-6 w-6" />
             <span className="text-lg font-bold tracking-tight">reservue</span>
-            {/* <Suspense>
-              <BusinessSwitcher />
-            </Suspense> */}
           </div>
 
-          {/* <MobileDropdown /> */}
           <MainNav navItems={guestNavItems} />
         </div>
         <div className="ml-auto flex items-center space-x-4">

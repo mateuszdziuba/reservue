@@ -1,6 +1,5 @@
 import type { TreatmentColumn } from "./columns";
 import { DataTable } from "~/components/data-table";
-import { Button } from "~/components/ui/button";
 import { api } from "~/trpc/server";
 import { DashboardShell } from "../components/dashboard-shell";
 import { NewTreatmentDialog } from "./_components/create-treatment-dialog";
@@ -42,7 +41,7 @@ export default async function Treatments() {
     >
       <DataTable
         columns={columns}
-        data={tableData as TreatmentColumn[]}
+        data={tableData as unknown as TreatmentColumn[]}
         toolbar={DataTableToolbar}
       />
     </DashboardShell>

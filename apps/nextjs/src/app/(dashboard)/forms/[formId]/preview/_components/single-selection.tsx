@@ -20,8 +20,6 @@ interface Props {
 }
 
 export function SingleSelection(props: Props) {
-  // Your component logic here
-
   return (
     <FormField
       control={props.control}

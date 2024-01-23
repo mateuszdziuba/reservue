@@ -20,13 +20,8 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Reservue",
     description: "Simple monorepo with shared backend for web & mobile apps",
-    url: "https://create-t3-turbo.vercel.app",
+    url: "https://reservue.vercel.app",
     siteName: "Reservue",
-  },
-  twitter: {
-    card: "summary_large_image",
-    site: "@jullerino",
-    creator: "@jullerino",
   },
 };
 

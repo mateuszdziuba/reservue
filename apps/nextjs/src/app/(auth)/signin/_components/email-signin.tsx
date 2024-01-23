@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 
-import { signIn } from "@reservue/auth";
-
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 
-export function EmailSignIn({ emailSignIn }) {
+export function EmailSignIn({
+  emailSignIn,
+}: {
+  emailSignIn: (email: string) => Promise<void>;
+}) {
   const [email, setEmail] = useState("");
   return (
     <form action={async () => await emailSignIn(email)} className="grid gap-2">

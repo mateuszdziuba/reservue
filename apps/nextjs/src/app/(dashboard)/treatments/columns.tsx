@@ -3,7 +3,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Eye, MoreHorizontal, Pencil, Trash } from "lucide-react";
+import { Eye, MoreHorizontal, Trash } from "lucide-react";
 
 import {
   AlertDialog,
@@ -22,8 +22,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { useToast } from "~/components/ui/use-toast";
@@ -120,8 +118,6 @@ export const columns: ColumnDef<TreatmentColumn>[] = [
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                {/* <DropdownMenuLabel>Akcje</DropdownMenuLabel> */}
-                {/* <DropdownMenuSeparator /> */}
                 <DropdownMenuItem asChild>
                   <Link href={`/treatments/${t.row.original.id}/view`}>
                     <Eye className="mr-2 h-4 w-4" />

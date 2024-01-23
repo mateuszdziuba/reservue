@@ -23,8 +23,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { useToast } from "~/components/ui/use-toast";
@@ -91,8 +89,6 @@ export const columns: ColumnDef<Form>[] = [
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                {/* <DropdownMenuLabel>Akcje</DropdownMenuLabel> */}
-                {/* <DropdownMenuSeparator /> */}
                 <DropdownMenuItem asChild>
                   <Link href={`/forms/${t.row.original.id}/preview`}>
                     <Eye className="mr-2 h-4 w-4" />

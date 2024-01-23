@@ -10,7 +10,6 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "~/components/ui/form";
 
 interface Props {
@@ -21,8 +20,6 @@ interface Props {
 }
 
 export function Agreements(props: Props) {
-  // Your component logic here
-
   return (
     <>
       {props.data.agreements.map((agreement) => (

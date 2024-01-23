@@ -1,6 +1,3 @@
-import type { Route } from "next";
-import Link from "next/link";
-
 import { signIn } from "@reservue/auth";
 
 import { OauthSignin } from "~/app/(auth)/signin/_components/oauth-signin";
@@ -38,24 +35,6 @@ export default function AuthenticationPage() {
 
         <OauthSignin />
       </div>
-
-      {/* <p className="text-muted-foreground px-8 text-center text-sm">
-        By clicking continue, you agree to our{" "}
-        <Link
-          href={"/terms" as Route}
-          className="hover:text-primary underline underline-offset-4"
-        >
-          Terms of Service
-        </Link>{" "}
-        and{" "}
-        <Link
-          href={"/privacy" as Route}
-          className="hover:text-primary underline underline-offset-4"
-        >
-          Privacy Policy
-        </Link>
-        .
-      </p> */}
     </div>
   );
 }
