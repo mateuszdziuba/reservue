@@ -13,7 +13,11 @@ import {
 } from "~/components/ui/popover";
 import { ScrollArea } from "~/components/ui/scroll-area";
 
-export function MobileDropdown() {
+export function MobileDropdown({
+  isAuthenticated,
+}: {
+  isAuthenticated?: boolean;
+}) {
   const [isOpen, setIsOpen] = React.useState(false);
 
   React.useEffect(() => {
@@ -37,15 +41,18 @@ export function MobileDropdown() {
       </PopoverTrigger>
       <PopoverContent className="z-40 mt-2 h-[calc(100vh-4rem)] w-screen animate-none rounded-none border-none transition-transform">
         <ScrollArea className="py-8">
-          {[...guestNavItems, ...authNavItems].map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="text-muted-foreground hover:text-primary flex py-1 text-base font-medium transition-colors"
-            >
-              {item.title}
-            </Link>
-          ))}
+          {[...guestNavItems, ...(isAuthenticated ? authNavItems : [])].map(
+            (item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="text-muted-foreground hover:text-primary flex py-1 text-base font-medium transition-colors"
+                onClick={() => setIsOpen(false)}
+              >
+                {item.title}
+              </Link>
+            ),
+          )}
         </ScrollArea>
       </PopoverContent>
     </Popover>

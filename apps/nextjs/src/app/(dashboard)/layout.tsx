@@ -7,6 +7,7 @@ import { auth } from "@reservue/auth";
 
 import { SiteFooter } from "~/components/footer";
 import { MainNav } from "~/components/main-nav";
+import { MobileDropdown } from "~/components/mobile-nav";
 import { UserNav } from "~/components/user-nav";
 import { api } from "~/trpc/server";
 import { guestNavItems } from "../config";
@@ -30,7 +31,7 @@ export default async function DashboardLayout(props: { children: ReactNode }) {
             <Book className="mr-2 h-6 w-6" />
             <span className="text-lg font-bold tracking-tight">reservue</span>
           </div>
-
+          <MobileDropdown isAuthenticated />
           <MainNav navItems={guestNavItems} />
         </div>
         <div className="ml-auto flex items-center space-x-4">

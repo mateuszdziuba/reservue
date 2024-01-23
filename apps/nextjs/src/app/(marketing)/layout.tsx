@@ -5,6 +5,7 @@ import { Book } from "lucide-react";
 import { DashboardLink } from "~/app/(marketing)/_components/dashboard-link";
 import { SiteFooter } from "~/components/footer";
 import { MainNav } from "~/components/main-nav";
+import { MobileDropdown } from "~/components/mobile-nav";
 import { guestNavItems } from "../config";
 
 export default function MarketingLayout(props: { children: ReactNode }) {
@@ -15,6 +16,7 @@ export default function MarketingLayout(props: { children: ReactNode }) {
           <Book className="mr-2 h-6 w-6" />
           <span className="text-lg font-bold tracking-tight">reservue</span>
         </div>
+        <MobileDropdown />
         <MainNav navItems={guestNavItems} />
         <div className="ml-auto flex items-center space-x-4">
           <Suspense>
