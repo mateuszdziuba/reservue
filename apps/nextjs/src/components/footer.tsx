@@ -17,12 +17,12 @@ export function SiteFooter(props: { className?: string }) {
         <p className="text-muted-foreground col-span-full row-start-2 text-center text-sm leading-loose md:flex-1 md:text-left">
           Stworzona przez{" "}
           <a
-            href="#"
+            href="https://github.com/mateuszdziuba"
             target="_blank"
             rel="noreferrer"
             className="font-medium underline underline-offset-4"
           >
-            Mateusz
+            Mateusz Dziuba
           </a>
           . Dla{" "}
           <a
