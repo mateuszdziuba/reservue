@@ -85,6 +85,7 @@ export default function CustomerPage() {
                     {
                       text: "Tak",
                       style: "destructive",
+                      // eslint-disable-next-line @typescript-eslint/no-misused-promises
                       onPress: async () => {
                         try {
                           await deleteCustomerForm(activeItem.id);

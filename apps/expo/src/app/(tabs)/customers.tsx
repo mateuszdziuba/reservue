@@ -15,7 +15,7 @@ import { Spinner } from "../components/spinner";
 
 type Customer = CreateCustomer & { id: number };
 
-const Index = () => {
+const Customers = () => {
   const [data, setData] = useState<Customer[]>([]);
   const [filter, setFilter] = useState("");
   const [activeItem, setActiveItem] = React.useState<Customer | null>(null);
@@ -147,4 +147,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default Customers;

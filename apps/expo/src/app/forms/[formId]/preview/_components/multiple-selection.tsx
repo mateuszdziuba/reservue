@@ -14,8 +14,6 @@ interface Props {
 }
 
 export function MultipleSelection(props: Props) {
-  // Your component logic here
-
   return (
     <Controller
       control={props.control}

@@ -14,7 +14,7 @@ import { api } from "~/utils/api";
 import { CreateTreatmentForm } from "../components/create-treatment-form";
 import { Spinner } from "../components/spinner";
 
-const Index = () => {
+const Treatments = () => {
   const [data, setData] = useState<CustomerForm[]>([]);
   const [filter, setFilter] = useState("");
   const [activeItem, setActiveItem] = useState<CustomerForm | null>(null);
@@ -156,4 +156,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default Treatments;

@@ -56,7 +56,7 @@ const formItems: Record<
       updateFormData,
     }: {
       initialData?: ComponentItems;
-      updateFormData: Dispatch<SetStateAction<any>>;
+      updateFormData: Dispatch<SetStateAction<Form>>;
     }) => JSX.Element;
   }
 > = {

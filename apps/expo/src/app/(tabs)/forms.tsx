@@ -12,7 +12,7 @@ import { TabShell } from "~/app/components/tab-shell";
 import { api } from "~/utils/api";
 import { Spinner } from "../components/spinner";
 
-const Index = () => {
+const Forms = () => {
   const [data, setData] = useState<Form[]>([]);
   const [filter, setFilter] = useState("");
   const [activeItem, setActiveItem] = useState<Form | null>(null);
@@ -134,4 +134,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default Forms;

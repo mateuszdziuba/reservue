@@ -10,8 +10,6 @@ import {
 
 import { useUser } from "~/utils/auth";
 
-// This is the main layout of the app
-// It wraps your pages with the providers they need
 export default function TabsLayout() {
   const user = useUser();
 
@@ -25,7 +23,6 @@ export default function TabsLayout() {
                 <Image
                   className="h-full w-full rounded-full "
                   source={{ uri: user?.image! }}
-                  // placeholder={blurhash}
                 />
               </Pressable>
             </Link>

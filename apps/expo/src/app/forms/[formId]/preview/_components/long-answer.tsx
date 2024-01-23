@@ -13,8 +13,6 @@ interface Props {
 }
 
 export function LongAnswer(props: Props) {
-  // Your component logic here
-
   return (
     <Controller
       control={props.control}

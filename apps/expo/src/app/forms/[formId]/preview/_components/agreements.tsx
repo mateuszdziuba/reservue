@@ -14,8 +14,6 @@ interface Props {
 }
 
 export function Agreements(props: Props) {
-  // Your component logic here
-
   return (
     <>
       {props.data.agreements.map((agreement) => (
@@ -29,15 +27,9 @@ export function Agreements(props: Props) {
               <Checkbox
                 value={field.value}
                 onValueChange={field.onChange}
-                // required={agreement.required}
                 disabled={props.disabled}
               />
-              <Text className="text-md ">
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Labore
-                est expedita dolorem quasi inventore! Officiis iste mollitia
-                alias? Soluta sequi minus rerum, quam mollitia incidunt veniam
-                recusandae est et consectetur?
-              </Text>
+              <Text className="text-md ">{agreement.content}</Text>
             </View>
           )}
         />

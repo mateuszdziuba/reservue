@@ -8,15 +8,9 @@ import "../styles.css";
 
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 
-// This is the main layout of the app
-// It wraps your pages with the providers they need
 const RootLayout = () => {
   return (
     <TRPCProvider>
-      {/*
-        The Stack component displays the current page.
-        It also allows you to configure your screens 
-      */}
       <BottomSheetModalProvider>
         <Stack screenOptions={{ headerTintColor: "#EF4444" }}>
           <Stack.Screen
