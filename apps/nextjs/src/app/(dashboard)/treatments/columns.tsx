@@ -48,7 +48,7 @@ export const columns: ColumnDef<TreatmentColumn>[] = [
     accessorKey: "status",
     header: "Status",
     cell: function Status(t) {
-      const status = t.row.original.status;
+      const status = Number(t.row.original.status);
 
       return (
         <Badge
