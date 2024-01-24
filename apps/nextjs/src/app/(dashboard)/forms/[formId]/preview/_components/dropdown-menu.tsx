@@ -37,7 +37,11 @@ export function DropdownMenu(props: Props) {
           <FormLabel className="text-base">
             {props.data.question?.content}
           </FormLabel>
-          <Select onValueChange={field.onChange} defaultValue={field.value}>
+          <Select
+            onValueChange={field.onChange}
+            defaultValue={field.value}
+            disabled={props.disabled}
+          >
             <FormControl>
               <SelectTrigger>
                 <SelectValue placeholder="Wybierz odpowiedź" />
